@@ -29,6 +29,7 @@ def main():
         for name in ("UPSTREAM_RULES.md", "VULKAN_COVERAGE.json", "GODOT_COVERAGE.json", "GODOT_PERF_NOTES.json", "GODOT_TUTORIAL_NOTES.json",
                      "GODOT_RUNTIME_WARNINGS.json", "DECLINED_RULES.md", "WHY_MEASURE.md", "COMPARISON.md", "MEASURED_EFFECTS.md"):
             shutil.copy2(ROOT / "docs" / name, package / "docs" / name)
+        shutil.copytree(ROOT / "docs" / "images", package / "docs" / "images")
         shutil.copy2(ROOT / "LICENSE", package / "LICENSE")
         # Every relative link in a shipped document must open a shipped file.
         for doc in package.rglob("*.md"):

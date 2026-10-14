@@ -8,6 +8,32 @@ Copy `addons/render_lens` into your project, then enable **Render Lens** in Proj
 {"mcpServers":{"render-lens":{"url":"http://127.0.0.1:43788"}}}
 ```
 
+![Render Lens in the Godot editor: the heavy sample scene running in the Game tab, Render Lens recording GPU passes in the Output panel, and the Render Lens dock on the right](docs/images/editor.png)
+
+## Example
+
+A real run on the heavy sample scene (`sample_project/heavy_test.tscn`, Godot 4.7.2, RTX 4080 SUPER). `advise` ranks what the measured GPU passes say costs time:
+
+| Finding | Measured share of GPU time | Suggestion |
+| --- | --- | --- |
+| `shadows.omni_shadow_count`: more than one omni light casts shadows | 41.7% | Disable shadows on omni lights that do not need grounded contact, or let distant ones fade their shadows out |
+| `shadows.spot_shadow_count`: more than one spot light casts shadows | 18.8% | Disable shadows on spots that only need a projected cookie |
+| `materials.alpha_blend`: materials use alpha blending | 5.5% | Select Disabled transparency for opaque-looking surfaces |
+
+`measure_change finding=shadows.omni_shadow_count` then turns those shadows off in the running game only, measures the frame before, with the change and after restoring it, and reports:
+
+```json
+{
+  "changes": [{"property": "shadow_enabled", "value": false, "objects": 8}],
+  "frame_ms": {"before": 7.511, "with_change": 4.479, "saving_ms": 3.032, "noise_ms": 0.005, "verdict": "faster"},
+  "gpu_frame_ms": {"before": 5.578, "with_change": 2.454, "saving_ms": 3.124, "noise_ms": 0.004, "verdict": "faster"},
+  "run_drift_percent": 0.1,
+  "pass_changes": [{"name": "Render OmniLight Shadows", "before": 2.908, "with_change": 0.0, "verdict": "faster"}]
+}
+```
+
+Nothing in the project changed; the shadows came back when the measurement ended.
+
 ## Free and open source
 
 Render Lens is free and open source under the [MIT license](LICENSE), with every tool included. If it saves you time, you can support it on [Ko-fi](https://ko-fi.com/christoskaramoustos): the **♥ Support Render Lens** link at the top of the Render Lens dock in the editor opens the page, no account is needed to tip, and a message with what you would like improved is very welcome.

@@ -6,6 +6,8 @@ Rendering and performance measurement for game engines, built for you and your A
 | --- | --- | --- |
 | Godot 4.4 to 4.7 | [godot/](godot/README.md) | Available |
 
+![Render Lens in the Godot editor](godot/docs/images/editor.png)
+
 More engines are planned.
 
 Free and open source under the [MIT license](LICENSE). If Render Lens saves you time, you can support it on [Ko-fi](https://ko-fi.com/christoskaramoustos) and suggest what to improve; no account is needed.
