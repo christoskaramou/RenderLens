@@ -6,7 +6,7 @@ Rendering and performance measurement for game engines, built for you and your A
 | --- | --- | --- |
 | Godot 4.4 to 4.7 | [godot/](godot/README.md) | Available |
 
-![Render Lens in the Godot editor](godot/docs/images/editor.png)
+![A real Claude Code session using Render Lens next to the Godot editor with the Render Lens dock](godot/docs/images/hero.png)
 
 More engines are planned.
 

@@ -8,7 +8,7 @@ Copy `addons/render_lens` into your project, then enable **Render Lens** in Proj
 {"mcpServers":{"render-lens":{"url":"http://127.0.0.1:43788"}}}
 ```
 
-![Render Lens in the Godot editor: the heavy sample scene running in the Game tab, Render Lens recording GPU passes in the Output panel, and the Render Lens dock on the right](docs/images/editor.png)
+![A real Claude Code session using Render Lens (left): it calls advise and measure_change and reports that turning the omni-light shadows off saves 3.04 ms per frame. Right: the Godot editor running the heavy sample scene, with the Render Lens dock](docs/images/hero.png)
 
 ## Example
 
