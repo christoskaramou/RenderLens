@@ -1,0 +1,491 @@
+[
+  {
+    "id": "xr.foveation_ignored",
+    "category": "xr",
+    "title": "Foveation is set but the renderer is Forward+",
+    "severity": "info",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "xr/openxr/foveation_level",
+        "value": 0
+      }
+    },
+    "evidence": "Only works on the Compatibility rendering method",
+    "suggestion": "xr/openxr/foveation_level has no effect on Forward+ in Godot 4.4. The 4.4 description says it only works on Compatibility. Godot 4.7's description no longer says that, so this rule is 4.4 only.",
+    "setting": "xr/openxr/foveation_level",
+    "tradeoff": "Switching renderer changes the whole pipeline.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4"
+      ],
+      "max_version": "4.4"
+    }
+  },
+  {
+    "id": "xr.subsample_off",
+    "category": "xr",
+    "title": "Foveation is not using subsampled images",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "xr/openxr/foveation_with_subsampled_images",
+        "value": false
+      }
+    },
+    "evidence": "This can improve the performance gain from foveated rendering",
+    "suggestion": "Turn xr/openxr/foveation_with_subsampled_images on when foveation is enabled on Vulkan. The 4.7 description says subsampled images improve the gain and conflict with some screen-space effects.",
+    "setting": "xr/openxr/foveation_with_subsampled_images",
+    "tradeoff": "Some screen-space effects are incompatible.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.7/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.7"
+      ],
+      "min_version": "4.7"
+    }
+  },
+  {
+    "id": "xr.screen_texture",
+    "category": "xr",
+    "title": "An XR project reads the screen texture",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_screen_texture",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "xr/openxr/enabled",
+            "value": true
+          }
+        }
+      ]
+    },
+    "offender_key": "check_screen_texture",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "xr/openxr/enabled is on and a spatial ShaderMaterial declares a hint_screen_texture uniform, or a BaseMaterial3D enables refraction (which samples the screen texture); comments are ignored. The page adds that Godot then makes a full copy of the render buffer. Godot docs: \"Full screen effects that require reading from the screen texture effectively disable all rendering performance optimizations in XR.\"",
+    "suggestion": "Write XR full-screen effects as per-pixel shaders that do not sample the screen (the page's vignette example), and avoid refraction on XR-visible materials.",
+    "tradeoff": "Effects that distort or blur the rendered image need the screen texture.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/xr/xr_full_screen_effects.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "xr.composition_layer_sort_zero",
+    "category": "xr",
+    "title": "An OpenXR composition layer has sort order 0",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_openxr_layer_sort_zero",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_openxr_layer_sort_zero",
+    "evidence": "Godot prints \"Composition layer returned sort order 0, it may be overwritten by projection layer.\" when an OpenXRCompositionLayer's sort_order is 0, the order of the main projection layer, so the runtime may draw the scene over it.",
+    "suggestion": "Use a positive sort_order to draw the layer in front of the scene, or a negative one to draw it behind.",
+    "tradeoff": "None.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/modules/openxr/openxr_api.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "xr.frame_synthesis_renderer",
+    "category": "xr",
+    "title": "OpenXR frame synthesis is requested under Forward+",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "xr/openxr/enabled",
+            "value": true
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "xr/openxr/extensions/frame_synthesis",
+            "value": true
+          }
+        }
+      ]
+    },
+    "setting": "xr/openxr/extensions/frame_synthesis",
+    "offender_key": "",
+    "evidence": "Godot prints \"OpenXR: Frame synthesis not supported for this rendering method!\" when xr/openxr/extensions/frame_synthesis is on and the project renders with Forward+ on Vulkan; Godot unregisters the extension, so no frames are synthesized. Mobile on Vulkan and Compatibility support it; Direct3D 12 and Metal reject it as a driver instead.",
+    "suggestion": "Use the Mobile renderer for XR projects that rely on frame synthesis, or turn the setting off.",
+    "tradeoff": "The Mobile renderer drops Forward+-only effects.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/modules/openxr/extensions/openxr_frame_synthesis_extension.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "xr.object_picking_stereo",
+    "category": "xr",
+    "title": "Physics object picking is expected in a stereo XR viewport",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "any": [
+        {
+          "scene_gte": {
+            "name": "check_xr_viewport_picking",
+            "value": 1
+          }
+        },
+        {
+          "all": [
+            {
+              "scene_gte": {
+                "name": "check_xr_pickable_listener",
+                "value": 1
+              }
+            },
+            {
+              "setting_eq": {
+                "path": "xr/openxr/enabled",
+                "value": true
+              }
+            },
+            {
+              "setting_eq": {
+                "path": "physics/common/enable_object_picking",
+                "value": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "setting": "",
+    "offender_key": "check_xr_pickable_listener",
+    "evidence": "Godot prints \"Object picking can't be used when stereo rendering, this will be turned off!\" once a stereo XR interface renders a viewport that has physics object picking on: a SubViewport with use_xr and physics_object_picking, or an OpenXR project whose root viewport picks (physics/common/enable_object_picking) while scene objects listen for input_event. Godot then turns picking off, so those listeners get no mouse or pointer events.",
+    "suggestion": "Use XR pointer raycasts (RayCast3D or a pointer tool) for interaction, and turn object picking off for XR viewports.",
+    "tradeoff": "Pointer raycasts need their own interaction code.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/scene/main/viewport.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "xr.canvas_background_multiview",
+    "category": "xr",
+    "title": "An XR project uses a canvas environment background on Mobile",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_env_bg_canvas",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "xr/openxr/enabled",
+            "value": true
+          }
+        }
+      ]
+    },
+    "setting": "",
+    "offender_key": "check_env_bg_canvas",
+    "evidence": "Godot prints \"Canvas background is not supported in multiview!\" when an Environment uses background mode Canvas in an OpenXR project under the Mobile renderer; stereo (multiview) rendering cannot show the canvas behind the scene.",
+    "suggestion": "Use a sky, color or passthrough background in XR.",
+    "tradeoff": "None.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/renderer_rd/forward_mobile/render_forward_mobile.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "xr.foveation_subsampled_disabled",
+    "category": "xr",
+    "title": "Subsampled foveation is disabled by post-processing on Mobile",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "xr/openxr/enabled",
+            "value": true
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "xr/openxr/foveation_with_subsampled_images",
+            "value": true
+          }
+        },
+        {
+          "any": [
+            {
+              "scene_gte": {
+                "name": "env_glow",
+                "value": 1
+              }
+            },
+            {
+              "scene_gte": {
+                "name": "dof_blur_enabled",
+                "value": 1
+              }
+            },
+            {
+              "scene_gte": {
+                "name": "check_auto_exposure",
+                "value": 1
+              }
+            },
+            {
+              "scene_gte": {
+                "name": "check_env_bg_canvas",
+                "value": 1
+              }
+            },
+            {
+              "scene_gte": {
+                "name": "check_shader_screen_read",
+                "value": 1
+              }
+            },
+            {
+              "scene_gte": {
+                "name": "check_compositor_transparent_callback",
+                "value": 1
+              }
+            },
+            {
+              "setting_neq": {
+                "path": "rendering/anti_aliasing/quality/screen_space_aa",
+                "value": 0
+              }
+            },
+            {
+              "setting_neq": {
+                "path": "rendering/scaling_3d/scale",
+                "value": 1.0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "setting": "xr/openxr/foveation_with_subsampled_images",
+    "offender_key": "",
+    "evidence": "Godot prints \"Foveation with subsampled images was enabled, but rendering features are in use that have forced it to be disabled.\" on headsets with the FB foveation extension when xr/openxr/foveation_with_subsampled_images is on (the default) and the Mobile renderer cannot finish post-processing in a subpass: glow, depth of field, auto-exposure, a canvas background, screen or depth texture reads (shaders, refraction, proximity fade), transparent-stage compositor effects, screen-space AA or a 3D scale other than 1 (render_forward_mobile.cpp).",
+    "suggestion": "Remove those features from the XR view to keep subsampled foveation, or turn the setting off.",
+    "tradeoff": "Dropping glow or depth of field changes the look.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/modules/openxr/openxr_api.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile"
+      ],
+      "versions": [
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

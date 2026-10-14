@@ -1,0 +1,230 @@
+{
+ "_note": "Reviewed expected advice for tests/golden/<case>.ctx (2026-10-13). Change it only after judging the new order is better, not to match new output.",
+ "demo_run": {
+  "performance": [
+   "shadows.spot_shadow_count",
+   "shadows.omni_shadow_count",
+   "materials.alpha_blend",
+   "pacing.shadow_draws_dominate",
+   "memory.texture_mem",
+   "memory.video_mem",
+   "stutter.compilations_surface",
+   "stutter.draw_calls_high",
+   "stutter.compilations_specialization",
+   "gi.sdfgi_enabled",
+   "post.dof_enabled",
+   "gi.ssil_enabled",
+   "post.ssr_enabled",
+   "post.volumetric_fog",
+   "post.glow_enabled",
+   "post.ssao_enabled"
+  ],
+  "visual": [
+   "antialiasing.no_aa"
+  ],
+  "missing": [
+   "scene_validation.decal_textures",
+   "scene_validation.gpu_process_missing",
+   "scene_validation.point_light_texture",
+   "scene_validation.trails_no_pose"
+  ],
+  "to_check": [
+   "gi.probe_always",
+   "geometry.multimesh_candidate",
+   "gi.half_resolution_off",
+   "lights.many_realtime",
+   "lights.no_lightmap_with_many_lights",
+   "materials.double_sided",
+   "pacing.vsync_off_uncapped",
+   "particles.cpu_nodes",
+   "particles.gpu_amount",
+   "particles.trails",
+   "textures.large_dimension",
+   "decals.no_distance_fade",
+   "geometry.lod_bias_high",
+   "geometry.no_visibility_range"
+  ],
+  "info": [
+   "platform.windows_driver_vulkan",
+   "platform.s3tc_off_forward"
+  ],
+  "same_pass": {
+   "shadows.spot_shadow_count": [
+    "shadows.directional_max_distance"
+   ],
+   "gi.sdfgi_enabled": [
+    "gi.sdfgi_frames_to_converge"
+   ],
+   "post.ssr_enabled": [
+    "post.ssr_steps"
+   ],
+   "post.volumetric_fog": [
+    "post.fog_sdfgi_inject"
+   ]
+  }
+ },
+ "heavy_mobile": {
+  "performance": [
+   "shadows.omni_shadow_count",
+   "materials.alpha_blend",
+   "pacing.fps_below_target",
+   "post.glow_enabled"
+  ],
+  "visual": [
+   "antialiasing.no_aa"
+  ],
+  "missing": [
+   "scene_validation.decal_textures",
+   "scene_validation.env_sdfgi_renderer",
+   "scene_validation.env_ssao_renderer",
+   "scene_validation.env_ssil_renderer",
+   "scene_validation.env_ssr_renderer",
+   "scene_validation.env_volumetric_fog_renderer",
+   "scene_validation.gpu_process_missing",
+   "scene_validation.trails_no_pose"
+  ],
+  "to_check": [
+   "canvas.pcf13",
+   "gi.probe_always",
+   "geometry.multimesh_candidate",
+   "import.mesh_lods_off",
+   "lights.many_realtime",
+   "lights.no_lightmap_with_many_lights",
+   "materials.double_sided",
+   "particles.cpu_nodes",
+   "particles.gpu_amount",
+   "particles.trails",
+   "post.dof_enabled",
+   "textures.large_dimension",
+   "textures.lossless_3d",
+   "textures.no_mipmaps",
+   "decals.no_distance_fade",
+   "geometry.lod_bias_high",
+   "geometry.no_visibility_range",
+   "import.audio_pcm",
+   "import.mesh_uncompressed",
+   "post.camera_far_default",
+   "post.glow_bicubic"
+  ],
+  "info": [
+   "platform.windows_driver_vulkan",
+   "platform.etc2_astc_off_mobile",
+   "renderer.mobile_method"
+  ],
+  "same_pass": {
+   "shadows.omni_shadow_count": [
+    "shadows.directional_max_distance",
+    "shadows.directional_pssm4",
+    "shadows.no_distance_fade",
+    "shadows.omni_cube",
+    "shadows.spot_shadow_count",
+    "import.mesh_shadow_off"
+   ]
+  }
+ },
+ "heavy_over_budget": {
+  "performance": [
+   "shadows.omni_shadow_count",
+   "shadows.spot_shadow_count",
+   "gi.sdfgi_enabled",
+   "materials.alpha_blend",
+   "post.dof_enabled",
+   "gi.ssil_enabled",
+   "post.ssr_enabled",
+   "post.glow_enabled",
+   "pacing.fps_below_target",
+   "post.ssao_enabled",
+   "post.volumetric_fog"
+  ],
+  "visual": [
+   "antialiasing.no_aa"
+  ],
+  "missing": [
+   "scene_validation.decal_textures",
+   "scene_validation.gpu_process_missing",
+   "scene_validation.trails_no_pose"
+  ],
+  "to_check": [
+   "canvas.pcf13",
+   "gi.probe_always",
+   "geometry.multimesh_candidate",
+   "gi.half_resolution_off",
+   "gi.texture_array_reflections",
+   "import.mesh_lods_off",
+   "lights.many_realtime",
+   "lights.no_lightmap_with_many_lights",
+   "materials.double_sided",
+   "particles.cpu_nodes",
+   "particles.gpu_amount",
+   "particles.trails",
+   "textures.large_dimension",
+   "textures.lossless_3d",
+   "textures.no_mipmaps",
+   "decals.no_distance_fade",
+   "geometry.lod_bias_high",
+   "geometry.no_visibility_range",
+   "import.audio_pcm",
+   "import.mesh_uncompressed",
+   "post.camera_far_default",
+   "post.glow_bicubic"
+  ],
+  "info": [
+   "platform.windows_driver_vulkan",
+   "platform.s3tc_off_forward"
+  ],
+  "same_pass": {
+   "shadows.omni_shadow_count": [
+    "shadows.no_distance_fade",
+    "shadows.omni_cube",
+    "import.mesh_shadow_off"
+   ],
+   "shadows.spot_shadow_count": [
+    "shadows.directional_max_distance",
+    "shadows.directional_pssm4"
+   ],
+   "gi.sdfgi_enabled": [
+    "gi.sdfgi_frames_to_converge"
+   ],
+   "post.ssr_enabled": [
+    "post.ssr_steps"
+   ],
+   "post.volumetric_fog": [
+    "post.fog_sdfgi_inject"
+   ]
+  }
+ },
+ "heavy_ui_static": {
+  "performance": [
+   "ui.subviewport_always",
+   "import.mesh_lods_off",
+   "ui.subviewport_msaa",
+   "import.audio_pcm",
+   "import.mesh_shadow_off",
+   "import.mesh_uncompressed",
+   "ui.subviewport_3d_unused"
+  ],
+  "visual": [],
+  "missing": [],
+  "to_check": [],
+  "info": [
+   "platform.windows_driver_vulkan",
+   "platform.s3tc_off_forward",
+   "ui.clip_children"
+  ],
+  "same_pass": {}
+ },
+ "lights2d_static": {
+  "performance": [
+   "canvas.many_shadow_lights"
+  ],
+  "visual": [
+   "ui.default_font_msdf_off"
+  ],
+  "missing": [],
+  "to_check": [],
+  "info": [
+   "renderer.compatibility_method"
+  ],
+  "same_pass": {}
+ }
+}

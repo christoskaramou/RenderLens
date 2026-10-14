@@ -1,0 +1,1343 @@
+[
+  {
+    "id": "cpu.process_time",
+    "category": "cpu",
+    "title": "Process time beyond the GPU time exceeds half the frame budget",
+    "severity": "high",
+    "heuristic": true,
+    "heuristic_rationale": "Half the budget is a review threshold. Godot's per-frame process time (the span Performance.TIME_PROCESS reports, passed to profilers in main.cpp) also covers RenderingServer sync and draw, so it includes the wait for the GPU: the median GPU time is subtracted, and the rule is skipped when frame timing finds the run GPU-bound. The median of frame_timing's samples is used instead of the once-per-second TIME_PROCESS peak, which also caught Render Lens's own work in the game; a few spike frames, which stutter_report covers, can also move a 95th percentile of 40 samples. It cannot name a script.",
+    "requires": [
+      "metrics",
+      "frame"
+    ],
+    "condition": {
+      "all": [
+        {
+          "metric_gt_budget_ratio": {
+            "name": "PROCESS_MEDIAN_SEC",
+            "ratio": 0.5,
+            "minus_gpu": true
+          }
+        },
+        {
+          "not": {
+            "frame_bound": "gpu"
+          }
+        }
+      ]
+    },
+    "evidence": "The median process time of the frame_timing samples, less the median GPU time, exceeds half of the target frame budget.",
+    "suggestion": "Profile _process and _physics_process. The CPU optimization page shows those built-in costs in the profiler. This rule does not name a script.",
+    "tradeoff": "Depends on which script work you remove.",
+    "expected_effect": "Compare actual frame_timing samples and script_profile before attributing work. A lower process median alone does not establish which work was saved.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/cpu_optimization.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.physics_time",
+    "category": "cpu",
+    "title": "Physics time is a large share of the frame budget",
+    "severity": "high",
+    "heuristic": true,
+    "heuristic_rationale": "TIME_PHYSICS_PROCESS above a third of the frame budget is a review cut. The monitor is seconds, per the Performance class.",
+    "requires": [
+      "metrics",
+      "frame"
+    ],
+    "condition": {
+      "metric_gt_budget_ratio": {
+        "name": "TIME_PHYSICS_PROCESS",
+        "ratio": 0.33
+      }
+    },
+    "evidence": "Performance.TIME_PHYSICS_PROCESS exceeds a third of the target frame budget.",
+    "suggestion": "Lower physics/common/physics_ticks_per_second toward 60 if it is higher, reduce collision shapes, and read PHYSICS_3D_ACTIVE_OBJECTS and PHYSICS_3D_COLLISION_PAIRS.",
+    "tradeoff": "Fewer ticks change physics feel. Simpler shapes change gameplay collision.",
+    "expected_effect": "Less time in the physics step.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/cpu_optimization.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.navigation_time",
+    "category": "cpu",
+    "title": "Navigation time is a large share of the frame budget",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "TIME_NAVIGATION_PROCESS above a quarter of the frame budget is a review cut. The monitor is seconds.",
+    "requires": [
+      "metrics",
+      "frame"
+    ],
+    "condition": {
+      "metric_gt_budget_ratio": {
+        "name": "TIME_NAVIGATION_PROCESS",
+        "ratio": 0.25
+      }
+    },
+    "evidence": "Performance.TIME_NAVIGATION_PROCESS exceeds a quarter of the target frame budget.",
+    "suggestion": "Reduce navigation regions that rebuild, and check NAVIGATION_AGENT_COUNT and NAVIGATION_OBSTACLE_COUNT in the same snapshot.",
+    "tradeoff": "Fewer agents or a coarser navmesh changes pathing.",
+    "expected_effect": "Less navigation-server time.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.physics_ticks",
+    "category": "cpu",
+    "title": "Physics ticks per second are above 60",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "physics/common/physics_ticks_per_second",
+        "value": 60
+      }
+    },
+    "evidence": "physics_ticks_per_second is above 60. The default is 60 and the range is 1\u20131000.",
+    "suggestion": "Set physics/common/physics_ticks_per_second to 60 unless the game needs a higher simulation rate.",
+    "setting": "physics/common/physics_ticks_per_second",
+    "tradeoff": "Physics and _physics_process run less often. Fast objects may need a different collision setup.",
+    "expected_effect": "Fewer physics steps per second. The physics introduction is the overview of that step.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/physics/physics_introduction.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.max_physics_steps",
+    "category": "cpu",
+    "title": "Max physics steps per frame is above the default",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "max_physics_steps_per_frame defaults to 8. A higher value lets a slow frame run more catch-up physics steps.",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "physics/common/max_physics_steps_per_frame",
+        "value": 8
+      }
+    },
+    "evidence": "max_physics_steps_per_frame is above 8.",
+    "suggestion": "Set it back to 8. If frames are dropping physics steps, the frame itself is over budget; raising this cap spends more CPU on catch-up.",
+    "setting": "physics/common/max_physics_steps_per_frame",
+    "tradeoff": "A stalled frame discards extra ticks sooner, so the simulation can hitch instead of spiraling.",
+    "expected_effect": "A lower CPU ceiling on catch-up ticks.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.solver_iterations",
+    "category": "cpu",
+    "title": "GodotPhysics solver iterations are above the default",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "physics/3d/physics_engine",
+            "value": "GodotPhysics3D"
+          }
+        },
+        {
+          "setting_gt": {
+            "path": "physics/3d/solver/solver_iterations",
+            "value": 16
+          }
+        }
+      ]
+    },
+    "evidence": "physics_engine is GodotPhysics3D and solver_iterations is above 16. The default is 16 and the range is 1\u201332. This setting is the GodotPhysics solver, not Jolt's velocity_steps.",
+    "suggestion": "Set solver_iterations back to 16.",
+    "setting": "physics/3d/solver/solver_iterations",
+    "tradeoff": "Stacks and constraints settle less accurately.",
+    "expected_effect": "Less work per GodotPhysics step.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.jolt_kinematic_contacts",
+    "category": "cpu",
+    "title": "Jolt generates all kinematic contacts",
+    "severity": "high",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "physics/3d/physics_engine",
+            "value": "Jolt Physics"
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "physics/jolt_physics_3d/simulation/generate_all_kinematic_contacts",
+            "value": true
+          }
+        }
+      ]
+    },
+    "evidence": "generate_all_kinematic_contacts is true. The Jolt page says kinematic bodies skip static contacts by default because reporting them all can waste CPU and memory, and the setting is opt-in.",
+    "suggestion": "Set generate_all_kinematic_contacts to false unless those contacts are required.",
+    "setting": "physics/jolt_physics_3d/simulation/generate_all_kinematic_contacts",
+    "tradeoff": "Kinematic bodies stop reporting contacts against static geometry.",
+    "expected_effect": "Less Jolt contact work, which the page describes as the reason the default is off.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/physics/using_jolt_physics.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.jolt_face_index",
+    "category": "cpu",
+    "title": "Jolt ray-cast face index is enabled",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "physics/3d/physics_engine",
+            "value": "Jolt Physics"
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "physics/jolt_physics_3d/queries/enable_ray_cast_face_index",
+            "value": true
+          }
+        }
+      ]
+    },
+    "evidence": "enable_ray_cast_face_index is true. The Jolt page says face_index stays -1 by default and enabling it raises ConcavePolygonShape3D memory by about 25%.",
+    "suggestion": "Turn enable_ray_cast_face_index off if queries do not read face_index.",
+    "setting": "physics/jolt_physics_3d/queries/enable_ray_cast_face_index",
+    "tradeoff": "intersect_ray face_index returns -1.",
+    "expected_effect": "The memory increase the page describes goes away.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/physics/using_jolt_physics.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.orphan_nodes",
+    "category": "cpu",
+    "title": "Orphan nodes exist",
+    "severity": "high",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt": {
+        "name": "OBJECT_ORPHAN_NODE_COUNT",
+        "value": 0
+      }
+    },
+    "evidence": "Performance.OBJECT_ORPHAN_NODE_COUNT is above 0. The class reference defines these as nodes not parented to the scene tree and says lower is better.",
+    "suggestion": "Free nodes that were removed from the tree without queue_free. This is a leak signal, not a tuning knob.",
+    "tradeoff": "None, if the orphans are truly unused.",
+    "expected_effect": "OBJECT_ORPHAN_NODE_COUNT returns to 0 after the leaked nodes are freed.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.collision_pairs",
+    "category": "cpu",
+    "title": "3D collision pair count is high",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "500 is not a Godot physics limit (Jolt's max_body_pairs default is 65536). It flags PHYSICS_3D_COLLISION_PAIRS so a broadphase that is doing a lot of work is visible.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt": {
+        "name": "PHYSICS_3D_COLLISION_PAIRS",
+        "value": 500
+      }
+    },
+    "evidence": "PHYSICS_3D_COLLISION_PAIRS is above 500.",
+    "suggestion": "Shrink collision shapes, freeze sleeping bodies, and avoid large Area3D overlaps. Read PHYSICS_3D_ACTIVE_OBJECTS in the same snapshot.",
+    "tradeoff": "Smaller shapes miss some contacts.",
+    "expected_effect": "Fewer pairs. Measure TIME_PHYSICS_PROCESS.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.active_bodies",
+    "category": "cpu",
+    "title": "Many 3D physics objects are active",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "100 active 3D objects is a review cut. Jolt's max_bodies default is 10240, so this is not that cap.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt": {
+        "name": "PHYSICS_3D_ACTIVE_OBJECTS",
+        "value": 100
+      }
+    },
+    "evidence": "PHYSICS_3D_ACTIVE_OBJECTS is above 100.",
+    "suggestion": "Let rigid bodies sleep. The Jolt page documents allow_sleep (default true) and the cost of contacts that never sleep.",
+    "tradeoff": "Sleeping bodies do not react until woken.",
+    "expected_effect": "Fewer active bodies on later snapshots.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.separate_thread_off",
+    "category": "cpu",
+    "title": "Physics is on the main thread while physics time is high",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "Suggests the separate-thread setting only when TIME_PHYSICS_PROCESS already exceeds a third of the budget. The 4.4 Jolt page calls that threading support experimental.",
+    "requires": [
+      "settings",
+      "metrics",
+      "frame"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "physics/3d/run_on_separate_thread",
+            "value": false
+          }
+        },
+        {
+          "metric_gt_budget_ratio": {
+            "name": "TIME_PHYSICS_PROCESS",
+            "ratio": 0.33
+          }
+        }
+      ]
+    },
+    "evidence": "physics/3d/run_on_separate_thread is false and physics time is a large share of the budget. The default is false.",
+    "suggestion": "Try enabling run_on_separate_thread and re-measure. The Jolt page says the module's thread safety, including this setting, is experimental.",
+    "setting": "physics/3d/run_on_separate_thread",
+    "tradeoff": "Threaded physics has the experimental status the Jolt page describes, and gameplay code must not assume physics state mid-frame.",
+    "expected_effect": "Physics work can overlap the frame. Confirm TIME_PHYSICS_PROCESS and frame time; do not assume a speedup.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/physics/using_jolt_physics.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.scene_bodies",
+    "category": "cpu",
+    "title": "The edited scene contains many physics bodies",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "80 physics bodies in the scanned scene is a review cut so a crowded collision scene is visible before play mode. It is not PHYSICS_3D_ACTIVE_OBJECTS.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "physics_body_3d_count",
+        "value": 80
+      }
+    },
+    "evidence": "The scan found at least 80 PhysicsBody3D nodes.",
+    "suggestion": "Merge static geometry into fewer shapes and remove bodies that never collide.",
+    "offender_key": "physics_bodies",
+    "tradeoff": "Merged colliders are coarser.",
+    "expected_effect": "Fewer bodies for the broadphase once the scene runs.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/physics/physics_introduction.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.flush_stdout",
+    "category": "cpu",
+    "title": "Stdout is flushed on every print",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "application/run/flush_stdout_on_print",
+        "value": true
+      }
+    },
+    "evidence": "flushes the standard output stream every time a line is printed",
+    "suggestion": "Turn application/run/flush_stdout_on_print off in release builds. The description says it is disabled by default on release because the flush is extra work.",
+    "setting": "application/run/flush_stdout_on_print",
+    "tradeoff": "Logs may arrive later for journald-style collectors.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.low_processor_sleep_short",
+    "category": "cpu",
+    "title": "Low-processor sleep is below the default",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_lt": {
+        "path": "application/run/low_processor_mode_sleep_usec",
+        "value": 6900
+      }
+    },
+    "evidence": "Higher values will result in lower CPU usage",
+    "suggestion": "Raise application/run/low_processor_mode_sleep_usec toward the default 6900 if low-processor mode is on. The description says higher values use less CPU.",
+    "setting": "application/run/low_processor_mode_sleep_usec",
+    "tradeoff": "The editor or tool wakes less often.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.interpolation_traversal",
+    "category": "cpu",
+    "title": "3D physics interpolation uses the slower Legacy or Debug traversal",
+    "severity": "medium",
+    "kind": "performance",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "physics/common/physics_interpolation",
+            "value": true
+          }
+        },
+        {
+          "setting_neq": {
+            "path": "physics/3d/physics_interpolation/scene_traversal",
+            "value": "DEFAULT"
+          }
+        }
+      ]
+    },
+    "evidence": "The previous reference method used for scene tree traversal, which is slower.",
+    "suggestion": "Set physics/3d/physics_interpolation/scene_traversal back to DEFAULT; Debug also alternates methods and logs.",
+    "setting": "physics/3d/physics_interpolation/scene_traversal",
+    "tradeoff": "Legacy is only useful to compare against the default method while investigating an interpolation bug.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.7/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "min_version": "4.5"
+    }
+  },
+  {
+    "id": "cpu.animation_value_transforms",
+    "category": "cpu",
+    "title": "Value tracks animate 3D position, rotation or scale",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_animation_value_transforms",
+        "value": 1
+      }
+    },
+    "offender_key": "check_animation_value_transforms",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An AnimationPlayer/AnimationTree library has a value track whose property is position, rotation, rotation_degrees, quaternion or scale on a node that resolves to Node3D. Unresolved targets are skipped. Godot class reference: \"track types instead of is recommended for performance reasons.\"",
+    "suggestion": "Use dedicated Position 3D, Rotation 3D and Scale 3D tracks for Node3D transforms.",
+    "tradeoff": "Value tracks can animate any property; dedicated tracks only cover transforms.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Animation.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.animation_cubic_3d",
+    "category": "cpu",
+    "title": "A complex 3D animation uses cubic transform interpolation",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_animation_cubic_3d",
+        "value": 1
+      }
+    },
+    "offender_key": "check_animation_cubic_3d",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "One animation has at least 16 position/rotation/scale 3D tracks with cubic or cubic-angle interpolation. The 16-track cutoff is a review heuristic for complex animations. Godot class reference: \"Stick to for complex 3D animations imported from external software, even if it requires using a higher animation framerate in return.\"",
+    "suggestion": "Switch imported 3D transform tracks to linear interpolation and raise the import animation FPS if motion needs it.",
+    "tradeoff": "Linear interpolation may need more keys for the same smoothness.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Animation.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.skeleton2d_zero_strength",
+    "category": "cpu",
+    "title": "A zero-strength 2D skeleton stack still dispatches native modifiers",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_skeleton2d_zero_strength",
+        "value": 1
+      }
+    },
+    "offender_key": "check_skeleton2d_zero_strength",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An in-tree unscripted Skeleton2D can process and owns a setup, enabled, unscripted SkeletonModificationStack2D with strength exactly zero. One of the first 128 modifications is an enabled unscripted native TwoBoneIK, LookAt, Jiggle, CCDIK or FABRIK modification whose execution mode has the corresponding internal idle or physics tick enabled. Both checked stacks dispatch matching modifications without a strength early-out. All five reviewed native implementations use strength in pose-override writes after their configured work. Invalid cached targets or bones and empty chains may return early, so dispatch is not proof of a successful solve or measured CPU cost. Detached, disabled, paused, uninitialized, shared-with-another-skeleton, scripted and unrecognized native classes are excluded. Offenders identify the modification index and native class. The audit reads native getters and never executes a stack or solver. Bone-count queries are avoided because they can rebuild caches and emit bone_setup_changed.",
+    "suggestion": "When these modifiers should remain unused, compare disabling the stack or unused modifications. Zero strength suppresses pose blending but is not a processing-off switch. Measure skeleton/animation CPU work during the intended zero-strength interval.",
+    "tradeoff": "Keep IK transitions and other stack modifications working. Disabling a stack does not remove all Skeleton2D per-bone bookkeeping; disabling stateful work such as Jiggle can change its next visible result. Custom modification semantics are not inferred.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/resources/2d/skeleton/skeleton_modification_stack_2d.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.skeleton_zero_influence",
+    "category": "cpu",
+    "title": "An active skeleton modifier has zero pose influence",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_skeleton_zero_influence",
+        "value": 1
+      }
+    },
+    "offender_key": "check_skeleton_zero_influence",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An in-tree unscripted SkeletonModifier3D is active with influence exactly zero. Its direct Skeleton3D parent has bones, can_process() is true and internal idle or physics processing is enabled. Both checked skeletons still enter the partial-influence modifier path; zero influence does not bypass the modifier dispatch. Godot 4.4 copies old/new bone poses and 4.7 iterates applied-pose state. A native modifier may have its own early-out, so this does not assert a particular IK/physics solve or measured CPU cost. Detached, empty, inactive, scripted and manually advanced/nonprocessing skeletons are excluded.",
+    "suggestion": "If a modifier should remain unused, compare deactivating its processing body; for a permanently unused modifier, consider removing it after checking dependencies. Simply setting influence to zero is not a processing-off switch. Profile skeleton/animation CPU work during the intended zero-influence interval.",
+    "tradeoff": "Processing can maintain simulation state and emit modification_processed signals even with no pose contribution. Preserve physics, IK transitions, signal consumers and runtime activation. Deactivation does not remove all parent pose bookkeeping, and disabling a stateful modifier can change the next visible pose.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/3d/skeleton_3d.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.viewport_pick_sort",
+    "category": "cpu",
+    "title": "A SubViewport sorts 2D physics mouse picks",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_viewport_pick_sort",
+        "value": 1
+      }
+    },
+    "offender_key": "check_viewport_pick_sort",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A SubViewport enables physics object picking and its sorting option, with input enabled. The native point-query path sorts up to 64 picked shapes by z order and tree order. Cost depends on input activity and overlapping pickable objects; it is not a GPU rendering cost.",
+    "suggestion": "Compare unsorted picking if the application does not depend on topmost-object ordering.",
+    "tradeoff": "Input recipients can arrive in a different order, changing interaction behavior.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/main/viewport.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.csg_composition",
+    "category": "cpu",
+    "title": "A CSG hierarchy retains runtime construction work",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_csg_composition",
+        "value": 1
+      }
+    },
+    "offender_key": "check_csg_composition",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A root CSGShape3D has a direct CSGShape3D child. Godot documents significant CPU construction cost for CSG and recommends baking final results. This identifies a runtime composition, not proof of rebuilding every frame; static results are cached until dirtied.",
+    "suggestion": "For finished static geometry, compare a baked mesh and matching collision geometry; retain CSG when runtime boolean changes are required.",
+    "tradeoff": "Baked geometry loses editable runtime boolean operations and must preserve materials, transforms and collision behavior.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Compare scene-load/first-frame time and CPU spikes during the same CSG edits; also compare a screenshot and collision behavior before replacing the hierarchy.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/modules/csg/doc_classes/CSGShape3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.cpu_particle_sort",
+    "category": "cpu",
+    "title": "CPU particles sort a nontrivial particle array",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_cpu_particle_sort",
+        "value": 1
+      }
+    },
+    "offender_key": "check_cpu_particle_sort",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "CPUParticles2D/3D uses lifetime ordering, or CPUParticles3D uses view-depth ordering, with amount at least 64. Native update code sorts the particle-index array; 64 is a review heuristic. Depth sorting additionally requires a current camera.",
+    "suggestion": "Compare index ordering where the effect does not require a sorted blend order, and profile CPU frame time.",
+    "tradeoff": "Particle overlap and transparency can change.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/3d/cpu_particles_3d.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.skin_dynamic_bounds",
+    "category": "cpu",
+    "title": "A skinned mesh uses automatically updated bounds",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_skin_dynamic_bounds",
+        "value": 1
+      }
+    },
+    "offender_key": "check_skin_dynamic_bounds",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A live MeshInstance3D resolves to a nonempty Skeleton3D and uses an ArrayMesh with bone attributes, with neither instance nor mesh custom AABB. The RD backend can recalculate bone bounds when the skeleton version changes and caches unchanged skeletons. Pose-update frequency and the actual cost are not inferred.",
+    "suggestion": "If CPU profiling identifies bounds updates, compare a carefully authored custom AABB that encloses every required animation pose.",
+    "tradeoff": "Too-small bounds cause visible geometry to disappear; oversized bounds weaken culling. Never use a single current pose as the full animation bound.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/rendering/renderer_rd/storage_rd/mesh_storage.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "cpu.rendering_server_sync_per_frame",
+    "category": "cpu",
+    "title": "A script calls a waiting RenderingServer getter every frame on a separate render thread",
+    "kind": "performance",
+    "severity": "medium",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_frame_rendering_sync",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/driver/threads/thread_model",
+            "value": 2
+          }
+        }
+      ]
+    },
+    "setting": "",
+    "offender_key": "check_frame_rendering_sync",
+    "evidence": "Godot prints \"Call to mesh_get_surface_count causing RenderingServer synchronizations on every frame. This significantly affects performance.\" when rendering/driver/threads/thread_model is Separate (2) and a script calls a RenderingServer method that returns a value (one of the FUNCnR/FUNCnRC wrappers, listed in server_sync_calls.gd) unconditionally in _process, _physics_process or _integrate_forces: the main thread waits for the render thread on every frame.",
+    "suggestion": "Cache the value, call it less often, or keep the Safe thread model.",
+    "tradeoff": "Cached values can go stale.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/rendering_server_default.h",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "cpu.physics_server_sync_per_frame",
+    "category": "cpu",
+    "title": "A script calls a waiting PhysicsServer getter every frame with physics on its own thread",
+    "kind": "performance",
+    "severity": "medium",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "any": [
+        {
+          "all": [
+            {
+              "scene_gte": {
+                "name": "check_frame_physics_3d_sync",
+                "value": 1
+              }
+            },
+            {
+              "setting_eq": {
+                "path": "physics/3d/run_on_separate_thread",
+                "value": true
+              }
+            }
+          ]
+        },
+        {
+          "all": [
+            {
+              "scene_gte": {
+                "name": "check_frame_physics_2d_sync",
+                "value": 1
+              }
+            },
+            {
+              "setting_eq": {
+                "path": "physics/2d/run_on_separate_thread",
+                "value": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "setting": "",
+    "offender_key": "check_frame_physics_3d_sync",
+    "evidence": "Godot prints \"Call to body_get_state causing PhysicsServer3D synchronizations on every frame. This significantly affects performance.\" (or the PhysicsServer2D form) when physics/3d (or 2d) run_on_separate_thread is on and a script calls a PhysicsServer3D (or PhysicsServer2D) method that returns a value unconditionally in a per-frame callback: the main thread waits for the physics thread every frame.",
+    "suggestion": "Read state from the body or PhysicsDirectBodyState in _integrate_forces, cache values, or run physics on the main thread.",
+    "tradeoff": "Cached values can lag one physics step.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/physics_3d/physics_server_3d_wrap_mt.h",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

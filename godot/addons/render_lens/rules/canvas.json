@@ -1,0 +1,978 @@
+[
+  {
+    "id": "canvas.pcf13",
+    "category": "canvas",
+    "title": "A 2D light uses PCF13 shadows",
+    "severity": "high",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "canvas_pcf13_count",
+        "value": 1
+      }
+    },
+    "evidence": "Light2D.shadow_filter is 2 (PCF13). The 2D lights page says PCF13 is the softest and the most expensive, and should be used on only a few lights. PCF5 is 1 and None is 0.",
+    "suggestion": "Set shadow_filter to 1 (PCF5) or 0 (None).",
+    "node_property": "Light2D.shadow_filter",
+    "offender_key": "canvas_pcf13",
+    "tradeoff": "2D shadows look harder.",
+    "expected_effect": "A cheaper 2D shadow filter than the one the page calls the most demanding.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/2d/2d_lights_and_shadows.html",
+    "when_pass": [
+      "Render PointLight2D Shadow",
+      "Render DirectionalLight2D Shadows"
+    ],
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "class": "Light2D",
+        "property": "shadow_filter",
+        "value": 1,
+        "only_above": 1
+      }
+    ]
+  },
+  {
+    "id": "canvas.many_shadow_lights",
+    "category": "canvas",
+    "title": "Several 2D lights cast shadows",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "Four shadow-casting Light2D nodes is a review cut. The 2D lights page says even PCF13 should be limited to a few lights.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "canvas_shadow_light_count",
+        "value": 4
+      }
+    },
+    "evidence": "At least four Light2D nodes have shadow_enabled.",
+    "suggestion": "Disable shadow_enabled on fill lights. Leave shadows on the one or two lights that define the silhouette.",
+    "node_property": "Light2D.shadow_enabled",
+    "offender_key": "canvas_shadow_lights",
+    "tradeoff": "Those 2D lights stop casting shadows.",
+    "expected_effect": "Fewer 2D shadow renders.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/2d/2d_lights_and_shadows.html",
+    "kind": "performance",
+    "when_pass": [
+      "Render PointLight2D Shadow"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "class": "Light2D",
+        "property": "shadow_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "canvas.hdr_2d",
+    "category": "canvas",
+    "title": "2D HDR is enabled",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/viewport/hdr_2d",
+        "value": true
+      }
+    },
+    "evidence": "rendering/viewport/hdr_2d is true. The default is false.",
+    "suggestion": "Turn hdr_2d off unless 2D glow or HDR canvases need values above 1.",
+    "setting": "rendering/viewport/hdr_2d",
+    "tradeoff": "2D buffers go back to the low-dynamic-range format. Bright 2D glow can clip.",
+    "expected_effect": "A narrower 2D framebuffer. Measure canvas time if 2D is the scene.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.sdf_oversize",
+    "category": "canvas",
+    "title": "2D SDF oversize is above the default",
+    "severity": "low",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "canvas_light_count",
+            "value": 1
+          }
+        },
+        {
+          "setting_gte": {
+            "path": "rendering/2d/sdf/oversize",
+            "value": 2
+          }
+        }
+      ]
+    },
+    "evidence": "sdf/oversize index is 2 or 3. The hint is 100%, 120%, 150%, 200%. The default index is 1 (120%). A 2D light is in the scene.",
+    "suggestion": "Set rendering/2d/sdf/oversize to 1.",
+    "setting": "rendering/2d/sdf/oversize",
+    "tradeoff": "The signed-distance field covers less margin around the viewport.",
+    "expected_effect": "A smaller 2D SDF texture.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.sdf_scale",
+    "category": "canvas",
+    "title": "2D SDF scale is at full resolution",
+    "severity": "low",
+    "kind": "quality_up",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "canvas_shadow_light_count",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/2d/sdf/scale",
+            "value": 0
+          }
+        }
+      ]
+    },
+    "evidence": "sdf/scale index is 0. The hint is 100%, 50%, 25%. The default index is 1 (50%). Shadow-casting 2D lights are present.",
+    "suggestion": "The default 50% scale is the cheaper SDF. Index 0 is the sharper, heavier field. Set it back to 1 if you did not choose 100% on purpose.",
+    "setting": "rendering/2d/sdf/scale",
+    "tradeoff": "50% SDF is blurrier around 2D shadows.",
+    "expected_effect": "A quarter of the SDF pixels versus 100%, because the scale is per axis.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.item_buffer",
+    "category": "canvas",
+    "title": "2D item buffer is above the default while canvas draws are high",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "item_buffer_size defaults to 16384. The rule flags it only when it is larger than that and canvas draw calls exceed 1000. 1000 is a review cut, not a batching budget.",
+    "requires": [
+      "settings",
+      "metrics"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_gt": {
+            "path": "rendering/2d/batching/item_buffer_size",
+            "value": 16384
+          }
+        },
+        {
+          "metric_gt": {
+            "name": "VIEWPORT_CANVAS_DRAW_CALLS",
+            "value": 1000
+          }
+        }
+      ]
+    },
+    "evidence": "item_buffer_size is above 16384 and the canvas viewport draw-call counter is above 1000.",
+    "suggestion": "Lower item_buffer_size toward 16384 after confirming the 2D scene still batches. uniform_set_cache_size defaults to 4096.",
+    "setting": "rendering/2d/batching/item_buffer_size",
+    "tradeoff": "A buffer that is too small splits batches.",
+    "expected_effect": "Less reserved 2D batch memory if the extra size is unused.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.draw_calls",
+    "category": "canvas",
+    "title": "Canvas draw calls are high",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "2000 canvas draw calls is a review cut so a 2D frame with a large VIEWPORT_CANVAS_DRAW_CALLS count is surfaced. Godot does not publish that number as a limit.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt": {
+        "name": "VIEWPORT_CANVAS_DRAW_CALLS",
+        "value": 2000
+      }
+    },
+    "evidence": "Viewport canvas draw calls are above 2000.",
+    "suggestion": "Reuse textures and materials so CanvasItem batching can merge items. The GPU optimization page explains draw calls as the CPU-side submission cost.",
+    "tradeoff": "Merging atlases changes how art is packed.",
+    "expected_effect": "Fewer canvas draws. Read the counter again with collect_metrics.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/gpu_optimization.html",
+    "when_pass": [
+      "Render CanvasItems"
+    ],
+    "kind": "performance",
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.tilemap_scene_tiles",
+    "category": "canvas",
+    "title": "A TileMapLayer places many scene tiles",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_tilemap_scene_tiles",
+        "value": 1
+      }
+    },
+    "offender_key": "check_tilemap_scene_tiles",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled TileMapLayer places more than 256 cells from a TileSetScenesCollectionSource (bounded to 4096 inspected cells per scan). The 256 cutoff is a review heuristic shared with the other TileMap checks. Godot docs: \"Scene tiles come with a greater performance overhead compared to atlases, as every scene is instanced individually for every placed tile.\"",
+    "suggestion": "Use atlas tiles for static decoration and keep scene tiles for cells that need their own nodes (scripts, collision behaviour, lights).",
+    "tradeoff": "Atlas tiles cannot carry per-cell scripts or child nodes.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/2d/using_tilesets.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.tilemap_occluders",
+    "category": "canvas",
+    "title": "A TileMapLayer creates many per-cell light occluders",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_tilemap_occluders",
+        "value": 1
+      }
+    },
+    "offender_key": "check_tilemap_occluders",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled, locally visible TileMapLayer with occlusion_enabled has more than 256 inspected atlas-cell occluder polygons on layers with nonzero light masks or SDF collision enabled. Closed polygons require at least three points; open polygons require two. The native path creates a separate occluder for each cell/layer/polygon. This object-count cutoff is a review heuristic, not proof of active shadow or SDF cost. Runtime tile-data overrides and invalid references are skipped; cell and resource limits are reported.",
+    "suggestion": "Compare consolidated static occluder outlines, or disable tile occlusion where neither 2D shadows nor SDF collision need it. Measure canvas CPU/GPU time while moving lights and editing tiles.",
+    "tradeoff": "Changing outlines or disabling occlusion changes 2D shadows and SDF-based effects or particle collision. Preserve holes, light masks, moving tiles and dynamic updates.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/2d/tile_map_layer.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.tilemap_animation_slices",
+    "category": "canvas",
+    "title": "Animated tiles record many canvas animation slices",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_tilemap_animation_slices",
+        "value": 1
+      }
+    },
+    "offender_key": "check_tilemap_animation_slices",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled, locally visible TileMapLayer has more than 4096 authored animation frames summed across inspected texture-assigned atlas cells with more than one frame. The native draw path records an animation slice and texture-region command for every authored frame, plus a reset slice. This counts configured command construction, not simultaneous GPU draws; inactive slices do not draw every frame. The threshold is a measurement heuristic. Runtime tile-data overrides and uninspected cells are not inferred.",
+    "suggestion": "Compare fewer authored animation frames or fewer animated background cells, measuring both canvas frame time and tile-edit/rebuild spikes along the same camera route.",
+    "tradeoff": "Fewer frames reduce animation smoothness; static replacements remove motion. Lowering playback speed alone does not reduce the recorded frame commands.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/2d/tile_map_layer.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.tilemap_small_quadrants",
+    "category": "canvas",
+    "title": "A populated TileMapLayer uses small rendering quadrants",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_tilemap_small_quadrants",
+        "value": 1
+      }
+    },
+    "offender_key": "check_tilemap_small_quadrants",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled, locally visible TileMapLayer without Y sorting has rendering_quadrant_size at most 4 and more than 256 inspected atlas cells with assigned textures. Native rendering groups cells into quadrants, then canvas items. The cutoff is a measurement heuristic; tile count is not draw-call count. Scene-collection cells, invalid references and runtime tile-data overrides are skipped. At most 4096 cells per scene scan and 32 data layers and 32 collision/occlusion polygons per layer per tile are inspected; omissions are reported.",
+    "suggestion": "Compare the default rendering quadrant size of 16, profiling canvas work along the same camera route and during tile edits.",
+    "tradeoff": "Larger quadrants reduce culling/update granularity and may rebuild more content after an edit. Retain small quadrants where measurements favor them.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/2d/tile_map_layer.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.tilemap_y_sort_groups",
+    "category": "canvas",
+    "title": "A Y-sorted TileMapLayer creates many rendering groups",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_tilemap_y_sort_groups",
+        "value": 1
+      }
+    },
+    "offender_key": "check_tilemap_y_sort_groups",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled, locally visible TileMapLayer uses Y sorting with more than 256 inspected texture-assigned atlas cells across more than 64 Y-position buckets. Buckets follow the checked native formula: int((map_to_local(cell).y + tile y_sort_origin + layer y_sort_origin) * 100). Y sorting uses these groups instead of rendering_quadrant_size. Group count does not prove visible draw calls or cost. Runtime tile-data overrides are skipped and scan omissions are reported.",
+    "suggestion": "Compare separating flat floor/background tiles into a layer without Y sorting while keeping overlap-sensitive tiles on the sorted layer.",
+    "tradeoff": "Disabling sorting can break character/prop overlap and visual order. Preserve per-tile origins and verify movement through the scene.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/2d/tile_map_layer.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.line_round_precision",
+    "category": "canvas",
+    "title": "A rounded Line2D exceeds the default arc precision",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_line_round_precision",
+        "value": 1
+      }
+    },
+    "offender_key": "check_line_round_precision",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible Line2D has positive width, enough points for its rounded joints or enabled open caps, and round_precision above eight. LineBuilder uses this value to subdivide arcs into triangles. The threshold is the documented default, not a hardware budget.",
+    "suggestion": "Compare the default precision on rounded lines, especially lines rebuilt frequently or displayed small.",
+    "tradeoff": "Corners and end caps can look more faceted; retain detail for large on-screen curves.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/2d/line_builder.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.sprite_opaque_prepass",
+    "category": "canvas",
+    "title": "A 3D sprite or label requests an opaque alpha prepass",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_sprite_opaque_prepass",
+        "value": 1
+      }
+    },
+    "offender_key": "check_sprite_opaque_prepass",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "SpriteBase3D or Label3D uses ALPHA_CUT_OPAQUE_PREPASS without a material override. Both class references describe this mode as slower than alpha blending or discard because it first draws fully opaque pixels in the depth prepass.",
+    "suggestion": "Compare alpha discard where hard cutouts are acceptable, or alpha blending where overlap sorting remains correct.",
+    "tradeoff": "Discard can harm antialiased text and translucent edges; blending can introduce sorting errors. Keep the prepass when correct appearance needs it.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/SpriteBase3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.backbuffer_full",
+    "category": "canvas",
+    "title": "A BackBufferCopy copies the entire viewport",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_backbuffer_full",
+        "value": 1
+      }
+    },
+    "offender_key": "check_backbuffer_full",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible BackBufferCopy uses viewport mode or rectangle mode with an exactly empty Rect2, which the native renderer also treats as a full copy. The copied pixel count scales with viewport size.",
+    "suggestion": "Compare a tight nonempty copy rectangle that contains all screen-texture samples needed by the following effects, or disable an unused copy.",
+    "tradeoff": "Sampling outside the copied region produces undefined or stale content; camera movement and effect offsets must fit the region.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/rendering/renderer_canvas_cull.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.canvas_group_mipmaps",
+    "category": "canvas",
+    "title": "A CanvasGroup generates backbuffer mipmaps",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_canvas_group_mipmaps",
+        "value": 1
+      }
+    },
+    "offender_key": "check_canvas_group_mipmaps",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "CanvasGroup.use_mipmaps is enabled, generating backbuffer mipmaps before the group is drawn.",
+    "suggestion": "Disable mipmaps if the group's custom material does not sample them.",
+    "tradeoff": "Blur or other mip-dependent shader effects change.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/CanvasGroup.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.canvas_group_margins",
+    "category": "canvas",
+    "title": "A CanvasGroup expands its backbuffer margins beyond the default",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_canvas_group_margins",
+        "value": 1
+      }
+    },
+    "offender_key": "check_canvas_group_margins",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "CanvasGroup.clear_margin or fit_margin exceeds the documented 10-pixel default. This is a review threshold, not a GPU limit; actual cost depends on the resulting area.",
+    "suggestion": "Reduce margins toward the smallest values that preserve shader effects and avoid mipmap edge artifacts.",
+    "tradeoff": "Too-small margins can clip effects or produce edge artifacts.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/CanvasGroup.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.sprite_shaded",
+    "category": "canvas",
+    "title": "3D sprites or labels enable lighting",
+    "severity": "low",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_sprite_shaded",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/shading/overrides/force_vertex_shading",
+            "value": false
+          }
+        }
+      ]
+    },
+    "offender_key": "check_sprite_shaded",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "SpriteBase3D or Label3D enables shaded with no material override. This activates the built-in lighting path; actual lighting cost depends on coverage and lights.",
+    "suggestion": "Compare unshaded sprites or labels for UI-like elements that should not react to scene lights.",
+    "tradeoff": "The sprite or text stops responding to scene lighting.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/SpriteBase3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "canvas.hdr_output_forces_hdr_2d",
+    "category": "canvas",
+    "title": "HDR output turns on HDR 2D",
+    "kind": "info",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "display/window/hdr/request_hdr_output",
+            "value": true
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/viewport/hdr_2d",
+            "value": false
+          }
+        }
+      ]
+    },
+    "setting": "display/window/hdr/request_hdr_output",
+    "offender_key": "",
+    "evidence": "Godot prints \"HDR 2D was automatically enabled because HDR output was requested in project settings.\" when display/window/hdr/request_hdr_output is on and rendering/viewport/hdr_2d is off. The root viewport then renders 2D in HDR anyway, with the memory and bandwidth of an HDR canvas buffer.",
+    "suggestion": "Enable rendering/viewport/hdr_2d explicitly so the project settings match what runs, and budget for the HDR canvas buffer.",
+    "tradeoff": "None; HDR 2D is already active.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/scene/main/scene_tree.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

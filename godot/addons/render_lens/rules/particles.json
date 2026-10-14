@@ -1,0 +1,847 @@
+[
+  {
+    "id": "particles.gpu_amount",
+    "category": "particles",
+    "title": "A GPU particle amount is far above the default",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "GPUParticles2D and GPUParticles3D amount default to 8. 64 is eight times that default. The particles properties page says raising Amount spawns more particles at a performance cost and does not define this cut.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "gpu_particle_high_amount_count",
+        "value": 1
+      }
+    },
+    "evidence": "A GPUParticles2D or GPUParticles3D has amount >= 64.",
+    "suggestion": "Compare a lower amount. Godot documents that reducing amount_ratio alone does not reduce allocated particle resources or improve performance.",
+    "node_property": "GPUParticles2D/3D.amount",
+    "offender_key": "gpu_particles_amount",
+    "tradeoff": "The effect is thinner.",
+    "expected_effect": "Fewer simulated particles.",
+    "verify_step": "scan_scene",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/GPUParticles3D.xml",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.cpu_nodes",
+    "category": "particles",
+    "title": "CPU particle nodes are in the scene",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "cpu_particle_count",
+        "value": 1
+      }
+    },
+    "evidence": "The scan found CPUParticles2D or CPUParticles3D nodes, which simulate on the CPU. Their presence alone does not establish a bottleneck.",
+    "suggestion": "Benchmark large effects with the matching GPUParticles2D or GPUParticles3D node when the target renderer supports the required features. CPU particles may be preferable for small effects or constrained platforms.",
+    "node_property": "CPUParticles2D/3D",
+    "offender_key": "cpu_particles",
+    "tradeoff": "GPU particles need a process material and suitable visibility bounds; 3D uses an AABB and 2D uses a rectangle. Behavior and renderer support can differ.",
+    "expected_effect": "Particle simulation leaves the CPU. Compare TIME_PROCESS.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_cpuparticles3d.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.trails",
+    "category": "particles",
+    "title": "GPU particle trails are enabled",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "gpu_particle_trail_count",
+        "value": 1
+      }
+    },
+    "evidence": "GPUParticles2D or GPUParticles3D trail_enabled is true. Trails add particle history and geometry; the default is false.",
+    "suggestion": "Disable trail_enabled where a billboard is enough, and keep trail_lifetime short (the property range is 0.01\u201310 seconds).",
+    "node_property": "GPUParticles2D/3D.trail_enabled",
+    "offender_key": "particle_trails",
+    "tradeoff": "The ribbon disappears.",
+    "expected_effect": "Less trail geometry per particle.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/particles/trails.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.collision",
+    "category": "particles",
+    "title": "Particle process materials enable collision",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "gpu_particle_collision_count",
+        "value": 1
+      }
+    },
+    "evidence": "ParticleProcessMaterial.collision_mode is not Disabled (0). The particles properties page says Fixed FPS also limits collision processing and that this helps most when collision is in heavy use.",
+    "suggestion": "Compare disabled collision where unnecessary, or lower the GPUParticles2D/3D fixed_fps. The documented default is 30.",
+    "node_property": "ParticleProcessMaterial.collision_mode",
+    "offender_key": "particle_collision",
+    "tradeoff": "Particles stop colliding.",
+    "expected_effect": "Less collision work inside the particle update.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/particles/properties.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.fixed_fps_high",
+    "category": "particles",
+    "title": "Particle Fixed FPS is at or above 60",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "60 matches a common display rate, not a particle constant. fixed_fps defaults to 30. The properties page says Fixed FPS limits how often the system is processed.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "gpu_particle_fixed_fps_high_count",
+        "value": 1
+      }
+    },
+    "evidence": "GPUParticles2D or GPUParticles3D fixed_fps is >= 60.",
+    "suggestion": "Lower fixed_fps toward 30 and leave interpolate true so the motion stays smooth. The class reference says a value of 2 renders the visual at 2 frames per second and does not slow the simulation speed.",
+    "node_property": "GPUParticles2D/3D.fixed_fps",
+    "offender_key": "particle_fixed_fps",
+    "tradeoff": "Collision and attractors update less often and can look choppy if interpolate is off.",
+    "expected_effect": "Fewer particle process steps per second.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/particles/properties.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.draw_passes",
+    "category": "particles",
+    "title": "GPU particles use more than one draw pass",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "gpu_particle_multi_pass_count",
+        "value": 1
+      }
+    },
+    "evidence": "GPUParticles3D.draw_passes is above 1. The default is 1 and the range is 0\u20134.",
+    "suggestion": "Drop extra draw passes that are not a second mesh.",
+    "node_property": "GPUParticles3D.draw_passes",
+    "offender_key": "particle_draw_passes",
+    "tradeoff": "The extra mesh in that pass disappears.",
+    "expected_effect": "One less particle draw per system.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_gpuparticles3d.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.heightfield_resolution",
+    "category": "particles",
+    "title": "Particle heightfield collision resolution is Slow or worse",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "heightfield_high_res_count",
+        "value": 1
+      }
+    },
+    "evidence": "GPUParticlesCollisionHeightField3D.resolution index is 3 or higher. The hint is 256 (Fastest), 512 (Fast), 1024 (Average), 2048 (Slow), 4096 (Slower), 8192 (Slowest).",
+    "suggestion": "Lower resolution to 2 (1024) or below. update_mode Always is the slow update; When Moved is the fast one.",
+    "node_property": "GPUParticlesCollisionHeightField3D.resolution",
+    "offender_key": "heightfields",
+    "tradeoff": "Collision against the heightfield gets coarser.",
+    "expected_effect": "A smaller heightfield texture. The related timestamp is Render Collider Heightfield.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_gpuparticles3d.html",
+    "when_pass": [
+      "Render Collider Heightfield",
+      "forward_plus:Setup GPUParticlesCollisionHeightField3D"
+    ],
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.many_systems",
+    "category": "particles",
+    "title": "Many particle nodes are in the scene",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "Eight particle nodes is a review cut so a scene full of systems is surfaced. It is not an engine limit.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "particle_node_count",
+        "value": 8
+      }
+    },
+    "evidence": "The combined GPUParticles2D/3D and CPUParticles2D/3D count is at least 8. Emission state and actual workload still need measurement.",
+    "suggestion": "Stop emission on systems that are off camera, or merge similar effects. amount still caps each system.",
+    "offender_key": "particle_nodes",
+    "tradeoff": "Fewer simultaneous effects.",
+    "expected_effect": "Fewer particle updates. Measure TIME_PROCESS and the GPU frame.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/particles/properties.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.trail_mesh_detail",
+    "category": "particles",
+    "title": "A particle trail mesh uses more segments than the default",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_trail_mesh_detail",
+        "value": 1
+      }
+    },
+    "offender_key": "check_trail_mesh_detail",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A trail-enabled GPUParticles3D draws a RibbonTrailMesh with section_segments above 3, or a TubeTrailMesh with radial_steps above 8 or section_rings above 3 (the defaults); every particle draws that geometry. Godot class reference: \"Higher values result in a more detailed tube at the cost of performance.\"",
+    "suggestion": "Return the trail mesh's segment counts toward the defaults unless the curve visibly needs them.",
+    "tradeoff": "Trails look more faceted or less smooth along fast curves.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/TubeTrailMesh.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.particle_sdf2d_quality",
+    "category": "particles",
+    "title": "2D particle collisions use an enlarged or high-resolution SDF",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_particle_sdf2d_quality",
+        "value": 1
+      }
+    },
+    "offender_key": "check_particle_sdf2d_quality",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A live GPUParticles2D uses built-in collision and its owning viewport has SDF scale above 50 percent or oversize above 120 percent. These exceed viewport defaults and increase the SDF workload when collision rendering uses it. Custom process shaders and unresolved detached viewports are excluded.",
+    "suggestion": "Compare the default SDF scale/oversize while moving the camera and testing particle collisions at viewport edges.",
+    "tradeoff": "Coarser SDFs reduce precision; smaller coverage can lose offscreen colliders needed by approaching particles.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Viewport.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.gpu_depth_sort",
+    "category": "particles",
+    "title": "3D GPU particles request a depth-sort pass",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_gpu_depth_sort",
+        "value": 1
+      }
+    },
+    "offender_key": "check_gpu_depth_sort",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "GPUParticles3D uses DRAW_ORDER_VIEW_DEPTH with more than one particle. The RD backend allocates a sort buffer and runs SortEffects for this mode. Lifetime ordering does not take this GPU sorting branch.",
+    "suggestion": "Compare index ordering for opaque or order-independent particle effects; retain depth sorting where transparency needs it.",
+    "tradeoff": "Overlapping transparent particles can composite incorrectly without depth ordering.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/rendering/renderer_rd/storage_rd/particles_storage.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.heightfield_camera",
+    "category": "particles",
+    "title": "Particle height-field collision follows camera movement",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_heightfield_camera",
+        "value": 1
+      }
+    },
+    "offender_key": "check_heightfield_camera",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "The height-field collider follows the camera in UPDATE_MODE_WHEN_MOVED. Godot documents that camera movement forces height-map updates. UPDATE_MODE_ALWAYS is already covered by its own finding.",
+    "suggestion": "Compare a fixed collider or lower resolution if the effect permits it; measure while moving the same camera path.",
+    "tradeoff": "A fixed collider may stop covering moving-camera effects, and lower resolution reduces collision precision.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/GPUParticlesCollisionHeightField3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.particle_trail_segments",
+    "category": "particles",
+    "title": "2D particle trails exceed the default mesh complexity",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_particle_trail_segments",
+        "value": 1
+      }
+    },
+    "offender_key": "check_particle_trail_segments",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "GPUParticles2D enables trails with trail_sections times trail_section_subdivisions above the default 8 times 4. The native trail mesh uses this product as its segment count; 32 is a review heuristic, not a limit.",
+    "suggestion": "Compare fewer trail sections or subdivisions while preserving the required curve smoothness.",
+    "tradeoff": "Trails may look more angular.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/2d/gpu_particles_2d.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.particle_warmup",
+    "category": "particles",
+    "title": "GPU particles request substantial startup preprocessing",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_particle_warmup",
+        "value": 1
+      }
+    },
+    "offender_key": "check_particle_warmup",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "GPUParticles2D/3D.preprocess multiplied by fixed_fps (30 when zero) is at least 120 estimated simulation steps. The 120-step review threshold is heuristic, not a timeout limit.",
+    "suggestion": "Reduce preprocessing for emitters that can start gradually, and measure the first frame or restart separately.",
+    "tradeoff": "The initial particle distribution changes.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/GPUParticles3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.particle_sdf_large",
+    "category": "particles",
+    "title": "A particle collision SDF has a large texture dimension",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_particle_sdf_large",
+        "value": 1
+      }
+    },
+    "offender_key": "check_particle_sdf_large",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An assigned SDF Texture3D has a dimension of at least 256 voxels. This inspects the actual texture, not a resolution setting awaiting a bake. Shape, format and other dimensions determine memory cost.",
+    "suggestion": "Test a lower-resolution rebake if collision precision allows it, then compare the assigned texture dimensions and VRAM.",
+    "tradeoff": "Thin collision features may disappear.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/GPUParticlesCollisionSDF3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.particle_heightfield_always",
+    "category": "particles",
+    "title": "A particle height field updates every frame",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_particle_heightfield_always",
+        "value": 1
+      }
+    },
+    "offender_key": "check_particle_heightfield_always",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "GPUParticlesCollisionHeightField3D.update_mode is UPDATE_MODE_ALWAYS.",
+    "suggestion": "Use UPDATE_MODE_WHEN_MOVED when the collision geometry does not change independently of the collider.",
+    "tradeoff": "Moving or deforming geometry may require continuous updates to keep collisions correct.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/GPUParticlesCollisionHeightField3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.particle_turbulence",
+    "category": "particles",
+    "title": "GPU particles enable turbulence noise",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_particle_turbulence",
+        "value": 1
+      }
+    },
+    "offender_key": "check_particle_turbulence",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An effective ParticleProcessMaterial on GPUParticles2D/3D enables turbulence. Godot documents a high GPU cost; custom process shaders are not inferred.",
+    "suggestion": "Compare disabled turbulence or a simpler motion pattern on distant effects, especially on mobile/web targets.",
+    "tradeoff": "Particle motion loses its turbulent variation.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/ParticleProcessMaterial.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "particles.particle_vector_resolution",
+    "category": "particles",
+    "title": "A particle vector field exceeds the documented low-resolution example",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_particle_vector_resolution",
+        "value": 1
+      }
+    },
+    "offender_key": "check_particle_vector_resolution",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A vector-field attractor with nonzero strength and nonempty layer mask has more than 64*64*64 texture voxels. Godot describes 64-cubed as an example appropriate for low-frequency attraction data; it is not a hardware limit.",
+    "suggestion": "Compare a lower-resolution field while preserving the attractor's world size.",
+    "tradeoff": "Fine variations in the force field may be lost.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/GPUParticlesAttractorVectorField3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  }
+]

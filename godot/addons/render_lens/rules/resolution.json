@@ -1,0 +1,689 @@
+[
+  {
+    "id": "resolution.scale_above_one",
+    "category": "resolution",
+    "title": "3D render scale is above 1 (supersampling)",
+    "severity": "high",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/scaling_3d/scale",
+        "value": 1.0
+      }
+    },
+    "evidence": "rendering/scaling_3d/scale is above 1.0. The resolution scaling page says scales above 1.0 are supersample antialiasing and are not recommended for most games. Scale is per axis, so 2.0 shades four times the pixels.",
+    "suggestion": "Set rendering/scaling_3d/scale to 1.0 and use MSAA or TAA instead of supersampling.",
+    "setting": "rendering/scaling_3d/scale",
+    "tradeoff": "Edges and specular aliasing lose the supersample filter.",
+    "expected_effect": "Fewer shaded pixels. The page's tables show the megapixel change for common factors; this rule does not invent a frame-time percentage.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/resolution_scaling.html",
+    "when_pass": [
+      "Render Opaque"
+    ],
+    "dedupe_key": "render_scale",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/scaling_3d/scale",
+        "value": 1.0
+      }
+    ]
+  },
+  {
+    "id": "resolution.full_scale_gpu_over_budget",
+    "category": "resolution",
+    "title": "Full 3D resolution while the GPU frame is over budget",
+    "severity": "high",
+    "heuristic": true,
+    "heuristic_rationale": "Suggests leaving scale 1.0 only after frame_timing reports a GPU-bound over-budget frame. The resolution scaling page says lowering scale helps GPU-bound scenes. No target scale is prescribed.",
+    "requires": [
+      "settings",
+      "frame"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/scaling_3d/scale",
+            "value": 1.0
+          }
+        },
+        {
+          "frame_over_budget": true
+        },
+        {
+          "frame_bound": "gpu"
+        }
+      ]
+    },
+    "evidence": "rendering/scaling_3d/scale is 1.0 and frame_timing is GPU-bound over the target budget.",
+    "suggestion": "Lower rendering/scaling_3d/scale below 1.0. The page lists 0.85, 0.75, 0.67, and 0.50 as example factors and notes that halving the factor cuts shaded pixels by four because the scale is per axis.",
+    "setting": "rendering/scaling_3d/scale",
+    "tradeoff": "The image is blurrier and aliases more unless FSR 1.0 or FSR 2.2 reconstructs it.",
+    "expected_effect": "Less fragment work in GPU-bound scenes. Measure the new median before keeping a factor.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/resolution_scaling.html",
+    "dedupe_key": "render_scale",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "resolution.fsr2_native_over_budget",
+    "category": "resolution",
+    "title": "FSR 2.2 is on at native resolution while over budget",
+    "severity": "high",
+    "requires": [
+      "settings",
+      "frame"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/scaling_3d/mode",
+            "value": 2
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/scaling_3d/scale",
+            "value": 1.0
+          }
+        },
+        {
+          "frame_over_budget": true
+        }
+      ]
+    },
+    "evidence": "rendering/scaling_3d/mode is 2 (FSR 2.2) and scale is 1.0. The antialiasing page says FSR 2.2 at native resolution costs more than TAA.",
+    "suggestion": "If the goal was antialiasing, use rendering/anti_aliasing/quality/use_taa instead. If the goal was performance, lower rendering/scaling_3d/scale or switch mode to 0 (bilinear) or 1 (FSR 1.0). Mode integers are Bilinear 0, FSR 1.0 1, FSR 2.2 2 on both 4.4 and 4.7 (4.7 also has Nearest 5).",
+    "setting": "rendering/scaling_3d/mode",
+    "tradeoff": "TAA ghosts more than FSR 2.2. Bilinear at a lower scale is blurrier.",
+    "expected_effect": "Removes the native-resolution FSR 2.2 cost described in the antialiasing page.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/3d_antialiasing.html",
+    "when_pass": [
+      "FSR2"
+    ],
+    "dedupe_key": "fsr2",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "resolution.fsr2_enabled",
+    "category": "resolution",
+    "title": "FSR 2.2 upscaling is selected",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/scaling_3d/mode",
+            "value": 2
+          }
+        },
+        {
+          "setting_lt": {
+            "path": "rendering/scaling_3d/scale",
+            "value": 1.0
+          }
+        }
+      ]
+    },
+    "evidence": "rendering/scaling_3d/mode is 2 (FSR 2.2) and scale is below 1. The ProjectSettings hint marks FSR 2.2 as Slow, and the resolution scaling page says it is the slowest upscaler and provides its own temporal antialiasing.",
+    "suggestion": "On a GPU that cannot afford FSR 2.2, set mode to 1 (FSR 1.0) or 0 (bilinear). The page says matching FSR 2.2 speed with FSR 1.0 needs a lower scale factor. use_taa is ignored while FSR 2.2 is the scaling mode.",
+    "setting": "rendering/scaling_3d/mode",
+    "tradeoff": "FSR 1.0 and bilinear reconstruct less detail and do not replace TAA.",
+    "expected_effect": "A cheaper upscale pass. Compare the FSR2 timestamp.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/resolution_scaling.html",
+    "when_pass": [
+      "FSR2"
+    ],
+    "dedupe_key": "fsr2",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "resolution.bilinear_while_upscaling",
+    "category": "resolution",
+    "title": "Upscaling with bilinear filtering",
+    "severity": "low",
+    "kind": "quality_up",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/scaling_3d/mode",
+            "value": 0
+          }
+        },
+        {
+          "setting_lt": {
+            "path": "rendering/scaling_3d/scale",
+            "value": 1.0
+          }
+        }
+      ]
+    },
+    "evidence": "Scale is below 1 and mode is 0 (bilinear). The page calls bilinear the fastest fallback and FSR slower but sharper. FSR is Forward+ only.",
+    "suggestion": "If there is GPU headroom, try mode 1 (FSR 1.0) or 2 (FSR 2.2). Pair FSR 1.0 with TAA or MSAA; FSR 2.2 already antialiases.",
+    "setting": "rendering/scaling_3d/mode",
+    "tradeoff": "FSR costs more GPU time than bilinear.",
+    "expected_effect": "Sharper upscale when the GPU can pay for it.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/resolution_scaling.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "resolution.fsr_sharpness_extreme",
+    "category": "resolution",
+    "title": "FSR sharpness is at a documented extreme",
+    "severity": "low",
+    "kind": "quality_up",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "any": [
+            {
+              "setting_eq": {
+                "path": "rendering/scaling_3d/mode",
+                "value": 1
+              }
+            },
+            {
+              "setting_eq": {
+                "path": "rendering/scaling_3d/mode",
+                "value": 2
+              }
+            }
+          ]
+        },
+        {
+          "any": [
+            {
+              "setting_eq": {
+                "path": "rendering/scaling_3d/fsr_sharpness",
+                "value": 0.0
+              }
+            },
+            {
+              "setting_gte": {
+                "path": "rendering/scaling_3d/fsr_sharpness",
+                "value": 2.0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "evidence": "FSR is selected and fsr_sharpness is 0 or at least 2. The page says 0 is sharpest, 2 is least sharp, and the default 0.2 balances sharpness against extra aliasing. Lower values are sharper.",
+    "suggestion": "Return rendering/scaling_3d/fsr_sharpness to 0.2 unless you measured aliasing or blur at that default.",
+    "setting": "rendering/scaling_3d/fsr_sharpness",
+    "tradeoff": "0.0 aliases more. 2.0 softens the image.",
+    "expected_effect": "Restores the documented default sharpness. No frame-time claim.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/resolution_scaling.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "resolution.negative_mip_bias",
+    "category": "resolution",
+    "title": "Texture mipmap bias is negative",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_lt": {
+        "path": "rendering/textures/default_filters/texture_mipmap_bias",
+        "value": 0.0
+      }
+    },
+    "evidence": "rendering/textures/default_filters/texture_mipmap_bias is below 0. The resolution scaling page says a negative bias samples higher mips farther away, which can cost performance, and recommends a manual offset between -0.5 and 0.",
+    "suggestion": "Set texture_mipmap_bias back to 0 and let Godot apply its automatic bias when 3D scale is below 1 or when FXAA or TAA is on.",
+    "setting": "rendering/textures/default_filters/texture_mipmap_bias",
+    "tradeoff": "A less negative bias looks slightly blurrier on detailed textures.",
+    "expected_effect": "Fewer high-resolution mip samples. Measure texture-heavy views.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/resolution_scaling.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pass.fsr2",
+    "category": "resolution",
+    "title": "FSR 2.2 is in the capture",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The trigger is a RenderingDevice timestamp label substring from Godot's clustered renderer. Labels are not a stable public API. The rule fires only when that pass has exclusive time above 0.",
+    "requires": [
+      "passes"
+    ],
+    "condition": {
+      "pass_present": {
+        "names": [
+          "FSR2"
+        ]
+      }
+    },
+    "evidence": "The FSR2 timestamp is present. FSR 2.2 is the slowest scaler on the resolution scaling page.",
+    "suggestion": "Lower the scale only if you need the speed, or switch mode to bilinear or FSR 1.0.",
+    "tradeoff": "Turning the feature off changes the look described on the cited page.",
+    "expected_effect": "That pass should shrink or disappear on the next gpu_passes capture. No percentage is predicted.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/resolution_scaling.html",
+    "when_pass": [
+      "FSR2"
+    ],
+    "dedupe_key": "fsr2",
+    "pass_only": true,
+    "kind": "performance",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "resolution.nearest_upscale",
+    "category": "resolution",
+    "title": "3D scaling mode is nearest",
+    "severity": "low",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/scaling_3d/mode",
+        "value": 5
+      }
+    },
+    "evidence": "Sets the scaling 3D mode",
+    "suggestion": "Viewport.SCALING_3D_MODE_NEAREST is 5 in Godot 4.7. The resolution scaling page describes bilinear and FSR as the filtered modes. Nearest is the unfiltered mode.",
+    "setting": "rendering/scaling_3d/mode",
+    "tradeoff": "Scaled 3D output looks blockier.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/resolution_scaling.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.7"
+      ],
+      "min_version": "4.7"
+    }
+  },
+  {
+    "id": "resolution.viewport_supersampling",
+    "category": "resolution",
+    "title": "A SubViewport renders 3D above its output resolution",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_viewport_supersampling",
+        "value": 1
+      }
+    },
+    "offender_key": "check_viewport_supersampling",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A SubViewport with updates and 3D enabled uses bilinear scaling above 1.0. Godot documents this as supersampling with high performance cost. This checks the SubViewport's own scale, independent of the project setting.",
+    "suggestion": "Compare a scale of 1.0 and use appropriate antialiasing if polygon edges need smoothing.",
+    "tradeoff": "Fine details and shader-induced edges can become less smooth.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Viewport.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "resolution.upscaler_renderer",
+    "category": "resolution",
+    "title": "The 3D scaling mode needs a renderer that is not selected",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "any": [
+        {
+          "setting_eq": {
+            "path": "rendering/scaling_3d/mode",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/scaling_3d/mode",
+            "value": 2
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/scaling_3d/mode",
+            "value": 4
+          }
+        },
+        {
+          "all": [
+            {
+              "setting_eq": {
+                "path": "rendering/renderer/rendering_method",
+                "value": "gl_compatibility"
+              }
+            },
+            {
+              "setting_eq": {
+                "path": "rendering/scaling_3d/mode",
+                "value": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "setting": "rendering/scaling_3d/mode",
+    "offender_key": "",
+    "evidence": "Godot prints \"FSR2 3D scaling is only available when using the Forward+ renderer.\" when rendering/scaling_3d/mode is FSR 1.0 (1), FSR 2.2 (2) or MetalFX Temporal (4) outside Forward+, or MetalFX Spatial (3) under Compatibility. Godot 4.4, 4.5 and 4.7 reject the mode and 4.6 falls back to bilinear scaling, so the chosen upscaler never runs.",
+    "suggestion": "Use bilinear scaling (0) with this renderer, or switch to a renderer that supports the upscaler.",
+    "tradeoff": "Bilinear scaling is softer than FSR at the same render scale.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/renderer_viewport.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "resolution.upscaler_downsampling",
+    "category": "resolution",
+    "title": "An upscaler is selected with a 3D scale above 1",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_gt": {
+            "path": "rendering/scaling_3d/scale",
+            "value": 1.0
+          }
+        },
+        {
+          "setting_neq": {
+            "path": "rendering/scaling_3d/mode",
+            "value": 0
+          }
+        }
+      ]
+    },
+    "setting": "rendering/scaling_3d/mode",
+    "offender_key": "",
+    "evidence": "Godot prints \"FSR, MetalFX, and nearest-neighbor 3D resolution scaling are not designed for downsampling. Falling back to bilinear 3D resolution scaling.\" when rendering/scaling_3d/scale is above 1.0 and the scaling mode is not bilinear. FSR, MetalFX and (4.7) nearest-neighbor scaling are replaced by bilinear supersampling.",
+    "suggestion": "Set the scaling mode to bilinear (0) when supersampling, or lower the scale to 1.0 or below to use the upscaler.",
+    "tradeoff": "None; Godot already renders this configuration with bilinear scaling.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/renderer_viewport.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

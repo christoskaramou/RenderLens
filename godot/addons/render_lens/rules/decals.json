@@ -1,0 +1,233 @@
+[
+  {
+    "id": "decals.count",
+    "category": "decals",
+    "title": "Many decals are in the scene",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "Sixteen decals is a review cut. The decal page says Forward+ clusters as many as performance allows, with a default limit of 512 clustered elements in view.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "decal_count",
+        "value": 16
+      }
+    },
+    "evidence": "The scan found at least 16 Decal nodes. Decals are Forward+ and Mobile only.",
+    "suggestion": "Enable Decal.distance_fade_enabled so distant decals drop out, and stay under rendering/limits/cluster_builder/max_clustered_elements together with lights and probes.",
+    "node_property": "Decal.distance_fade_enabled",
+    "offender_key": "decals",
+    "tradeoff": "Decals fade out over distance_fade_length.",
+    "expected_effect": "Fewer clustered decals in view.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/using_decals.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "decals.no_distance_fade",
+    "category": "decals",
+    "title": "Decals have no distance fade",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "decal_without_distance_fade_count",
+        "value": 4
+      }
+    },
+    "evidence": "At least four Decal nodes leave distance_fade_enabled off. The optimizing-3D page says decals can use their distance fade for level of detail.",
+    "suggestion": "Enable distance_fade_enabled on decals that are not always next to the camera.",
+    "node_property": "Decal.distance_fade_enabled",
+    "offender_key": "decals_no_fade",
+    "tradeoff": "Decals fade before they reach the far plane.",
+    "expected_effect": "Distant decals leave the cluster.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/optimizing_3d_performance.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "decals.compatibility_renderer",
+    "category": "decals",
+    "title": "Decals are present under the Compatibility renderer",
+    "severity": "high",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "decal_count",
+        "value": 1
+      }
+    },
+    "evidence": "Decal nodes exist while the renderer is gl_compatibility. The decal page says decals are not supported on Compatibility and points at Sprite3D as a stand-in.",
+    "suggestion": "Switch to Forward+ or Mobile, or replace Decal nodes with Sprite3D.",
+    "node_property": "Decal",
+    "tradeoff": "Sprite3D does not project onto arbitrary geometry the same way.",
+    "expected_effect": "The decals become visible. They currently are not part of the Compatibility renderer.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/using_decals.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "editor"
+  },
+  {
+    "id": "decals.large_size",
+    "category": "decals",
+    "title": "A decal is very large",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "A decal size axis of 50 meters or more covers a large cluster region. The property range goes to 1024. 50 is a review cut.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "decal_large_count",
+        "value": 1
+      }
+    },
+    "evidence": "A Decal has a size component >= 50.",
+    "suggestion": "Shrink the decal to the stain it represents so it overlaps fewer clusters.",
+    "node_property": "Decal.size",
+    "offender_key": "decals_large",
+    "tradeoff": "The projection covers less surface.",
+    "expected_effect": "Less cluster overlap.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/using_decals.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "decals.decal_normal_fade",
+    "category": "decals",
+    "title": "A decal uses normal-angle fading",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_decal_normal_fade",
+        "value": 1
+      }
+    },
+    "offender_key": "check_decal_normal_fade",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible Decal with a nonzero cull_mask has normal_fade above 0. Godot class reference: \"Setting to a value greater than 0.0 has a small performance cost due to the added normal angle computations.\"",
+    "suggestion": "Set normal_fade to 0 where the decal does not need to fade on steep surfaces.",
+    "tradeoff": "Without normal fade the decal also projects onto surfaces nearly parallel to it.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Decal.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  }
+]

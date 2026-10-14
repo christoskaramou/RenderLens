@@ -1,0 +1,8 @@
+[gd_scene load_steps=1 format=3]
+
+[node name="HeavyUI" type="Control"]
+clip_children = 1
+
+[node name="AlwaysOn" type="SubViewport" parent="."]
+render_target_update_mode = 4
+msaa_3d = 2

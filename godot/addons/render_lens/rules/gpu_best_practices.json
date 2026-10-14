@@ -1,0 +1,821 @@
+[
+  {
+    "id": "gpu_best_practices.compute_arm_spatial",
+    "category": "gpu_best_practices",
+    "title": "A one-dimensional compute workgroup accesses multidimensional images on Arm",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. On the actual Vulkan driver, exactly one fixed local-size dimension exceeds one and the compute entry-point body directly samples, fetches, gathers, reads or writes a 2D/3D/cube/rectangle image. Image declarations alone do not qualify. Helper-only operations, unresolved image values and specialized sizes are skipped. Addressing and tiling are unknown; a one-dimensional group can still have good locality.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_compute_arm_spatial",
+        "value": 1
+      }
+    },
+    "evidence": "On the actual Vulkan driver, exactly one fixed local-size dimension exceeds one and the compute entry-point body directly samples, fetches, gathers, reads or writes a 2D/3D/cube/rectangle image. Image declarations alone do not qualify. Helper-only operations, unresolved image values and specialized sizes are skipped. Addressing and tiling are unknown; a one-dimensional group can still have good locality.",
+    "suggestion": "If this shader is dispatched on the target Arm GPU, compare a two-dimensional workgroup that follows adjacent image texels, updating coordinates, bounds, dispatch counts and shared-memory synchronization together.",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "check_compute_arm_spatial",
+    "tradeoff": "A linear address mapping may already be efficient. A new workgroup shape can reduce occupancy or change algorithm behavior; verify output and retain it only after measuring a benefit.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_pipeline.cpp",
+    "upstream_check": "BestPractices-Arm-vkCreateComputePipelines-compute-spatial-locality",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "arm"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.compute_amd_layout",
+    "category": "gpu_best_practices",
+    "title": "An imported shader stage exceeds AMD's small-layout guideline",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. On the actual Vulkan driver, fixed push-constant members plus the known descriptor-set layout count exceed upstream's 13-DWORD guideline. Push data costs one DWORD per four bytes and each set costs one DWORD; Godot includes gaps through the highest set index. Padding, dynamic-buffer costs and unsupported types are omitted. This is an AMD guideline, not a Vulkan limit, a measured bottleneck or proof that the shader is executed.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_compute_amd_layout",
+        "value": 1
+      }
+    },
+    "evidence": "On the actual Vulkan driver, fixed push-constant members plus the known descriptor-set layout count exceed upstream's 13-DWORD guideline. Push data costs one DWORD per four bytes and each set costs one DWORD; Godot includes gaps through the highest set index. Padding, dynamic-buffer costs and unsupported types are omitted. This is an AMD guideline, not a Vulkan limit, a measured bottleneck or proof that the shader is executed.",
+    "suggestion": "For an executed shader on the target AMD GPU, benchmark a smaller push-constant payload, moving less frequently changed data to an existing buffer when practical. Update the shader and push-constant callers together.",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "check_compute_amd_layout",
+    "tradeoff": "Buffer reads can cost more than larger push constants. Keep the original layout when target-device measurements show no benefit.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_pipeline.cpp",
+    "upstream_check": "BestPractices-AMD-CreatePipelinesLayout-KeepLayoutSmall",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "amd"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.compute_nvidia_descriptor_space",
+    "category": "gpu_best_practices",
+    "title": "An imported shader stage exceeds NVIDIA's descriptor-space guideline",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. On the actual Vulkan driver, known descriptors in one imported stage exceed upstream's 256-byte fast-space guideline: image/sampler descriptors cost four bytes, non-array uniform buffers eight and non-array storage buffers sixteen. Distinct set/binding pairs are counted once. Buffer arrays, unsupported and runtime-sized arrays are omitted, so this is a lower bound, not a complete pipeline layout size. Godot's checked Vulkan implementations create these descriptor set layouts without update-after-bind flags. This is a vendor guideline, not a Vulkan limit or measured cost.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_compute_nvidia_descriptor_space",
+        "value": 1
+      }
+    },
+    "evidence": "On the actual Vulkan driver, known descriptors in one imported stage exceed upstream's 256-byte fast-space guideline: image/sampler descriptors cost four bytes, non-array uniform buffers eight and non-array storage buffers sixteen. Distinct set/binding pairs are counted once. Buffer arrays, unsupported and runtime-sized arrays are omitted, so this is a lower bound, not a complete pipeline layout size. Godot's checked Vulkan implementations create these descriptor set layouts without update-after-bind flags. This is a vendor guideline, not a Vulkan limit or measured cost.",
+    "suggestion": "For executed shaders on the target NVIDIA/Vulkan GPU, compare smaller shader-specific resource sets or reuse resources when the algorithm permits, updating all RDUniform bindings with the shader.",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "check_compute_nvidia_descriptor_space",
+    "tradeoff": "Splitting resource sets or passes can add binding and draw/dispatch work. Keep the larger layout if real profiling shows no benefit.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_pipeline.cpp",
+    "upstream_check": "BestPractices-NVIDIA-CreatePipelineLayout-LargePipelineLayout",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "nvidia"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.compute_nvidia_separate_sampler",
+    "category": "gpu_best_practices",
+    "title": "An imported shader stage declares separate samplers on Vulkan/NVIDIA",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. An imported shader stage has a UniformConstant variable whose type is a sampler or a fixed array of samplers. Godot reflects this as a separate sampler descriptor. The scanner requires the actual Vulkan rendering driver; D3D12, Metal and unknown drivers are excluded. A declaration does not prove the shader is executed or expensive, and upstream describes the potential benefit as marginal.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_compute_nvidia_separate_sampler",
+        "value": 1
+      }
+    },
+    "evidence": "An imported shader stage has a UniformConstant variable whose type is a sampler or a fixed array of samplers. Godot reflects this as a separate sampler descriptor. The scanner requires the actual Vulkan rendering driver; D3D12, Metal and unknown drivers are excluded. A declaration does not prove the shader is executed or expensive, and upstream describes the potential benefit as marginal.",
+    "suggestion": "If the shader is used on the target NVIDIA/Vulkan device, benchmark combined image samplers where they fit the resource reuse pattern, updating shader declarations and RDUniform bindings together.",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "check_compute_nvidia_separate_sampler",
+    "tradeoff": "Combined samplers can reduce texture/sampler reuse flexibility and change binding layouts; validate all callers and output before comparing time.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_pipeline.cpp",
+    "upstream_check": "BestPractices-NVIDIA-CreatePipelineLayout-SeparateSampler",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "nvidia"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.compute_arm_large",
+    "category": "gpu_best_practices",
+    "title": "Compute workgroups exceed Arm's 64-thread guideline",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. Fixed local sizes are read from imported RDShaderFile compute SPIR-V. The exact upstream size predicate is used. Runtime-specialized sizes are skipped. A shader file can be unused; no dispatch or measured cost is asserted. GPU generations differ.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_compute_arm_large",
+        "value": 1
+      }
+    },
+    "evidence": "Fixed local sizes are read from imported RDShaderFile compute SPIR-V. The exact upstream size predicate is used. Runtime-specialized sizes are skipped. A shader file can be unused; no dispatch or measured cost is asserted. GPU generations differ.",
+    "suggestion": "If this shader is dispatched on the target GPU, benchmark alternative workgroup sizes and update dispatch counts and bounds checks together.",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "check_compute_arm_large",
+    "tradeoff": "Changing group dimensions can change synchronization, shared-memory usage and output indexing; verify output correctness before comparing time.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_pipeline.cpp",
+    "upstream_check": "BestPractices-Arm-vkCreateComputePipelines-compute-work-group-size",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "arm"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.compute_arm_alignment",
+    "category": "gpu_best_practices",
+    "title": "Compute workgroup dimensions miss Arm's four-thread alignment",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. Fixed local sizes are read from imported RDShaderFile compute SPIR-V. The exact upstream size predicate is used. Runtime-specialized sizes are skipped. A shader file can be unused; no dispatch or measured cost is asserted. GPU generations differ.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_compute_arm_alignment",
+        "value": 1
+      }
+    },
+    "evidence": "Fixed local sizes are read from imported RDShaderFile compute SPIR-V. The exact upstream size predicate is used. Runtime-specialized sizes are skipped. A shader file can be unused; no dispatch or measured cost is asserted. GPU generations differ.",
+    "suggestion": "If this shader is dispatched on the target GPU, benchmark alternative workgroup sizes and update dispatch counts and bounds checks together.",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "check_compute_arm_alignment",
+    "tradeoff": "Changing group dimensions can change synchronization, shared-memory usage and output indexing; verify output correctness before comparing time.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_pipeline.cpp",
+    "upstream_check": "BestPractices-Arm-vkCreateComputePipelines-compute-thread-group-alignment",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "arm"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.compute_amd_alignment",
+    "category": "gpu_best_practices",
+    "title": "Compute workgroups are not multiples of 64 on AMD",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. Fixed local sizes are read from imported RDShaderFile compute SPIR-V. The exact upstream size predicate is used. Runtime-specialized sizes are skipped. A shader file can be unused; no dispatch or measured cost is asserted. GPU generations differ.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_compute_amd_alignment",
+        "value": 1
+      }
+    },
+    "evidence": "Fixed local sizes are read from imported RDShaderFile compute SPIR-V. The exact upstream size predicate is used. Runtime-specialized sizes are skipped. A shader file can be unused; no dispatch or measured cost is asserted. GPU generations differ.",
+    "suggestion": "If this shader is dispatched on the target GPU, benchmark alternative workgroup sizes and update dispatch counts and bounds checks together.",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "check_compute_amd_alignment",
+    "tradeoff": "Changing group dimensions can change synchronization, shared-memory usage and output indexing; verify output correctness before comparing time.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_pipeline.cpp",
+    "upstream_check": "BestPractices-AMD-LocalWorkgroup-Multiple64",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "amd"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.double_buffer_vsync",
+    "category": "gpu_best_practices",
+    "title": "Double buffering with VSync deserves a pacing comparison",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. Two swapchain images and enabled VSync are configured. The actual present mode and driver-selected image count are not observed.",
+    "vendors": [],
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/rendering_device/vsync/swapchain_image_count",
+            "value": 2
+          }
+        },
+        {
+          "setting_gt": {
+            "path": "display/window/vsync/vsync_mode",
+            "value": 0
+          }
+        }
+      ]
+    },
+    "evidence": "Two swapchain images and enabled VSync are configured. The actual present mode and driver-selected image count are not observed.",
+    "suggestion": "Compare three swapchain images when frames miss the refresh deadline.",
+    "setting": "rendering/rendering_device/vsync/swapchain_image_count",
+    "node_property": "",
+    "offender_key": "",
+    "tradeoff": "Triple buffering may add input latency.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_wsi.cpp",
+    "upstream_check": "BestPractices-vkCreateSwapchainKHR-suboptimal-swapchain-image-count",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.arm_msaa8",
+    "category": "gpu_best_practices",
+    "title": "8x MSAA on a GPU family with a 4x efficiency guideline",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. The main viewport setting or a SubViewport uses 8x MSAA. Upstream's family-specific efficiency threshold is 4 samples; hardware revisions vary.",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "any": [
+        {
+          "setting_eq": {
+            "path": "rendering/anti_aliasing/quality/msaa_3d",
+            "value": 3
+          }
+        },
+        {
+          "scene_gte": {
+            "name": "subviewport_msaa8_count",
+            "value": 1
+          }
+        }
+      ]
+    },
+    "evidence": "The main viewport setting or a SubViewport uses 8x MSAA. Upstream's family-specific efficiency threshold is 4 samples; hardware revisions vary.",
+    "suggestion": "Compare 4x MSAA on the target device and inspect edge quality.",
+    "setting": "rendering/anti_aliasing/quality/msaa_3d",
+    "node_property": "",
+    "offender_key": "subviewport_msaa8",
+    "tradeoff": "Reducing samples can expose edge aliasing.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_image.cpp",
+    "upstream_check": "BestPractices-Arm-vkCreateImage-too-large-sample-count",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "arm"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.imagination_msaa8",
+    "category": "gpu_best_practices",
+    "title": "8x MSAA on a GPU family with a 4x efficiency guideline",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. The main viewport setting or a SubViewport uses 8x MSAA. Upstream's family-specific efficiency threshold is 4 samples; hardware revisions vary.",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "any": [
+        {
+          "setting_eq": {
+            "path": "rendering/anti_aliasing/quality/msaa_3d",
+            "value": 3
+          }
+        },
+        {
+          "scene_gte": {
+            "name": "subviewport_msaa8_count",
+            "value": 1
+          }
+        }
+      ]
+    },
+    "evidence": "The main viewport setting or a SubViewport uses 8x MSAA. Upstream's family-specific efficiency threshold is 4 samples; hardware revisions vary.",
+    "suggestion": "Compare 4x MSAA on the target device and inspect edge quality.",
+    "setting": "rendering/anti_aliasing/quality/msaa_3d",
+    "node_property": "",
+    "offender_key": "subviewport_msaa8",
+    "tradeoff": "Reducing samples can expose edge aliasing.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_image.cpp",
+    "upstream_check": "BestPractices-IMG-vkCreateImage-too-large-sample-count",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "imagination"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.arm_anisotropic_materials",
+    "category": "gpu_best_practices",
+    "title": "Anisotropic material samplers on Arm",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. A BaseMaterial3D requests anisotropic filtering and the project level enables it. ShaderMaterial samplers are not inspected.",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "anisotropic_material_count",
+            "value": 1
+          }
+        },
+        {
+          "setting_gt": {
+            "path": "rendering/textures/default_filters/anisotropic_filtering_level",
+            "value": 0
+          }
+        }
+      ]
+    },
+    "evidence": "A BaseMaterial3D requests anisotropic filtering and the project level enables it. ShaderMaterial samplers are not inspected.",
+    "suggestion": "Compare regular mipmapped filtering on the listed materials on the target Arm GPU.",
+    "setting": "",
+    "node_property": "BaseMaterial3D.texture_filter",
+    "offender_key": "anisotropic_materials",
+    "tradeoff": "Textures viewed at an angle may become blurrier.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_descriptor.cpp",
+    "upstream_check": "BestPractices-Arm-vkCreateSampler-anisotropy",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "arm"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.arm_mip_bias",
+    "category": "gpu_best_practices",
+    "title": "Manual mipmap bias on Arm",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. The manual mipmap bias is nonzero. Godot may add automatic scaling/AA bias, so the final sampler bias is not known.",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_neq": {
+        "path": "rendering/textures/default_filters/texture_mipmap_bias",
+        "value": 0.0
+      }
+    },
+    "evidence": "The manual mipmap bias is nonzero. Godot may add automatic scaling/AA bias, so the final sampler bias is not known.",
+    "suggestion": "Compare a manual bias of zero on the target Arm GPU.",
+    "setting": "rendering/textures/default_filters/texture_mipmap_bias",
+    "node_property": "",
+    "offender_key": "",
+    "tradeoff": "Texture sharpness or shimmer can change.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_descriptor.cpp",
+    "upstream_check": "BestPractices-Arm-vkCreateSampler-lod-bias",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "arm"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.arm_msaa_blending",
+    "category": "gpu_best_practices",
+    "title": "Measure transparency together with MSAA on Arm",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. MSAA and alpha-blended materials coexist in the scene. The actual attachment format, sample shading and per-pass render state are not exposed; this is a candidate for measurement only.",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_gt": {
+            "path": "rendering/anti_aliasing/quality/msaa_3d",
+            "value": 0
+          }
+        },
+        {
+          "scene_gte": {
+            "name": "transparent_alpha_blend_count",
+            "value": 1
+          }
+        }
+      ]
+    },
+    "evidence": "MSAA and alpha-blended materials coexist in the scene. The actual attachment format, sample shading and per-pass render state are not exposed; this is a candidate for measurement only.",
+    "suggestion": "Compare lower MSAA or opaque/scissor materials where visually appropriate.",
+    "setting": "rendering/anti_aliasing/quality/msaa_3d",
+    "node_property": "",
+    "offender_key": "alpha_blend",
+    "tradeoff": "Edge quality and transparent appearance can change.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_pipeline.cpp",
+    "upstream_check": "BestPractices-Arm-vkCreatePipelines-multisampled-blending",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "arm"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.tile_keep_viewport",
+    "category": "gpu_best_practices",
+    "title": "A SubViewport retains its previous color contents",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. A SubViewport uses CLEAR_MODE_NEVER. Preserving pixels can require attachment reads on tile GPUs; Render Lens does not see the generated load operations.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "subviewport_keep_count",
+        "value": 1
+      }
+    },
+    "evidence": "A SubViewport uses CLEAR_MODE_NEVER. Preserving pixels can require attachment reads on tile GPUs; Render Lens does not see the generated load operations.",
+    "suggestion": "Use CLEAR_MODE_ALWAYS if each rendered frame should start fresh; keep accumulation viewports unchanged.",
+    "setting": "",
+    "node_property": "SubViewport.render_target_clear_mode",
+    "offender_key": "subviewport_keep",
+    "tradeoff": "Clearing destroys deliberate trails, painting and temporal accumulation.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_render_pass.cpp",
+    "upstream_check": "BestPractices-vkCmdBeginRenderPass-attachment-needs-readback",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "arm",
+        "imagination"
+      ]
+    }
+  },
+  {
+    "id": "gpu_best_practices.tile_small_meshes",
+    "category": "gpu_best_practices",
+    "title": "Many tiny indexed mesh surfaces on a tile GPU",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Adapted from an upstream API-level check using Godot-visible evidence. It does not prove the Vulkan condition fired or predict saved milliseconds. At least ten visible MeshInstance3D surfaces have 1-10 indices each. This mirrors upstream's size/count thresholds but does not establish culling, instancing or command-buffer membership.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "small_indexed_surface_count",
+        "value": 10
+      }
+    },
+    "evidence": "At least ten visible MeshInstance3D surfaces have 1-10 indices each. This mirrors upstream's size/count thresholds but does not establish culling, instancing or command-buffer membership.",
+    "suggestion": "Compare batching or MultiMesh for compatible repeated geometry; confirm the draw-call change with render_stats.",
+    "setting": "",
+    "node_property": "ArrayMesh surfaces / MeshInstance3D",
+    "offender_key": "small_indexed_surfaces",
+    "tradeoff": "Batching reduces independent culling and may complicate material variation.",
+    "expected_effect": "Compare an ordinary game capture before and after the change on the target GPU.",
+    "verify_step": "frame_timing, gpu_passes, capture_viewport",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_drawdispatch.cpp",
+    "upstream_check": "BestPractices-vkCmdDrawIndexed-many-small-indexed-drawcalls",
+    "evidence_kind": "godot_adaptation",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "arm",
+        "imagination"
+      ]
+    }
+  }
+]

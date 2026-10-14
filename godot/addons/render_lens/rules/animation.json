@@ -1,0 +1,49 @@
+[
+  {
+    "id": "animation.physics_callback",
+    "category": "animation",
+    "title": "An AnimationPlayer updates during the physics frame",
+    "severity": "low",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "animation_physics_callback_count",
+        "value": 1
+      }
+    },
+    "evidence": "Process animation during physics frames",
+    "suggestion": "AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_PHYSICS updates during the physics frame. The class says that is for animating physics bodies. Use ANIMATION_CALLBACK_MODE_PROCESS_IDLE otherwise.",
+    "node_property": "AnimationMixer.callback_mode_process",
+    "offender_key": "animation_physics",
+    "tradeoff": "Animations of non-physics nodes update with the idle frame instead.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_animationmixer.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  }
+]

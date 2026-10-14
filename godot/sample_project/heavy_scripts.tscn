@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://heavy_scripts.gd" id="1_script"]
+
+[node name="HeavyScripts" type="Node"]
+
+[node name="A" type="Node" parent="."]
+script = ExtResource("1_script")
+
+[node name="B" type="Node" parent="."]
+script = ExtResource("1_script")
+
+[node name="C" type="Node" parent="."]
+script = ExtResource("1_script")
+
+[node name="D" type="Node" parent="."]
+script = ExtResource("1_script")
+
+[node name="E" type="Node" parent="."]
+script = ExtResource("1_script")
+
+[node name="F" type="Node" parent="."]
+script = ExtResource("1_script")
+
+[node name="G" type="Node" parent="."]
+script = ExtResource("1_script")
+
+[node name="H" type="Node" parent="."]
+script = ExtResource("1_script")

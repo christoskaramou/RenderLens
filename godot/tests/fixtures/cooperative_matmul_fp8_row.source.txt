@@ -1,0 +1,6 @@
+#version 460
+#extension GL_NV_cooperative_vector : require
+#extension GL_EXT_shader_explicit_arithmetic_types_float16 : require
+#extension GL_EXT_shader_16bit_storage : require
+layout(local_size_x=1) in; layout(set=0,binding=0,std430) buffer Output { float data[]; };
+void main() { coopvecNV<float,4> a=coopvecNV<float,4>(1.0); coopvecNV<float,4> r; coopVecMatMulNV(r,a,1,data,0u,1000491002,4u,4u,0,false,16u); data[0]=r[0]; }

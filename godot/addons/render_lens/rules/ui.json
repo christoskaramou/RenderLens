@@ -1,0 +1,832 @@
+[
+  {
+    "id": "ui.default_font_msdf_off",
+    "category": "ui",
+    "title": "The default font is not an MSDF font",
+    "severity": "low",
+    "kind": "quality_up",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "gui/theme/default_font_multichannel_signed_distance_field",
+            "value": false
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "gui/theme/custom_font",
+            "value": ""
+          }
+        },
+        {
+          "scene_gte": {
+            "name": "default_font_text_count",
+            "value": 1
+          }
+        }
+      ]
+    },
+    "evidence": "this allows for resizing the font in real-time without any performance penalty",
+    "suggestion": "Turn gui/theme/default_font_multichannel_signed_distance_field on if you scale Controls or Label3D often. The description says MSDF avoids re-rasterizing on size changes.",
+    "setting": "gui/theme/default_font_multichannel_signed_distance_field",
+    "tradeoff": "MSDF text looks different from the bitmap font.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "offender_key": "default_font_text",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.font_mipmaps_on",
+    "category": "ui",
+    "title": "The default font generates mipmaps",
+    "severity": "low",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "gui/theme/default_font_generate_mipmaps",
+        "value": true
+      }
+    },
+    "evidence": "Enabling increases font generation time and memory usage",
+    "suggestion": "Leave gui/theme/default_font_generate_mipmaps on only if scaled-down text looks grainy. The description says enabling it increases font generation time and memory usage.",
+    "setting": "gui/theme/default_font_generate_mipmaps",
+    "tradeoff": "Scaled-down text can look grainy.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.subviewport_always",
+    "category": "ui",
+    "title": "A SubViewport updates even when it is not visible",
+    "severity": "high",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "subviewport_always_count",
+        "value": 1
+      }
+    },
+    "evidence": "Always update the render target",
+    "suggestion": "Set SubViewport.render_target_update_mode to SubViewport.UPDATE_WHEN_VISIBLE. The class says UPDATE_ALWAYS always updates, and UPDATE_WHEN_VISIBLE is the default.",
+    "node_property": "SubViewport.render_target_update_mode",
+    "offender_key": "subviewport_always",
+    "tradeoff": "A hidden viewport freezes until it is shown.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_subviewport.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.subviewport_msaa",
+    "category": "ui",
+    "title": "A SubViewport has 3D MSAA enabled",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "subviewport_msaa_count",
+        "value": 1
+      }
+    },
+    "evidence": "A higher number results in smoother edges at the cost of significantly worse performance",
+    "suggestion": "Set the SubViewport msaa_3d back to Viewport.MSAA_DISABLED unless that viewport needs smooth edges. The Viewport class says higher MSAA is significantly more expensive.",
+    "node_property": "Viewport.msaa_3d",
+    "offender_key": "subviewport_msaa",
+    "tradeoff": "Edges in that viewport are aliased.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_viewport.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.clip_children",
+    "category": "ui",
+    "title": "A CanvasItem clips its children",
+    "severity": "low",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "canvas_clip_children_count",
+        "value": 1
+      }
+    },
+    "evidence": "Clipping nodes cannot be nested",
+    "suggestion": "CanvasItem.clip_children cannot be nested or placed in a CanvasGroup. The class says an ancestor that already clips should force this node back to CLIP_CHILDREN_DISABLED.",
+    "node_property": "CanvasItem.clip_children",
+    "offender_key": "clip_children",
+    "tradeoff": "Children can draw outside the parent.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_canvasitem.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.subviewport_3d_unused",
+    "category": "ui",
+    "title": "A 2D-only SubViewport keeps 3D enabled",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_subviewport_3d_unused",
+        "value": 1
+      }
+    },
+    "offender_key": "check_subviewport_3d_unused",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A SubViewport has disable_3d off and no Node3D anywhere below it, so it renders only 2D. Godot docs: \"Disabling 3D is slightly faster and uses less memory compared to enabled 3D.\"",
+    "suggestion": "Turn on disable_3d for SubViewports that only show 2D content.",
+    "tradeoff": "3D nodes added to the SubViewport later do not render until disable_3d is turned off again.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/rendering/viewports.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.label3d_font_size",
+    "category": "ui",
+    "title": "A Label3D renders a large dynamic font size",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_label3d_font_size",
+        "value": 1
+      }
+    },
+    "offender_key": "check_label3d_font_size",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible Label3D with text uses font_size above 64 with a non-MSDF font, so each new glyph is rasterized at that size. Godot class reference: \"Higher font sizes require more time to render new characters, which can cause stuttering during gameplay.\"",
+    "suggestion": "Lower font_size and raise pixel_size, or use an MSDF font for large 3D text.",
+    "tradeoff": "Smaller rasterized text looks softer up close.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Label3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.hidden_video",
+    "category": "ui",
+    "title": "A hidden video player can keep decoding frames",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_hidden_video",
+        "value": 1
+      }
+    },
+    "offender_key": "check_hidden_video",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A hidden in-tree VideoStreamPlayer has a recognized, unscripted native Theora stream and a nonempty video texture. It is unpaused and can_process() is true, including inherited process and tree-pause state. In a running game, playback and internal processing must both be active; in the editor, autoplay is a configuration candidate only. Both verified native players update playback independently of visibility, and Theora decodes, converts and uploads new frames. Stopped runtime playback, detached nodes, custom streams and zero playback speed/time scale where the player supports scaling are excluded. This does not measure decoder cost or prove the texture is unused elsewhere.",
+    "suggestion": "If this hidden video is not needed for audio, timing or another consumer of get_video_texture(), pause playback while it is hidden and compare CPU/frame timing during that interval.",
+    "tradeoff": "Pausing also pauses audio and playback position. Another node or shader may still display the video texture, and gameplay may depend on its timing; keep playback active when needed.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Compare the same hidden-video interval before and after explicitly pausing the player, checking audio, playback position and every consumer of its video texture while measuring CPU/frame timing.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/gui/video_stream_player.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.font_msdf_size",
+    "category": "ui",
+    "title": "A text node uses an enlarged MSDF glyph cache",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_font_msdf_size",
+        "value": 1
+      }
+    },
+    "offender_key": "check_font_msdf_size",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A Label, Button or explicitly font-assigned Label3D uses a FontFile with source data, MSDF enabled and msdf_size above its default 48. Native glyph caches use this source size; larger values increase generation work and memory. Up to eight explicit FontVariation base links are followed; fallback glyph fonts are not inferred.",
+    "suggestion": "Compare the default MSDF source size where glyph detail remains adequate; measure first-use text generation and font memory as well as appearance.",
+    "tradeoff": "Fine glyph details or large text can lose precision. Preserve the required outline pixel range and do not switch off MSDF merely to reduce this size.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/FontFile.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.font_subpixel_large",
+    "category": "ui",
+    "title": "Large text forces subpixel glyph variants",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_font_subpixel_large",
+        "value": 1
+      }
+    },
+    "offender_key": "check_font_subpixel_large",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An observed dynamic non-MSDF FontFile forces half- or quarter-pixel positioning and the text node requests a font size above 20. In both checked versions AUTO stops subpixel variants above 20 pixels; 4.7 stores that size in 1/64 units internally. Actual raster size can also depend on scaling, so this is a review candidate.",
+    "suggestion": "Compare AUTO subpixel positioning at the actual viewport scale, checking text sharpness and first-use cache generation.",
+    "tradeoff": "Kerning and small text sharpness may change. Cached glyphs do not necessarily cost fresh rasterization every frame.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/modules/text_server_adv/text_server_adv.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.font_local_mipmaps",
+    "category": "ui",
+    "title": "An observed font resource generates mipmaps",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_font_local_mipmaps",
+        "value": 1
+      }
+    },
+    "offender_key": "check_font_local_mipmaps",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A Label, Button or explicitly font-assigned Label3D resolves to a FontFile with source data and generate_mipmaps enabled. Native atlas upload generates the mip chain when dirty. This inspects the actual font override, independently of the project's default-font setting.",
+    "suggestion": "Compare disabling mipmaps for fonts displayed at a stable native size with no minification; retain them for shrinking or distant text.",
+    "tradeoff": "Removing mipmaps can cause shimmering or grainy minified text and may increase sampling cost. Profile atlas updates and memory, not only unchanged cached text.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/modules/text_server_adv/text_server_adv.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.font_oversampling",
+    "category": "ui",
+    "title": "A canvas text font overrides oversampling above 2",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_font_oversampling",
+        "value": 1
+      }
+    },
+    "offender_key": "check_font_oversampling",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A nonempty Label or Button resolves through at most eight native FontVariation links to an unscripted FontFile with source data, MSDF disabled, fixed_size zero and a finite oversampling override above 2. Godot 4.4 scales the glyph raster size inside its cache; 4.7 requests a larger size cache during canvas drawing. Larger outline glyphs can increase first-use raster work and atlas memory; embedded color bitmap strikes can behave differently. The threshold is a review heuristic, not a measured cost. Label3D, system/fallback glyph selection, scripted fonts and automatic viewport oversampling are not inferred.",
+    "suggestion": "Compare a smaller explicit font oversampling override at the intended display scale. Measure first-use text rendering and font memory, and inspect small text and outlines before keeping the change. Zero restores automatic oversampling and does not necessarily reduce it.",
+    "tradeoff": "Lower oversampling can blur or distort text, especially with viewport scaling or high-density displays. Cached text need not rerasterize every frame, and a configured primary font may not supply every displayed glyph.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/modules/text_server_adv/text_server_adv.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.panel_corner_detail",
+    "category": "ui",
+    "title": "A rounded panel uses high corner geometry detail",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_panel_corner_detail",
+        "value": 1
+      }
+    },
+    "offender_key": "check_panel_corner_detail",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible Panel or PanelContainer uses an effective native, unscripted StyleBoxFlat with corner_detail above the default 8, nonnegative border/radius settings with at least one positive corner radius, and an enabled nontransparent fill, border or shadow. The expanded rectangle must be finite, not approximately zero-sized, and larger in both dimensions than twice its largest border width, excluding degenerate or border-filled cases where native radius adaptation can remove rounding. Both versions build more vertices per rounded fill/ring as corner_detail increases; borders, shadows and antialiasing can add rings. The threshold is a review heuristic, not evidence of a frame-time bottleneck. Canvas geometry is cached between redraws; no per-frame CPU rebuild is claimed.",
+    "suggestion": "Compare corner_detail 8 or a lower visually acceptable value on these panels, checking corner smoothness at the actual UI scale and measuring canvas cost and redraw-heavy UI updates.",
+    "tradeoff": "Lower detail can make large or magnified corners visibly angular. Retain the current value when the visual benefit matters; a small number of panels may have negligible cost.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/resources/style_box_flat.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.label_effect_passes",
+    "category": "ui",
+    "title": "A long Label draws both outline and shadow passes",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_label_effect_passes",
+        "value": 1
+      }
+    },
+    "offender_key": "check_label_effect_passes",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A Label with at least 128 text characters and visible_characters not zero enables both a visible outline and visible shadow. Native drawing processes separate shadow, outline and fill steps; a shadow outline can add more work. LabelSettings overrides take precedence. Character count is not a visible-glyph or draw-call count.",
+    "suggestion": "Compare using only the outline or only the shadow for long UI text, and measure canvas rendering while checking readability.",
+    "tradeoff": "Text contrast and legibility can suffer; keep both effects where they are required. Wrapping, clipping and visible-character limits may reduce actual work.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/gui/label.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.richtext_sync",
+    "category": "ui",
+    "title": "A large RichTextLabel processes text synchronously",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_richtext_sync",
+        "value": 1
+      }
+    },
+    "offender_key": "check_richtext_sync",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "RichTextLabel has over 32768 current characters according to get_total_character_count() with threaded disabled. The getter walks the native item list without triggering shaping or custom effects; it counts text, newlines and image placeholders, excluding markup and stale stored text after programmatic edits. Its cache-validation path processes invalid lines synchronously; unchanged valid text is cached. The character cutoff is heuristic, not a rendered-glyph or millisecond estimate. Counting cost scales with the number of native rich-text items.",
+    "suggestion": "Compare threaded text processing if long text updates stall the UI, and wait for finished before relying on completed layout dimensions.",
+    "tradeoff": "Text/layout completion becomes asynchronous; this moves work off the caller rather than eliminating shaping work.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Profile the same long-text insertion or replacement and UI response time; verify finished/layout behavior and text appearance. Do not benchmark only an unchanged cached label.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/gui/rich_text_label.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "ui.aspect_ratio_proportional_texture",
+    "category": "ui",
+    "title": "A proportional TextureRect is inside an AspectRatioContainer",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_aspect_ratio_texture_rect",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_aspect_ratio_texture_rect",
+    "evidence": "Godot prints \"Proportional TextureRect is currently not supported inside AspectRatioContainer\" when a direct TextureRect child of AspectRatioContainer uses expand mode Fit Width Proportional or Fit Height Proportional; the container ignores that child's proportional sizing.",
+    "suggestion": "Use expand mode Ignore Size or Keep Size inside the container and let the container keep the ratio.",
+    "tradeoff": "None.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/scene/gui/aspect_ratio_container.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "ui.flow_fit_texture_rect",
+    "category": "ui",
+    "title": "A fit-mode TextureRect is inside a wrapping FlowContainer",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_flow_fit_texture_rect",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_flow_fit_texture_rect",
+    "evidence": "Godot prints \"TextureRects with Fit Expand Modes are currently not supported inside FlowContainers with multiple lines\" when a direct TextureRect child of a FlowContainer that has wrapped to more than one line uses a Fit Width or Fit Height expand mode; Godot stops sizing it to avoid a layout loop. Line count is known only for laid-out containers (running scenes).",
+    "suggestion": "Use Ignore Size or Keep Size for TextureRects inside FlowContainers, or wrap them in a fixed-size container.",
+    "tradeoff": "None.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/scene/gui/flow_container.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

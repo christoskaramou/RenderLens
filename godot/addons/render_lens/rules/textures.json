@@ -1,0 +1,661 @@
+[
+  {
+    "id": "textures.anisotropy_16x",
+    "category": "textures",
+    "title": "Anisotropic filtering is 16\u00d7",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gte": {
+        "path": "rendering/textures/default_filters/anisotropic_filtering_level",
+        "value": 4
+      }
+    },
+    "evidence": "anisotropic_filtering_level is 4. The hint is Disabled, 2\u00d7, 4\u00d7, 8\u00d7, 16\u00d7 (Slow). The default is 2 (4\u00d7).",
+    "suggestion": "Set anisotropic_filtering_level to 2 (4\u00d7) or 3 (8\u00d7).",
+    "setting": "rendering/textures/default_filters/anisotropic_filtering_level",
+    "tradeoff": "Grazing surfaces look blurrier.",
+    "expected_effect": "Fewer anisotropic samples than the level labeled Slow.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "textures.anisotropy_off",
+    "category": "textures",
+    "title": "Anisotropic filtering is disabled",
+    "severity": "low",
+    "kind": "quality_up",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/textures/default_filters/anisotropic_filtering_level",
+        "value": 0
+      }
+    },
+    "evidence": "anisotropic_filtering_level is 0 (Disabled). The default is 2 (4\u00d7).",
+    "suggestion": "Set it to 2 if grazing-angle textures shimmer and there is GPU headroom.",
+    "setting": "rendering/textures/default_filters/anisotropic_filtering_level",
+    "tradeoff": "4\u00d7 anisotropy costs more samples than disabled.",
+    "expected_effect": "Sharper textures at an angle. The importing-images page is the companion for mipmaps, which anisotropy needs.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/assets_pipeline/importing_images.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "textures.nearest_mip_filter",
+    "category": "textures",
+    "title": "Nearest mipmap filter is forced",
+    "severity": "info",
+    "kind": "info",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/textures/default_filters/use_nearest_mipmap_filter",
+        "value": true
+      }
+    },
+    "evidence": "use_nearest_mipmap_filter is true. The default is false.",
+    "suggestion": "Leave this on only for a pixel-art mip look. The default linear mip filter is the smoother 3D path.",
+    "setting": "rendering/textures/default_filters/use_nearest_mipmap_filter",
+    "tradeoff": "Linear mip filtering is slightly more expensive and blurs mip transitions.",
+    "expected_effect": "Visual only, unless you were bandwidth-bound on the extra tap.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "textures.vram_uncompressed",
+    "category": "textures",
+    "title": "Imported textures use VRAM uncompressed",
+    "severity": "high",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "texture_vram_uncompressed_count",
+        "value": 1
+      }
+    },
+    "evidence": "A texture .import file has compress/mode 3. resource_importer_texture.h at tag 4.4-stable orders the enum Lossless, Lossy, VRAM Compressed, VRAM Uncompressed, Basis Universal.",
+    "suggestion": "Set the Import dock compress mode to VRAM Compressed for 3D textures. The importing-images page says 3D detection switches compression to VRAM Compressed.",
+    "node_property": "compress/mode",
+    "offender_key": "textures_uncompressed",
+    "tradeoff": "Block compression is lossy.",
+    "expected_effect": "Less texture VRAM. Read RENDER_TEXTURE_MEM_USED after reimport.",
+    "verify_step": "collect_metrics",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/editor/import/resource_importer_texture.h",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "textures.lossless_3d",
+    "category": "textures",
+    "title": "Textures used in 3D are imported lossless",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "texture_lossless_count",
+        "value": 1
+      }
+    },
+    "evidence": "compress/mode is 0 (Lossless) on a texture referenced by a 3D material or decal.",
+    "suggestion": "Reimport as VRAM Compressed unless the texture is a UI asset or a normal map that cannot tolerate the block format.",
+    "node_property": "compress/mode",
+    "offender_key": "textures_lossless",
+    "tradeoff": "VRAM compression is lossy. The importing-images page notes quality issues can be fixed per texture.",
+    "expected_effect": "Smaller GPU textures.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/assets_pipeline/importing_images.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "textures.no_mipmaps",
+    "category": "textures",
+    "title": "3D textures have mipmaps disabled",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "texture_no_mipmaps_count",
+        "value": 1
+      }
+    },
+    "evidence": "mipmaps/generate is false on a texture used in 3D. The importing-images page says mipmaps are enabled when a texture is detected as 3D.",
+    "suggestion": "Enable mipmaps in the Import dock and reimport.",
+    "node_property": "mipmaps/generate",
+    "offender_key": "textures_no_mipmaps",
+    "tradeoff": "Mipmaps use about a third more memory and storage.",
+    "expected_effect": "Farther surfaces sample smaller mips instead of the full image. The resolution scaling page notes the mipmap bias only affects textures that have mipmaps.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/assets_pipeline/importing_images.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "textures.large_dimension",
+    "category": "textures",
+    "title": "A texture is larger than 2048 on a side",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "2048 is not a Godot maximum. Textures wider or taller than 2048 are called out because they dominate VRAM relative to the 256 default reflection size and the 4096 shadow maps.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "texture_large_count",
+        "value": 1
+      }
+    },
+    "evidence": "A Texture2D used by the scene reports a width or height above 2048.",
+    "suggestion": "Downscale in the Import dock with process/size_limit, or author a smaller source. Keep unique hero textures only where the texel is visible.",
+    "node_property": "Texture2D.get_width",
+    "offender_key": "textures_large",
+    "tradeoff": "Less texel detail up close.",
+    "expected_effect": "Less RENDER_TEXTURE_MEM_USED after reimport.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/assets_pipeline/importing_images.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "textures.decal_filter_aniso",
+    "category": "textures",
+    "title": "Decal filter uses anisotropic samples",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gte": {
+        "path": "rendering/textures/decals/filter",
+        "value": 4
+      }
+    },
+    "evidence": "decals/filter index is 4 or higher (anisotropic modes in the hint). The default index is 3 (Linear Mipmap).",
+    "suggestion": "Set rendering/textures/decals/filter to 3.",
+    "setting": "rendering/textures/decals/filter",
+    "tradeoff": "Decals shimmer more at grazing angles.",
+    "expected_effect": "Cheaper decal sampling.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/using_decals.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "textures.webp_method_slow",
+    "category": "textures",
+    "title": "WebP compression method is above 4",
+    "severity": "low",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/textures/webp_compression/compression_method",
+        "value": 4
+      }
+    },
+    "evidence": "compression methods above 4 are very slow",
+    "suggestion": "Lower rendering/textures/webp_compression/compression_method to 4 or below. The description says methods above 4 are very slow and save little.",
+    "setting": "rendering/textures/webp_compression/compression_method",
+    "tradeoff": "Imported WebP files can be slightly larger.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "textures.gpu_compress_off",
+    "category": "textures",
+    "title": "GPU texture compression is disabled",
+    "severity": "info",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/textures/vram_compression/compress_with_gpu",
+        "value": false
+      }
+    },
+    "evidence": "improving the import time of large images",
+    "suggestion": "Turn rendering/textures/vram_compression/compress_with_gpu on when the device has Vulkan, D3D12, or Metal. The description says that speeds up import of large images.",
+    "setting": "rendering/textures/vram_compression/compress_with_gpu",
+    "tradeoff": "Import uses the CPU compressor instead.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "textures.noise_texture_startup",
+    "category": "textures",
+    "title": "A procedural noise texture has a large generation workload",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_noise_texture_startup",
+        "value": 1
+      }
+    },
+    "offender_key": "check_noise_texture_startup",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An observed NoiseTexture2D/3D with an assigned generator contains at least 1048576 configured texels. Native texture updates explicitly run the first update without a worker thread; later updates can use workers. Resource lifecycle determines whether that first update already had its generator. The scanner reads dimensions only and never generates or downloads the texture.",
+    "suggestion": "For static noise, compare a pre-generated imported texture; otherwise prepare it during a loading phase and measure startup or regeneration spikes.",
+    "tradeoff": "Stored textures trade disk/package size against runtime generation and must preserve dimensions, wrapping, color space and normal-map interpretation. Keep generation when procedural variation is required.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Measure scene-load/first-use time and peak frame timing after changing the noise resource; compare the visual output and resulting texture memory.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/modules/noise/noise_texture_2d.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "textures.noise_texture_octaves",
+    "category": "textures",
+    "title": "A noise texture samples more fractal layers than the default",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_noise_texture_octaves",
+        "value": 1
+      }
+    },
+    "offender_key": "check_noise_texture_octaves",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An observed noise texture of at least 65536 texels uses FastNoiseLite with active ordinary fractal octaves above five, or enabled fractal domain warp above five. The wrapper forwards octave counts and the native implementation loops over them per sample. Disabled fractal/warp modes are excluded; these are generation costs, not continuous fragment-shader costs.",
+    "suggestion": "Compare fewer noise or warp octaves while keeping the detail needed at the displayed scale; profile regeneration, especially during loading.",
+    "tradeoff": "Fine structure or warping can change. Reducing texture dimensions changes a different quality setting and should be tested separately.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Compare generation or loading time for the same dimensions and generator seed, then inspect the texture at its intended scale.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/modules/noise/fastnoise_lite.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "textures.gradient_hdr_size",
+    "category": "textures",
+    "title": "A large procedural gradient uses full-float pixels",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_gradient_hdr_size",
+        "value": 1
+      }
+    },
+    "offender_key": "check_gradient_hdr_size",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A built-in Sprite2D, Sprite3D or TextureRect texture is a GradientTexture2D with HDR enabled and at least 512 by 512 pixels in total. Native generation selects RGBAF rather than RGBA8: four times the base pixel bytes. The size cutoff is heuristic and does not measure GPU residency or regeneration frequency.",
+    "suggestion": "Compare a smaller gradient, or disable HDR only when overbright colors and float precision are unnecessary.",
+    "tradeoff": "Lower resolution may reveal banding or interpolation artifacts; LDR clamps overbright colors and can change glow or precision.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/resources/gradient_texture.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "textures.animated_texture",
+    "category": "textures",
+    "title": "A sprite or texture control uses an actively animated texture resource",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_animated_texture",
+        "value": 1
+      }
+    },
+    "offender_key": "check_animated_texture",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "Sprite2D, Sprite3D or TextureRect assigns an AnimatedTexture with multiple frames, nonzero speed and playback unpaused. Godot warns that this deprecated implementation is inefficient on modern renderers. Custom/parent canvas materials and 3D material overrides are excluded.",
+    "suggestion": "For these node uses, compare AnimatedSprite2D/3D or explicit texture/frame animation while preserving playback timing and visual output.",
+    "tradeoff": "AnimatedTexture has no universal drop-in replacement for every resource use; replacing a sprite/control requires adapting scene or animation data.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/AnimatedTexture.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  }
+]

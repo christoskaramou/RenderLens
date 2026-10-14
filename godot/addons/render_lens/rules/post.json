@@ -1,0 +1,2252 @@
+[
+  {
+    "id": "post.ssao_enabled",
+    "category": "post",
+    "title": "SSAO is enabled",
+    "severity": "high",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_eq": {
+        "name": "env_ssao",
+        "value": 1
+      }
+    },
+    "evidence": "Environment.ssao_enabled is true. The environment page says SSAO is Forward+ only and only affects ambient light.",
+    "suggestion": "Turn ssao_enabled off and compare contact darkening. If you keep it, leave rendering/environment/ssao/half_size true (the default) and avoid quality indexes 3 and 4 (High, Ultra).",
+    "node_property": "Environment.ssao_enabled",
+    "tradeoff": "Corners and creases lose the screen-space ambient darkening.",
+    "expected_effect": "Removes Process SSAO. No millisecond cost is assumed.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "when_pass": [
+      "Process SSAO"
+    ],
+    "dedupe_key": "ssao",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "environment": true,
+        "property": "ssao_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "post.ssao_quality_high",
+    "category": "post",
+    "title": "SSAO quality is High or Ultra",
+    "severity": "high",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_ssao",
+            "value": 1
+          }
+        },
+        {
+          "setting_gte": {
+            "path": "rendering/environment/ssao/quality",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "evidence": "ssao/quality is 3 or 4. The hint is Very Low, Low, Medium, High (Slow), Ultra (Custom). The default is 2 (Medium).",
+    "suggestion": "Set rendering/environment/ssao/quality to 2 or lower.",
+    "setting": "rendering/environment/ssao/quality",
+    "tradeoff": "SSAO banding and noise increase.",
+    "expected_effect": "A cheaper SSAO quality level than the ones labeled Slow and Ultra.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "dedupe_key": "ssao",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Process SSAO"
+    ],
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/environment/ssao/quality",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "post.ssao_full_res",
+    "category": "post",
+    "title": "SSAO half-size is off",
+    "severity": "medium",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_ssao",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/environment/ssao/half_size",
+            "value": false
+          }
+        }
+      ]
+    },
+    "evidence": "ssao/half_size is false. The default is true.",
+    "suggestion": "Set rendering/environment/ssao/half_size to true.",
+    "setting": "rendering/environment/ssao/half_size",
+    "tradeoff": "SSAO is blurrier, which is the default look.",
+    "expected_effect": "SSAO runs at half resolution.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Process SSAO"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/environment/ssao/half_size",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "post.ssao_blur_passes",
+    "category": "post",
+    "title": "SSAO blur passes are above the default",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "ssao/blur_passes defaults to 2 (range 0\u20136). More passes than the default is extra blur work.",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_ssao",
+            "value": 1
+          }
+        },
+        {
+          "setting_gt": {
+            "path": "rendering/environment/ssao/blur_passes",
+            "value": 2
+          }
+        }
+      ]
+    },
+    "evidence": "ssao/blur_passes is above 2.",
+    "suggestion": "Set blur_passes back to 2.",
+    "setting": "rendering/environment/ssao/blur_passes",
+    "tradeoff": "SSAO noise is less smoothed.",
+    "expected_effect": "Fewer SSAO blur iterations.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "kind": "performance",
+    "when_pass": [
+      "Process SSAO"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.ssil_quality_high",
+    "category": "post",
+    "title": "SSIL quality is High or Ultra",
+    "severity": "high",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_ssil",
+            "value": 1
+          }
+        },
+        {
+          "setting_gte": {
+            "path": "rendering/environment/ssil/quality",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "evidence": "ssil/quality is 3 or 4 (High / Ultra). The default is 2 (Medium). blur_passes defaults to 4 and half_size defaults to true.",
+    "suggestion": "Set ssil/quality to 2 or lower.",
+    "setting": "rendering/environment/ssil/quality",
+    "tradeoff": "Indirect detail gets noisier.",
+    "expected_effect": "A cheaper SSIL quality level.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "dedupe_key": "ssil",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Process SSIL"
+    ],
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/environment/ssil/quality",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "post.ssil_full_res",
+    "category": "post",
+    "title": "SSIL half-size is off",
+    "severity": "medium",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_ssil",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/environment/ssil/half_size",
+            "value": false
+          }
+        }
+      ]
+    },
+    "evidence": "ssil/half_size is false. The default is true.",
+    "suggestion": "Set rendering/environment/ssil/half_size to true.",
+    "setting": "rendering/environment/ssil/half_size",
+    "tradeoff": "SSIL softens, which matches the default.",
+    "expected_effect": "SSIL runs at half resolution.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Process SSIL"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/environment/ssil/half_size",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "post.ssr_enabled",
+    "category": "post",
+    "title": "Screen-space reflections are enabled",
+    "severity": "high",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_eq": {
+        "name": "env_ssr",
+        "value": 1
+      }
+    },
+    "evidence": "Environment.ssr_enabled is true. The environment page says SSR is Forward+ only.",
+    "suggestion": "Turn ssr_enabled off or lower ssr_max_steps (Environment default 64, range 1\u2013512).",
+    "node_property": "Environment.ssr_enabled",
+    "tradeoff": "Reflections fall back to reflection probes and the sky.",
+    "expected_effect": "Removes the screen-space reflection pass.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "when_pass": [
+      "Screen-Space Reflections",
+      "Process SSR"
+    ],
+    "dedupe_key": "ssr",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "environment": true,
+        "property": "ssr_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "post.ssr_steps",
+    "category": "post",
+    "title": "SSR max steps is above the Environment default",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "Environment.ssr_max_steps defaults to 64 in Godot 4.4. Above 64 traces more steps than that default.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_ssr",
+            "value": 1
+          }
+        },
+        {
+          "scene_gte": {
+            "name": "env_ssr_max_steps",
+            "value": 65
+          }
+        }
+      ]
+    },
+    "evidence": "ssr_max_steps is above 64.",
+    "suggestion": "Set Environment.ssr_max_steps to 64 or below.",
+    "node_property": "Environment.ssr_max_steps",
+    "tradeoff": "Reflections cut off sooner on grazing surfaces.",
+    "expected_effect": "Shorter SSR traces.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_environment.html",
+    "dedupe_key": "ssr_steps",
+    "kind": "performance",
+    "when_pass": [
+      "Screen-Space Reflections",
+      "Process SSR"
+    ],
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "environment": true,
+        "property": "ssr_max_steps",
+        "value": 64,
+        "only_above": 64
+      }
+    ]
+  },
+  {
+    "id": "post.glow_enabled",
+    "category": "post",
+    "title": "Glow is enabled",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_eq": {
+        "name": "env_glow",
+        "value": 1
+      }
+    },
+    "evidence": "Environment.glow_enabled is true.",
+    "suggestion": "Turn glow off to see the bloom cost, or reduce how many glow_levels are above 0. The timestamp label for the pass is Glow.",
+    "node_property": "Environment.glow_enabled",
+    "tradeoff": "Bloom and glow on bright pixels disappear.",
+    "expected_effect": "Removes the glow pass. Measure it; do not assume a percentage of the frame.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "when_pass": [
+      "Glow"
+    ],
+    "dedupe_key": "glow",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "environment": true,
+        "property": "glow_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "post.glow_bicubic",
+    "category": "post",
+    "title": "Glow upscale is bicubic while glow is on",
+    "severity": "low",
+    "requires": [
+      "frame",
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "all": [
+            {
+              "scene_eq": {
+                "name": "env_glow",
+                "value": 1
+              }
+            },
+            {
+              "setting_eq": {
+                "path": "rendering/environment/glow/upscale_mode",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "frame_over_budget": true
+        }
+      ]
+    },
+    "evidence": "glow/upscale_mode is 1. The hint is Linear (Fast), Bicubic (Slow). The desktop default is 1 and the .mobile override default is 0. This is Godot's default, so it is reported only when the measured frame is over budget.",
+    "suggestion": "Set rendering/environment/glow/upscale_mode to 0 (Linear) if glow is a measured cost.",
+    "setting": "rendering/environment/glow/upscale_mode",
+    "tradeoff": "Glow upscale looks softer or more aliased than bicubic.",
+    "expected_effect": "The faster glow upscale labeled in ProjectSettings.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "dedupe_key": "glow",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/environment/glow/upscale_mode",
+        "value": 0
+      }
+    ]
+  },
+  {
+    "id": "post.volumetric_fog",
+    "category": "post",
+    "title": "Volumetric fog is enabled",
+    "severity": "high",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_eq": {
+        "name": "env_volumetric_fog",
+        "value": 1
+      }
+    },
+    "evidence": "Environment.volumetric_fog_enabled is true. The volumetric fog page says it is Forward+ only.",
+    "suggestion": "Turn volumetric fog off, or lower volume_size and volume_depth (both default to 64, range 16\u2013512). The page says a smaller volume size is the performance side of that tradeoff.",
+    "node_property": "Environment.volumetric_fog_enabled",
+    "tradeoff": "Height fog and light shafts from the froxel volume disappear. Quad-based fog still works on Mobile and Compatibility.",
+    "expected_effect": "Removes the volumetric fog passes (Render Fog, Filter Fog, Integrate Fog).",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/volumetric_fog.html",
+    "dedupe_key": "vfog",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render Fog",
+      "Integrate Fog",
+      "Filter Fog"
+    ],
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "environment": true,
+        "property": "volumetric_fog_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "post.volumetric_fog_size",
+    "category": "post",
+    "title": "Volumetric fog volume size or depth is above the default",
+    "severity": "high",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_volumetric_fog",
+            "value": 1
+          }
+        },
+        {
+          "any": [
+            {
+              "setting_gt": {
+                "path": "rendering/environment/volumetric_fog/volume_size",
+                "value": 64
+              }
+            },
+            {
+              "setting_gt": {
+                "path": "rendering/environment/volumetric_fog/volume_depth",
+                "value": 64
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "evidence": "volume_size or volume_depth is above 64. Both default to 64. The volumetric fog page says to raise them for detail and lower them for performance.",
+    "suggestion": "Set volume_size and volume_depth back to 64 or below.",
+    "setting": "rendering/environment/volumetric_fog/volume_size",
+    "tradeoff": "Froxel detail drops. Shorten Environment.volumetric_fog_length if the fog range is the actual problem; the page says that part has no performance cost.",
+    "expected_effect": "A smaller froxel buffer.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/volumetric_fog.html",
+    "dedupe_key": "vfog",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render Fog",
+      "Integrate Fog",
+      "Filter Fog"
+    ],
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.fog_enabled",
+    "category": "post",
+    "title": "Distance or height fog is enabled",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_fog",
+            "value": 1
+          }
+        },
+        {
+          "scene_eq": {
+            "name": "env_volumetric_fog",
+            "value": 0
+          }
+        }
+      ]
+    },
+    "evidence": "Environment.fog_enabled is true and volumetric fog is off. This is the exponential or depth fog mode, not the froxel volume.",
+    "suggestion": "Turn fog_enabled off only if the art direction allows it. Prefer this over volumetric fog when the scene does not need light shafts.",
+    "node_property": "Environment.fog_enabled",
+    "tradeoff": "Aerial perspective goes away.",
+    "expected_effect": "Drops the standard fog evaluation. Volumetric fog is the separate, heavier feature.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.adjustments",
+    "category": "post",
+    "title": "Color adjustments are enabled",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_eq": {
+        "name": "env_adjustment",
+        "value": 1
+      }
+    },
+    "evidence": "Environment.adjustment_enabled is true (brightness, contrast, saturation, or a color correction texture).",
+    "suggestion": "Bake the grade into the tonemap and textures if this is a constant grade, and turn adjustment_enabled off.",
+    "node_property": "Environment.adjustment_enabled",
+    "tradeoff": "You lose a live grade slider.",
+    "expected_effect": "One less fullscreen color pass.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.dof_enabled",
+    "category": "post",
+    "title": "Depth-of-field blur is enabled",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_eq": {
+        "name": "dof_blur_enabled",
+        "value": 1
+      }
+    },
+    "evidence": "CameraAttributesPractical has far or near DOF blur enabled on the camera or WorldEnvironment.",
+    "suggestion": "Turn dof_blur_far_enabled and dof_blur_near_enabled off, or lower the bokeh quality project setting (default index 1, Low).",
+    "node_property": "CameraAttributesPractical.dof_blur_far_enabled",
+    "offender_key": "dof",
+    "tradeoff": "Focus falloff disappears.",
+    "expected_effect": "Removes the DOF blur. The bokeh shape hint marks Circle as Slowest.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Depth of Field"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "camera_attributes": true,
+        "property": "dof_blur_far_enabled",
+        "value": false
+      },
+      {
+        "camera_attributes": true,
+        "property": "dof_blur_near_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "post.dof_circle",
+    "category": "post",
+    "title": "DOF bokeh shape is Circle",
+    "severity": "medium",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "dof_blur_enabled",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/camera/depth_of_field/depth_of_field_bokeh_shape",
+            "value": 2
+          }
+        }
+      ]
+    },
+    "evidence": "bokeh shape is 2. The hint is Box (Fast), Hexagon (Average), Circle (Slowest). The default is 1 (Hexagon).",
+    "suggestion": "Set depth_of_field_bokeh_shape to 1 or 0.",
+    "setting": "rendering/camera/depth_of_field/depth_of_field_bokeh_shape",
+    "tradeoff": "Bokeh highlights become hexagonal or square.",
+    "expected_effect": "The faster bokeh kernel labeled in ProjectSettings.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Depth of Field"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.dof_quality_high",
+    "category": "post",
+    "title": "DOF bokeh quality is High",
+    "severity": "medium",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "dof_blur_enabled",
+            "value": 1
+          }
+        },
+        {
+          "setting_gte": {
+            "path": "rendering/camera/depth_of_field/depth_of_field_bokeh_quality",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "evidence": "bokeh quality index is 3 or more. The hint is Very Low, Low, Medium, High (Slow). The default is 1 (Low).",
+    "suggestion": "Set depth_of_field_bokeh_quality to 1.",
+    "setting": "rendering/camera/depth_of_field/depth_of_field_bokeh_quality",
+    "tradeoff": "DOF looks noisier.",
+    "expected_effect": "A cheaper bokeh quality than High (Slow).",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Depth of Field"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.sss_quality",
+    "category": "post",
+    "title": "Subsurface scattering quality is Medium or High while materials use it",
+    "severity": "medium",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "subsurf_material_count",
+            "value": 1
+          }
+        },
+        {
+          "setting_gte": {
+            "path": "rendering/environment/subsurface_scattering/subsurface_scattering_quality",
+            "value": 2
+          }
+        }
+      ]
+    },
+    "evidence": "A material enables subsurf_scatter and the quality index is 2 or 3. The hint is Disabled, Low, Medium (Average), High (Slow). The default is 1 (Low).",
+    "suggestion": "Set subsurface_scattering_quality to 1, or turn subsurf_scatter_enabled off on materials that do not need it.",
+    "setting": "rendering/environment/subsurface_scattering/subsurface_scattering_quality",
+    "offender_key": "subsurf_materials",
+    "tradeoff": "Skin and wax scattering looks harder.",
+    "expected_effect": "A cheaper subsurface mode than the ones labeled Average and Slow.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [
+      "Sub-Surface Scattering"
+    ],
+    "dedupe_key": "sss",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.camera_far_default",
+    "category": "post",
+    "title": "Camera far plane is still the default 4000",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "Camera3D.far defaults to 4000, which is also the inspector maximum. Keeping the far plane that high retains more of the world in the frustum than a typical scene needs.",
+    "requires": [
+      "frame",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "camera_far_at_default_count",
+            "value": 1
+          }
+        },
+        {
+          "frame_over_budget": true
+        }
+      ]
+    },
+    "evidence": "A Camera3D has far >= 4000. This is Godot's default, so it is reported only when the measured frame is over budget.",
+    "suggestion": "Lower Camera3D.far to just beyond the play space. Shadow max distance and fog depth should stay inside that range.",
+    "node_property": "Camera3D.far",
+    "offender_key": "camera_far",
+    "tradeoff": "Geometry beyond the new far plane pops out.",
+    "expected_effect": "A shorter frustum for culling. The mesh LOD page notes that what is on screen drives LOD; the far plane decides what can be on screen.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_camera3d.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pass.ssao",
+    "category": "post",
+    "title": "Process SSAO is in the capture",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The trigger is a RenderingDevice timestamp label substring from Godot's clustered renderer. Labels are not a stable public API. The rule fires only when that pass has exclusive time above 0.",
+    "requires": [
+      "passes"
+    ],
+    "condition": {
+      "pass_present": {
+        "names": [
+          "Process SSAO"
+        ]
+      }
+    },
+    "evidence": "The Process SSAO timestamp is present. SSAO is Forward+ only.",
+    "suggestion": "Turn Environment.ssao_enabled off or lower ssao/quality, then re-measure.",
+    "tradeoff": "Turning the feature off changes the look described on the cited page.",
+    "expected_effect": "That pass should shrink or disappear on the next gpu_passes capture. No percentage is predicted.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "when_pass": [
+      "Process SSAO"
+    ],
+    "dedupe_key": "ssao",
+    "pass_only": true,
+    "kind": "performance",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "environment": true,
+        "property": "ssao_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "pass.ssr",
+    "category": "post",
+    "title": "Screen-space reflections are in the capture",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The trigger is a RenderingDevice timestamp label substring from Godot's clustered renderer. Labels are not a stable public API. The rule fires only when that pass has exclusive time above 0.",
+    "requires": [
+      "passes"
+    ],
+    "condition": {
+      "pass_present": {
+        "names": [
+          "Screen-Space Reflections",
+          "Process SSR"
+        ]
+      }
+    },
+    "evidence": "An SSR timestamp is present. SSR is Forward+ only.",
+    "suggestion": "Turn Environment.ssr_enabled off or lower ssr_max_steps.",
+    "tradeoff": "Turning the feature off changes the look described on the cited page.",
+    "expected_effect": "That pass should shrink or disappear on the next gpu_passes capture. No percentage is predicted.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "when_pass": [
+      "Screen-Space Reflections",
+      "Process SSR"
+    ],
+    "dedupe_key": "ssr",
+    "pass_only": true,
+    "kind": "performance",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "environment": true,
+        "property": "ssr_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "pass.glow",
+    "category": "post",
+    "title": "Glow is in the capture",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The trigger is a RenderingDevice timestamp label substring from Godot's clustered renderer. Labels are not a stable public API. The rule fires only when that pass has exclusive time above 0.",
+    "requires": [
+      "passes"
+    ],
+    "condition": {
+      "pass_present": {
+        "names": [
+          "Glow"
+        ]
+      }
+    },
+    "evidence": "The Glow timestamp is present.",
+    "suggestion": "Turn Environment.glow_enabled off or set glow upscale to Linear (0).",
+    "tradeoff": "Turning the feature off changes the look described on the cited page.",
+    "expected_effect": "That pass should shrink or disappear on the next gpu_passes capture. No percentage is predicted.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "when_pass": [
+      "Glow"
+    ],
+    "dedupe_key": "glow",
+    "pass_only": true,
+    "kind": "performance",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "environment": true,
+        "property": "glow_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "pass.vfog",
+    "category": "post",
+    "title": "Volumetric fog is in the capture",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The trigger is a RenderingDevice timestamp label substring from Godot's clustered renderer. Labels are not a stable public API. The rule fires only when that pass has exclusive time above 0.",
+    "requires": [
+      "passes"
+    ],
+    "condition": {
+      "pass_present": {
+        "names": [
+          "Render Fog",
+          "Integrate Fog",
+          "Filter Fog"
+        ]
+      }
+    },
+    "evidence": "Volumetric fog timestamps (Render Fog, Filter Fog, Integrate Fog) are present. Volumetric fog is Forward+ only.",
+    "suggestion": "Turn volumetric_fog_enabled off or lower volume_size and volume_depth toward 64.",
+    "tradeoff": "Turning the feature off changes the look described on the cited page.",
+    "expected_effect": "That pass should shrink or disappear on the next gpu_passes capture. No percentage is predicted.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/volumetric_fog.html",
+    "when_pass": [
+      "Render Fog",
+      "Integrate Fog",
+      "Filter Fog"
+    ],
+    "dedupe_key": "vfog",
+    "pass_only": true,
+    "kind": "performance",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "environment": true,
+        "property": "volumetric_fog_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "pass.sss",
+    "category": "post",
+    "title": "Subsurface scattering is in the capture",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The trigger is a RenderingDevice timestamp label substring from Godot's clustered renderer. Labels are not a stable public API. The rule fires only when that pass has exclusive time above 0.",
+    "requires": [
+      "passes"
+    ],
+    "condition": {
+      "pass_present": {
+        "names": [
+          "Sub-Surface Scattering"
+        ]
+      }
+    },
+    "evidence": "A subsurface timestamp is present.",
+    "suggestion": "Disable subsurf_scatter on materials that do not need it, and keep the quality setting at Low.",
+    "tradeoff": "Turning the feature off changes the look described on the cited page.",
+    "expected_effect": "That pass should shrink or disappear on the next gpu_passes capture. No percentage is predicted.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [
+      "Sub-Surface Scattering"
+    ],
+    "dedupe_key": "sss",
+    "pass_only": true,
+    "kind": "performance",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/environment/subsurface_scattering/subsurface_scattering_quality",
+        "value": 0
+      }
+    ]
+  },
+  {
+    "id": "post.ssr_half_size_off",
+    "category": "post",
+    "title": "Screen-space reflections are rendered at full size",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/environment/screen_space_reflection/half_size",
+        "value": false
+      }
+    },
+    "evidence": "screen-space reflections will be rendered at half size and then upscaled",
+    "suggestion": "Set rendering/environment/screen_space_reflection/half_size to true. The 4.7 description says half size is faster and full size is the alternative.",
+    "setting": "rendering/environment/screen_space_reflection/half_size",
+    "tradeoff": "Reflections can look sharper and can flicker less.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.7/classes/class_projectsettings.html",
+    "when_pass": [
+      "Screen-Space Reflections",
+      "Process SSR"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.6",
+        "4.7"
+      ],
+      "min_version": "4.6"
+    }
+  },
+  {
+    "id": "post.ssr_roughness_quality",
+    "category": "post",
+    "title": "SSR roughness quality is above the 4.4 default",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/environment/screen_space_reflection/roughness_quality",
+        "value": 1
+      }
+    },
+    "evidence": "higher values make rough reflections look better",
+    "suggestion": "Lower rendering/environment/screen_space_reflection/roughness_quality toward the default 1. This setting exists in Godot 4.4.",
+    "setting": "rendering/environment/screen_space_reflection/roughness_quality",
+    "tradeoff": "Rough reflections look sharper and less filtered.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [
+      "Screen-Space Reflections",
+      "Process SSR"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5"
+      ],
+      "max_version": "4.5"
+    }
+  },
+  {
+    "id": "post.glow_upscale_mobile",
+    "category": "post",
+    "title": "Mobile devices use bicubic glow upscaling",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/environment/glow/upscale_mode.mobile",
+        "value": 1
+      }
+    },
+    "evidence": "on mobile devices, due to performance concerns or driver support.",
+    "suggestion": "Keep rendering/environment/glow/upscale_mode.mobile at Linear (0), the lower-end default for mobile devices.",
+    "setting": "rendering/environment/glow/upscale_mode.mobile",
+    "tradeoff": "Linear glow upscaling looks blockier on large glow radii.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.ssil_blur_passes",
+    "category": "post",
+    "title": "SSIL blur passes are above the default",
+    "severity": "medium",
+    "kind": "performance",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_ssil",
+            "value": 1
+          }
+        },
+        {
+          "setting_gt": {
+            "path": "rendering/environment/ssil/blur_passes",
+            "value": 4
+          }
+        }
+      ]
+    },
+    "evidence": "A higher number will result in a smoother look, but will be slower to compute and will have less high-frequency detail.",
+    "suggestion": "Return rendering/environment/ssil/blur_passes toward the default 4.",
+    "setting": "rendering/environment/ssil/blur_passes",
+    "tradeoff": "Indirect light looks noisier with fewer blur passes.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [
+      "Process SSIL"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.auto_exposure",
+    "category": "post",
+    "title": "Camera auto exposure is enabled",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_auto_exposure",
+        "value": 1
+      }
+    },
+    "offender_key": "check_auto_exposure",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A Camera3D or WorldEnvironment has CameraAttributes with auto_exposure_enabled. Godot docs: \"Auto exposure needs to evaluate the scene's brightness every frame, which has a moderate performance cost.\"",
+    "suggestion": "Leave auto exposure disabled if it doesn't make much of a difference in the scene, as the page recommends; set a fixed exposure instead.",
+    "tradeoff": "Scenes with large brightness changes (indoor to outdoor) need manual exposure changes instead.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.color_correction_lut_large",
+    "category": "post",
+    "title": "The color-correction LUT is larger than 65 per side",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_color_correction_lut_large",
+        "value": 1
+      }
+    },
+    "offender_key": "check_color_correction_lut_large",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An Environment with adjustments enabled uses a 3D color-correction texture wider than 65 texels; the page lists 17 to 65 per side as typical sizes. The 65 cutoff is a review heuristic. Godot docs: \"since color correction is low-frequency data, sticking to low resolutions is recommended for performance reasons.\"",
+    "suggestion": "Resample the LUT to 33 or 65 per side.",
+    "tradeoff": "Very fine color grades may need the larger LUT.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.fog_density_texture_large",
+    "category": "post",
+    "title": "A FogVolume density texture is larger than 64 per side",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_fog_density_texture_large",
+        "value": 1
+      }
+    },
+    "offender_key": "check_fog_density_texture_large",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A FogVolume's FogMaterial uses a 3D density texture wider, taller or deeper than 64 texels. Godot docs: \"To improve performance, it's recommended to use low texture sizes (64\u00d764\u00d764 or lower), as high-frequency detail is difficult to notice in a FogVolume.\"",
+    "suggestion": "Resample the density texture to 64\u00d764\u00d764 or lower.",
+    "tradeoff": "Finer density detail needs a larger volumetric fog volume size anyway, which the page notes has its own cost.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/volumetric_fog.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render Fog",
+      "Integrate Fog",
+      "Filter Fog"
+    ],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.compositor_msaa_resolve",
+    "category": "post",
+    "title": "A custom compositor requests an intermediate MSAA resolve",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_compositor_msaa_resolve",
+        "value": 1
+      }
+    },
+    "offender_key": "check_compositor_msaa_resolve",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "The active camera/world compositor has an enabled pre-opaque, post-opaque or pre-transparent effect requesting resolved color or depth while its live viewport enables 3D MSAA. Forward+ tests those stage flags before resolving. Post-sky and post-transparent stages are excluded from this extra-resolve claim; shared resolves are not counted individually.",
+    "suggestion": "Review the effect callback: remove a resolved-buffer request only when it does not read that buffer, or restructure compatible effects to share a rendering stage.",
+    "tradeoff": "An effect that samples an unresolved or stale buffer can render incorrectly. Rendering order is part of the effect's behavior; do not disable requirements blindly.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/rendering/renderer_rd/forward_clustered/render_forward_clustered.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.compositor_motion",
+    "category": "post",
+    "title": "A custom compositor requests motion-vector rendering",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_compositor_motion",
+        "value": 1
+      }
+    },
+    "offender_key": "check_compositor_motion",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled effect in the active live compositor requests motion vectors, while viewport TAA is off and scaling is bilinear or FSR1. Forward+ enables its motion-vector path for this request. Debug views or other consumers may still need those vectors; no frame-time saving is assumed.",
+    "suggestion": "Verify that the effect consumes motion vectors; remove the request only after adapting the callback to work without them.",
+    "tradeoff": "Temporal effects and motion reconstruction can fail without velocity data.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/rendering/renderer_rd/forward_clustered/render_forward_clustered.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.compositor_extra_buffers",
+    "category": "post",
+    "title": "A custom compositor requests auxiliary lighting buffers",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_compositor_extra_buffers",
+        "value": 1
+      }
+    },
+    "offender_key": "check_compositor_extra_buffers",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled effect in the active live compositor requests separate specular, or normal/roughness with a resolved Environment. Forward+ can select auxiliary render targets and a specular combine. Other rendering features may already require these buffers. Camera overrides, disabled viewport updates and disabled 3D are respected.",
+    "suggestion": "Audit the callback's actual inputs and remove unused normal/roughness or separate-specular requirements, then profile the affected passes.",
+    "tradeoff": "Custom lighting and post effects may rely on these buffers. Removing an input flag without changing the consumer is not a valid optimization.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/rendering/renderer_rd/forward_clustered/render_forward_clustered.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.fog_sdfgi_inject",
+    "category": "post",
+    "title": "Volumetric fog enables SDFGI sampling",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_fog_sdfgi_inject",
+        "value": 1
+      }
+    },
+    "offender_key": "check_fog_sdfgi_inject",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An assigned Environment enables volumetric fog and SDFGI with GI injection above the native 0.0001 threshold. The fog renderer selects its SDFGI shader path when the SDFGI buffers are available. This does not infer VoxelGI, LightmapGI or SSIL contributions.",
+    "suggestion": "Compare zero fog GI injection where bounced lighting contributes little to the intended fog appearance.",
+    "tradeoff": "Indirect illumination in fog changes; direct lighting is controlled separately.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/rendering/renderer_rd/environment/fog.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render Fog",
+      "Integrate Fog",
+      "Filter Fog"
+    ],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.fog_ambient_inject",
+    "category": "post",
+    "title": "Volumetric fog includes ambient-light injection",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_fog_ambient_inject",
+        "value": 1
+      }
+    },
+    "offender_key": "check_fog_ambient_inject",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An assigned Environment enables volumetric fog with positive ambient injection. The fog shader evaluates the ambient branch and can sample sky radiance. The documented cost is small; the configured feature alone does not establish a bottleneck.",
+    "suggestion": "Compare zero ambient injection if ambient lighting adds little to the intended fog appearance.",
+    "tradeoff": "Fog lighting and color can change.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/rendering/renderer_rd/shaders/environment/volumetric_fog_process.glsl",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render Fog",
+      "Integrate Fog",
+      "Filter Fog"
+    ],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.ssao_large_radius",
+    "category": "post",
+    "title": "SSAO radius exceeds the default",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_ssao_large_radius",
+        "value": 1
+      }
+    },
+    "offender_key": "check_ssao_large_radius",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An assigned Environment enables SSAO with radius above its 1.0 default. Godot documents greater occlusion distance at a performance and quality cost. Compatibility supports this feature from 4.6 (the 4.5 GLES3 driver only stores the settings).",
+    "suggestion": "Compare a smaller SSAO radius that still captures the intended contact shading.",
+    "tradeoff": "Broad ambient occlusion becomes weaker or disappears.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Environment.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [
+      "Process SSAO"
+    ],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "renderers_by_version": {
+        "4.4": [
+          "forward_plus"
+        ],
+        "4.6": [
+          "forward_plus",
+          "gl_compatibility"
+        ]
+      }
+    }
+  },
+  {
+    "id": "post.fog_aerial",
+    "category": "post",
+    "title": "Fog samples sky radiance for aerial perspective",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_fog_aerial",
+        "value": 1
+      }
+    },
+    "offender_key": "check_fog_aerial",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An assigned Environment enables regular fog with positive fog_aerial_perspective, a sky background and a sky material. The Forward+ and Mobile fog shaders sample sky radiance; the documentation describes a small performance cost.",
+    "suggestion": "Compare a fixed fog color by setting aerial perspective to zero where the visual difference is acceptable.",
+    "tradeoff": "Fog no longer follows sky colors.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Environment.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.camera_blur_amount",
+    "category": "post",
+    "title": "Depth-of-field blur exceeds the documented default amount",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_camera_blur_amount",
+        "value": 1
+      }
+    },
+    "offender_key": "check_camera_blur_amount",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "Assigned CameraAttributesPractical enables near or far depth of field with dof_blur_amount above its 0.1 default. Higher blur amounts can be more expensive; the default is a review threshold, not a quality limit. Physical camera attributes are excluded.",
+    "suggestion": "Compare a lower blur amount and remeasure with the same camera and focus distances.",
+    "tradeoff": "Out-of-focus regions become sharper.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/CameraAttributesPractical.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "post.compositor_pre_opaque_resolved",
+    "category": "post",
+    "title": "A pre-opaque compositor effect asks for resolved buffers",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_compositor_pre_opaque_resolved",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_compositor_pre_opaque_resolved",
+    "evidence": "Godot prints \"Pre opaque rendering effects can't access resolved color buffers.\" when a Pre-Opaque CompositorEffect sets access_resolved_color (or access_resolved_depth without a depth prepass) on a viewport with 3D MSAA; nothing has been rendered to resolve at that point.",
+    "suggestion": "Move the effect to a later callback, or clear the access_resolved flags it cannot use.",
+    "tradeoff": "A later callback runs after opaque geometry.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/renderer_rd/forward_clustered/render_forward_clustered.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "post.compositor_mobile_unsupported",
+    "category": "post",
+    "title": "A compositor effect uses a callback the Mobile renderer does not run",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_compositor_mobile_unsupported",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_compositor_mobile_unsupported",
+    "evidence": "Godot prints \"Post opaque rendering effect callback is not supported in the mobile renderer\" for a Post-Opaque CompositorEffect under the Mobile renderer, which renders opaque geometry and sky in subpasses; the renderer also prints that resolved depth access is unsupported when an effect asks for it with 3D MSAA.",
+    "suggestion": "Use the Pre-Transparent or Post-Transparent callback on Mobile, or disable 3D MSAA for effects that read resolved depth.",
+    "tradeoff": "A different callback changes what the effect sees.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/renderer_rd/forward_mobile/render_forward_mobile.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

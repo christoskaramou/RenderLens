@@ -1,0 +1,141 @@
+[
+  {
+    "id": "renderer.burley_mobile",
+    "category": "renderer",
+    "title": "Mobile devices use Burley instead of Lambert diffuse",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/shading/overrides/force_lambert_over_burley.mobile",
+        "value": false
+      }
+    },
+    "evidence": "on mobile devices, due to performance concerns or driver support.",
+    "suggestion": "Keep rendering/shading/overrides/force_lambert_over_burley.mobile on, the lower-end default.",
+    "setting": "rendering/shading/overrides/force_lambert_over_burley.mobile",
+    "tradeoff": "Lambert diffuse is slightly less physically accurate.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "renderer.gl_item_buffer_raised",
+    "category": "renderer",
+    "title": "The Compatibility canvas item buffer is above its default",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/gl_compatibility/item_buffer_size",
+        "value": 16384
+      }
+    },
+    "evidence": "Decreasing this limit may improve performance on bandwidth limited devices.",
+    "suggestion": "Keep rendering/gl_compatibility/item_buffer_size at 16384 unless canvas items are being dropped; raise it only as far as needed.",
+    "setting": "rendering/gl_compatibility/item_buffer_size",
+    "tradeoff": "Too small a buffer drops canvas items that exceed it in one viewport update.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "renderer.nvidia_gl_threaded",
+    "category": "renderer",
+    "title": "NVIDIA threaded optimization stays enabled under OpenGL",
+    "severity": "high",
+    "kind": "performance",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/gl_compatibility/nvidia_disable_threaded_optimization",
+        "value": false
+      }
+    },
+    "evidence": "disables the threaded optimization feature from the NVIDIA drivers, which are known to cause stuttering in most OpenGL applications.",
+    "suggestion": "Turn rendering/gl_compatibility/nvidia_disable_threaded_optimization back on (Windows only).",
+    "setting": "rendering/gl_compatibility/nvidia_disable_threaded_optimization",
+    "tradeoff": "None documented; the setting has no effect outside Windows.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "vendors": [
+        "nvidia"
+      ]
+    }
+  }
+]

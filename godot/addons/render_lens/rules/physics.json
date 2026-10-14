@@ -1,0 +1,1648 @@
+[
+  {
+    "id": "physics.solver_iterations_2d",
+    "category": "physics",
+    "title": "2D solver iterations are above 16",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "physics/2d/solver/solver_iterations",
+        "value": 16
+      }
+    },
+    "evidence": "a greater number of iterations requires more CPU power, which can decrease performance",
+    "suggestion": "Lower physics/2d/solver/solver_iterations toward the default 16. The description says more iterations cost CPU.",
+    "setting": "physics/2d/solver/solver_iterations",
+    "tradeoff": "Stacks and joints settle less accurately.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.jolt_position_steps",
+    "category": "physics",
+    "title": "Jolt position steps are above 2",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "physics/jolt_physics_3d/simulation/position_steps",
+        "value": 2
+      }
+    },
+    "evidence": "The greater the number of iterations, the more accurate the simulation will be, at the cost of CPU performance",
+    "suggestion": "Lower physics/jolt_physics_3d/simulation/position_steps toward the default 2.",
+    "setting": "physics/jolt_physics_3d/simulation/position_steps",
+    "tradeoff": "Contacts settle less accurately.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.jolt_velocity_steps",
+    "category": "physics",
+    "title": "Jolt velocity steps are above 10",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "physics/jolt_physics_3d/simulation/velocity_steps",
+        "value": 10
+      }
+    },
+    "evidence": "The greater the number of iterations, the more accurate the simulation will be, at the cost of CPU performance",
+    "suggestion": "Lower physics/jolt_physics_3d/simulation/velocity_steps toward the default 10. The description says friction needs at least 2.",
+    "setting": "physics/jolt_physics_3d/simulation/velocity_steps",
+    "tradeoff": "Friction and bounce settle less accurately.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.jolt_sleep_disabled",
+    "category": "physics",
+    "title": "Jolt rigid bodies are not allowed to sleep",
+    "severity": "high",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "physics/jolt_physics_3d/simulation/allow_sleep",
+        "value": false
+      }
+    },
+    "evidence": "This can improve physics simulation performance",
+    "suggestion": "Turn physics/jolt_physics_3d/simulation/allow_sleep on so resting bodies leave the solver.",
+    "setting": "physics/jolt_physics_3d/simulation/allow_sleep",
+    "tradeoff": "Bodies that should stay awake, such as slow platforms, may need sleep disabled locally.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.jolt_temp_buffer",
+    "category": "physics",
+    "title": "Jolt's temporary memory buffer is above 32 MiB",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "physics/jolt_physics_3d/limits/temporary_memory_buffer_size",
+        "value": 32
+      }
+    },
+    "evidence": "The amount of memory to pre-allocate for the stack allocator used within Jolt, in MiB",
+    "suggestion": "Lower physics/jolt_physics_3d/limits/temporary_memory_buffer_size toward 32 unless a step is actually running out of that allocator.",
+    "setting": "physics/jolt_physics_3d/limits/temporary_memory_buffer_size",
+    "tradeoff": "A step that needs more temporary memory will fail instead of growing.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.areas_detect_static",
+    "category": "physics",
+    "title": "Jolt areas detect static bodies",
+    "severity": "high",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "physics/jolt_physics_3d/simulation/areas_detect_static_bodies",
+        "value": true
+      }
+    },
+    "evidence": "Enabling this setting can come at a heavy CPU and memory cost",
+    "suggestion": "Turn physics/jolt_physics_3d/simulation/areas_detect_static_bodies off unless areas must overlap static shapes. This setting exists in Godot 4.4 and was removed later.",
+    "setting": "physics/jolt_physics_3d/simulation/areas_detect_static_bodies",
+    "tradeoff": "Area3D nodes no longer report overlaps with StaticBody3D.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4"
+      ],
+      "max_version": "4.4"
+    }
+  },
+  {
+    "id": "physics.continuous_cd",
+    "category": "physics",
+    "title": "Continuous collision detection is enabled on a 3D body",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "rigid_ccd_count",
+        "value": 1
+      }
+    },
+    "evidence": "Not using continuous collision detection is faster to compute",
+    "suggestion": "Turn RigidBody3D.continuous_cd off on bodies that are not small and fast. The class says skipping CCD is faster and can miss those impacts.",
+    "node_property": "RigidBody3D.continuous_cd",
+    "offender_key": "rigid_ccd",
+    "tradeoff": "Fast thin objects can tunnel.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_rigidbody3d.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.continuous_cd_2d",
+    "category": "physics",
+    "title": "Continuous collision detection is enabled on a 2D body",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "rigid_2d_ccd_count",
+        "value": 1
+      }
+    },
+    "evidence": "Continuous collision detection is slower, but more precise",
+    "suggestion": "Turn RigidBody2D.continuous_cd off on bodies that are not small and fast.",
+    "node_property": "RigidBody2D.continuous_cd",
+    "offender_key": "rigid_2d_ccd",
+    "tradeoff": "Fast thin objects can tunnel.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_rigidbody2d.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.concave_shape",
+    "category": "physics",
+    "title": "A concave collision shape is in the scene",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "concave_shape_count",
+        "value": 1
+      }
+    },
+    "evidence": "Try using simplified versions of your rendered geometry for collision shapes",
+    "suggestion": "Replace ConcavePolygonShape3D with a few convex shapes or primitives where the player will not notice. The CPU optimization page recommends simplified collision geometry.",
+    "node_property": "ConcavePolygonShape3D",
+    "offender_key": "concave_shapes",
+    "tradeoff": "Collision no longer matches every triangle of the visual mesh.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/cpu_optimization.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.heightmap_shape",
+    "category": "physics",
+    "title": "A heightmap collision shape is in the scene",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "heightmap_shape_count",
+        "value": 1
+      }
+    },
+    "evidence": "Try using simplified versions of your rendered geometry for collision shapes",
+    "suggestion": "HeightMapShape3D is a dense terrain collider. The CPU optimization page says simplified stand-in shapes are often enough.",
+    "node_property": "HeightMapShape3D",
+    "offender_key": "heightmap_shapes",
+    "tradeoff": "Terrain collision gets coarser.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/cpu_optimization.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.soft_body",
+    "category": "physics",
+    "title": "A SoftBody3D is in the scene",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "soft_body_count",
+        "value": 1
+      }
+    },
+    "evidence": "Increasing this value will improve the resulting simulation, but can affect performance",
+    "suggestion": "Lower SoftBody3D.simulation_precision if the body is not a focal object. The class says raising it improves the sim and can affect performance.",
+    "node_property": "SoftBody3D.simulation_precision",
+    "offender_key": "soft_bodies",
+    "tradeoff": "The soft body looks less stable.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_softbody3d.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.many_character_bodies",
+    "category": "physics",
+    "title": "Several CharacterBody3D nodes are in the scene",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "The CPU optimization page says physics becomes a bottleneck with large numbers of physics objects, from the scene rather than a fixed cap. Eight is only a prompt to look.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "character_body_3d_count",
+        "value": 8
+      }
+    },
+    "evidence": "physics can end up becoming a bottleneck",
+    "suggestion": "The CPU optimization page says large numbers of physics objects become a bottleneck and suggests removing ones outside the current area.",
+    "node_property": "CharacterBody3D",
+    "offender_key": "",
+    "tradeoff": "Bodies you despawn cannot be pushed until they spawn again.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/cpu_optimization.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.active_bodies_2d",
+    "category": "physics",
+    "title": "Many 2D rigid bodies are active",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The monitor counts active RigidBody2D nodes and says lower is better. 32 is a review prompt, not a Godot limit.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gte": {
+        "name": "PHYSICS_2D_ACTIVE_OBJECTS",
+        "value": 32
+      }
+    },
+    "evidence": "Number of active nodes in the game",
+    "suggestion": "PHYSICS_2D_ACTIVE_OBJECTS counts active 2D bodies. The CPU optimization page says large numbers of physics objects become a bottleneck.",
+    "tradeoff": "Depends on which objects or allocations you remove.",
+    "expected_effect": "The same Performance monitor should fall on the next collect_metrics.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "share_from": "",
+    "share_unit": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.pairs_2d",
+    "category": "physics",
+    "title": "Many 2D collision pairs",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The monitor counts 2D collision pairs and says lower is better. 64 is a review prompt, not a Godot limit.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gte": {
+        "name": "PHYSICS_2D_COLLISION_PAIRS",
+        "value": 64
+      }
+    },
+    "evidence": "Number of collision pairs in the 2D physics engine",
+    "suggestion": "PHYSICS_2D_COLLISION_PAIRS is the pair count. Simplify shapes or let bodies sleep.",
+    "tradeoff": "Depends on which objects or allocations you remove.",
+    "expected_effect": "The same Performance monitor should fall on the next collect_metrics.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "share_from": "",
+    "share_unit": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.islands_3d",
+    "category": "physics",
+    "title": "Many 3D physics islands",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The monitor counts 3D physics islands and says lower is better. 32 is a review prompt, not a Godot limit.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gte": {
+        "name": "PHYSICS_3D_ISLAND_COUNT",
+        "value": 32
+      }
+    },
+    "evidence": "Number of islands in the 3D physics engine",
+    "suggestion": "PHYSICS_3D_ISLAND_COUNT is the island count. Islands grow when many bodies are awake and touching.",
+    "tradeoff": "Depends on which objects or allocations you remove.",
+    "expected_effect": "The same Performance monitor should fall on the next collect_metrics.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "share_from": "",
+    "share_unit": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.separate_thread_2d_off",
+    "category": "physics",
+    "title": "The 2D physics server runs on the main thread while physics takes a third of the frame",
+    "severity": "low",
+    "kind": "performance",
+    "requires": [
+      "settings",
+      "metrics",
+      "frame"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "physics/2d/run_on_separate_thread",
+            "value": false
+          }
+        },
+        {
+          "metric_gt_budget_ratio": {
+            "name": "TIME_PHYSICS_PROCESS",
+            "ratio": 0.33
+          }
+        }
+      ]
+    },
+    "evidence": "making better use of multi-core CPUs",
+    "suggestion": "Turn physics/2d/run_on_separate_thread on: measured physics processing exceeds a third of the frame budget. The description says a separate thread can increase performance and restricts API use to the physics process.",
+    "setting": "physics/2d/run_on_separate_thread",
+    "tradeoff": "2D physics calls from idle _process are no longer safe.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.jolt_contact_cache_off",
+    "category": "physics",
+    "title": "The Jolt body pair contact cache is disabled",
+    "severity": "medium",
+    "kind": "performance",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "physics/3d/physics_engine",
+            "value": "Jolt Physics"
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "physics/jolt_physics_3d/simulation/body_pair_contact_cache_enabled",
+            "value": false
+          }
+        }
+      ]
+    },
+    "evidence": "enables the body pair contact cache, which removes the need for potentially expensive collision detection when the relative orientation between two bodies hasn't changed much.",
+    "suggestion": "Turn physics/jolt_physics_3d/simulation/body_pair_contact_cache_enabled back on.",
+    "setting": "physics/jolt_physics_3d/simulation/body_pair_contact_cache_enabled",
+    "tradeoff": "The cache reuses contacts for nearly unchanged body pairs; disable it only if that causes visible contact errors.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.body_many_shapes",
+    "category": "physics",
+    "title": "A physics body has more than 16 collision shapes",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_body_many_shapes",
+        "value": 1
+      }
+    },
+    "offender_key": "check_body_many_shapes",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A CollisionObject2D or CollisionObject3D owns more than 16 enabled shapes (for example from automatic convex decomposition). The 16 cutoff is a review heuristic. Godot docs: \"Convex collision shapes should use a number of shapes as low as possible for performance reasons.\"",
+    "suggestion": "Replace generated shape sets with a few primitive shapes (box, sphere, capsule), or a single concave shape on static level geometry.",
+    "tradeoff": "Fewer shapes follow the visual mesh less closely.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/physics/troubleshooting_physics_issues.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.tilemap_kinematic",
+    "category": "physics",
+    "title": "A TileMap syncs its collisions as kinematic bodies",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_tilemap_kinematic",
+        "value": 1
+      }
+    },
+    "offender_key": "check_tilemap_kinematic",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A TileMap enables collision_animatable. Godot class reference: \"Enabling may have a small performance impact, only do it if the TileMap is moving and has colliding tiles.\"",
+    "suggestion": "Disable collision_animatable unless the TileMap moves and other bodies collide with it.",
+    "tradeoff": "Moving TileMap platforms need it to carry bodies correctly.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/TileMap.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.tilemap_physics_chunking",
+    "category": "physics",
+    "title": "A populated TileMapLayer disables physics chunking",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_tilemap_physics_chunking",
+        "value": 1
+      }
+    },
+    "offender_key": "check_tilemap_physics_chunking",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "On verified Godot 4.7, an enabled TileMapLayer with collision_enabled uses physics_quadrant_size 1 and more than 256 inspected atlas cells have collision polygons with at least three points on layers with nonzero collision layer/mask bits. Native quadrant updates merge polygons with matching physics properties; size 1 disables cross-cell chunking. Godot 4.4 has no such public property and is excluded. Runtime tile-data overrides and inspection omissions are not guessed.",
+    "suggestion": "If exact per-cell body identification is unnecessary, compare the default physics quadrant size of 16 and measure physics processing and tile-edit spikes.",
+    "tradeoff": "Larger quadrants make get_coords_for_body_rid less precise and change rebuild granularity. Keep size 1 when gameplay depends on identifying the exact collision cell.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/scene/2d/tile_map_layer.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.character_slide_budget",
+    "category": "physics",
+    "title": "A character body permits extra slide iterations",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_character_slide_budget",
+        "value": 1
+      }
+    },
+    "offender_key": "check_character_slide_budget",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A CharacterBody2D/3D with an enabled collision shape, nonzero collision mask and a process mode other than disabled raises max_slides above its default of 4 in 2D or 6 in 3D. Native grounded and floating movement repeat move_and_collide up to this limit. Actual work depends on calling move_and_slide and on the contacts encountered; a raised limit alone does not consume all iterations.",
+    "suggestion": "Profile move_and_slide in collision-heavy movement and compare the default limit where gameplay permits.",
+    "tradeoff": "A smaller limit can change movement in corners, on slopes or among moving platforms. Test movement correctness before keeping it.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/3d/physics/character_body_3d.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.softbody_precision",
+    "category": "physics",
+    "title": "A soft body requests additional solver iterations",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_softbody_precision",
+        "value": 1
+      }
+    },
+    "offender_key": "check_softbody_precision",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A SoftBody3D with a mesh surface requests simulation_precision above its default 5 and is not explicitly disabled with remove mode. Godot Physics repeats its link solver iteration_count times; Jolt maps the same setting to its iteration count. Mesh complexity and activity determine actual cost, and the scanner does not claim the two backends have identical work per iteration.",
+    "suggestion": "Compare a lower simulation precision while profiling physics with this soft body active.",
+    "tradeoff": "Fewer iterations can make cloth or other deformable bodies less stable and less accurate. Inspect deformation and collisions under stress.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/modules/godot_physics_3d/godot_soft_body_3d.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.shape_cast_results",
+    "category": "physics",
+    "title": "A ShapeCast permits more contact queries per update",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_shape_cast_results",
+        "value": 1
+      }
+    },
+    "offender_key": "check_shape_cast_results",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled ShapeCast2D/3D with a shape, a nonzero collision mask and an enabled collision target permits more than the default 32 results. Native shape casts repeatedly call rest_info, excluding each hit, until no further hit is found or max_results is reached. The limit permits extra work; it does not prove that enough objects are hit to use it. Unsupported concave 3D shapes are excluded.",
+    "suggestion": "Profile shape-cast updates in dense collision scenes and compare a smaller result limit if gameplay needs only a few contacts.",
+    "tradeoff": "Reducing the limit omits contacts and can change gameplay. Keep enough results for the worst case the game must handle.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/3d/physics/shape_cast_3d.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.spring_bone_collision_pairs",
+    "category": "physics",
+    "title": "A spring-bone simulator declares many joint/collider pairs",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_spring_bone_collision_pairs",
+        "value": 1
+      }
+    },
+    "offender_key": "check_spring_bone_collision_pairs",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A live active unscripted SpringBoneSimulator3D has a direct unscripted Skeleton3D parent with bones, can_process() true and an enabled internal idle/physics tick. Across the first 128 settings, configured joint counts times verified eligible unscripted direct SpringBoneCollision3D children exceed 128. Only the first 128 children and collision paths are inspected. Allow lists deduplicate verified direct references; full child lists remove resolved exclusions. Settings with more than 128 exclusions are skipped. Both native versions loop over colliders for every initialized joint. This is a configured workload indicator: joints without Verlet state and other initialization/processing early-outs can reduce actual calls, so it is not a measured collision count or CPU cost. The 128-pair threshold is heuristic; inactive, paused, detached, scripted and empty cases are excluded. The audit never initializes joints, rebuilds native collision caches, clears paths or runs collision callbacks.",
+    "suggestion": "Compare restricting each chain's collision list to relevant nearby colliders, reducing decorative joints/colliders, or deactivating unused simulation. Profile skeleton/physics CPU work during the same animation, then verify contact and motion.",
+    "tradeoff": "Removing colliders or joints changes secondary motion and contact. Keep gameplay-relevant contacts; configuration alone does not establish measured cost.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/3d/spring_bone_simulator_3d.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.skeleton2d_jiggle_colliders",
+    "category": "physics",
+    "title": "A native 2D Jiggle chain requests many collision rays",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_skeleton2d_jiggle_colliders",
+        "value": 1
+      }
+    },
+    "offender_key": "check_skeleton2d_jiggle_colliders",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "One of the first 128 modifications in a live, setup, owned, enabled, unscripted Skeleton2D stack is an enabled unscripted native SkeletonModification2DJiggle with use_colliders true, nonzero collision_mask, physics execution mode, an enabled internal physics tick and more than 16 configured joints. Each joint that reaches the reviewed native collision branch performs a PhysicsDirectSpaceState2D intersect_ray query. The 16-joint threshold is a review heuristic, not a Godot budget. Invalid targets or joint caches can return early, so the configured joint count is not a measured ray count or CPU cost. Strength zero does not bypass this work. Paused, detached, disabled, scripted and unrecognized native cases are excluded; the audit does not run physics queries or modifiers.",
+    "suggestion": "For decorative chains, compare disabling collision where contact is unnecessary, reducing the joint chain while preserving its motion, or narrowing collision_mask. Measure physics CPU work during the same animation and camera route.",
+    "tradeoff": "Removing collision or joints changes how bones react to obstacles; a narrower mask must retain relevant gameplay surfaces. Keep collisions that are necessary for the intended motion.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/resources/2d/skeleton/skeleton_modification_2d_jiggle.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.rigid_sleep_disabled",
+    "category": "physics",
+    "title": "A dynamic rigid body cannot automatically sleep",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_rigid_sleep_disabled",
+        "value": 1
+      }
+    },
+    "offender_key": "check_rigid_sleep_disabled",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An unfrozen RigidBody2D or RigidBody3D disables can_sleep. Sleeping bodies skip motion and force calculations until woken; disabling automatic sleep removes that opportunity when a body settles. This does not claim that a moving body could already be sleeping.",
+    "suggestion": "Enable automatic sleeping where settled bodies need no continuous simulation, then compare the same settling scene and physics CPU time.",
+    "tradeoff": "Sleep/wake timing can affect custom force logic and interactions; keep continuous simulation where the gameplay requires it.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/RigidBody3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.rigid_contact_budget",
+    "category": "physics",
+    "title": "A rigid body allows a large contact-report list",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_rigid_contact_budget",
+        "value": 1
+      }
+    },
+    "offender_key": "check_rigid_contact_budget",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An unfrozen RigidBody2D or RigidBody3D enables contact monitoring with max_contacts_reported above 32, a heuristic review cutoff. Native monitoring builds temporary lists and walks actual reported contacts during state callbacks. The configured cap permits work but does not establish the actual contact count or cost; multiple contacts can belong to one collision.",
+    "suggestion": "Profile crowded contact cases and compare a smaller report cap only if gameplay still receives every contact it needs.",
+    "tradeoff": "A lower cap can omit body or shape events and get_colliding_bodies entries. Keep enough reports for gameplay; collision response itself is separate from reporting.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/3d/physics/rigid_body_3d.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "physics.jolt_joint_ignored",
+    "category": "physics",
+    "title": "A joint sets parameters that Jolt Physics ignores",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_jolt_joint_ignored",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "physics/3d/physics_engine",
+            "value": "Jolt Physics"
+          }
+        }
+      ]
+    },
+    "setting": "",
+    "offender_key": "check_jolt_joint_ignored",
+    "evidence": "Godot prints \"Hinge joint softness is not supported when using Jolt Physics. Any such value will be ignored.\" for each Hinge, Pin, ConeTwist, Slider or Generic6DOF joint parameter (bias, softness, relaxation, damping, restitution, ERP, force limit and slider angular limits) and solver priority that differs from Godot's default while physics/3d/physics_engine is Jolt Physics. PhysicalBone3D joints are not inspected.",
+    "suggestion": "Reset the parameters Jolt ignores, or tune the joint with the settings Jolt implements (limits, motors and springs).",
+    "tradeoff": "Behavior tuned under GodotPhysics may differ under Jolt.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/modules/jolt_physics/joints/jolt_hinge_joint_3d.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "physics.jolt_area_wind_ignored",
+    "category": "physics",
+    "title": "An Area3D sets wind that Jolt Physics ignores",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_jolt_area_wind_ignored",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "physics/3d/physics_engine",
+            "value": "Jolt Physics"
+          }
+        }
+      ]
+    },
+    "setting": "",
+    "offender_key": "check_jolt_area_wind_ignored",
+    "evidence": "Godot prints \"Area wind force magnitude is not supported when using Jolt Physics. Any such value will be ignored.\" when an Area3D's wind force magnitude, attenuation or source differs from the default while physics/3d/physics_engine is Jolt Physics (Godot 4.4 to 4.6; 4.7 implements area wind).",
+    "suggestion": "Apply the force from a script, or remove the wind settings.",
+    "tradeoff": "A script force needs its own per-body update.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.6.3-stable/modules/jolt_physics/objects/jolt_area_3d.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "physics.jolt_shape_bias_ignored",
+    "category": "physics",
+    "title": "A collision shape sets a solver bias that Jolt Physics ignores",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_jolt_shape_bias_ignored",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "physics/3d/physics_engine",
+            "value": "Jolt Physics"
+          }
+        }
+      ]
+    },
+    "setting": "",
+    "offender_key": "check_jolt_shape_bias_ignored",
+    "evidence": "Godot prints \"Custom solver bias for shapes is not supported when using Jolt Physics. Any such value will be ignored.\" when a CollisionShape3D's shape has a nonzero custom_solver_bias while physics/3d/physics_engine is Jolt Physics.",
+    "suggestion": "Set custom_solver_bias back to 0.",
+    "tradeoff": "None.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/modules/jolt_physics/shapes/jolt_shape_3d.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "physics.convex_polygon_2d_concave",
+    "category": "physics",
+    "title": "A ConvexPolygonShape2D has concave points",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_convex_polygon_concave",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_convex_polygon_concave",
+    "evidence": "Godot prints \"Concave polygon is assigned to ConvexPolygonShape2D.\" in debug builds when a CollisionShape2D's ConvexPolygonShape2D points fail Godot's convexity test; the shape still collides as a convex solver shape, so contacts do not follow the drawn outline.",
+    "suggestion": "Use a CollisionPolygon2D with build mode Solids (it decomposes concave outlines), or a ConcavePolygonShape2D for static geometry.",
+    "tradeoff": "Decomposition creates several shapes.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/scene/resources/2d/convex_polygon_shape_2d.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "physics.jolt_singular_basis",
+    "category": "physics",
+    "title": "A physics node has a zero-scale axis under Jolt Physics",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_jolt_singular_basis",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "physics/3d/physics_engine",
+            "value": "Jolt Physics"
+          }
+        }
+      ]
+    },
+    "setting": "",
+    "offender_key": "check_jolt_singular_basis",
+    "evidence": "Godot prints \"<object>: The basis of the transform was singular, which is not supported by Jolt Physics. This is likely caused by one or more axes having a scale of zero. The basis (and thus its scale) will be treated as identity.\" when a CollisionObject3D or CollisionShape3D in the tree has a global transform with a zero scale on some axis while physics/3d/physics_engine is Jolt Physics; Jolt replaces the basis.",
+    "suggestion": "Give physics nodes a nonzero scale; hide or disable them instead of scaling them to zero.",
+    "tradeoff": "None.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/modules/jolt_physics/shapes/jolt_shape_3d.h",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "physics.jolt_server_call_ignored",
+    "category": "physics",
+    "title": "A script sets PhysicsServer3D parameters that Jolt Physics ignores",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_script_jolt_server_call",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "physics/3d/physics_engine",
+            "value": "Jolt Physics"
+          }
+        }
+      ]
+    },
+    "setting": "",
+    "offender_key": "check_script_jolt_server_call",
+    "evidence": "Godot prints \"Space-specific solver iterations is not supported when using Jolt Physics. Any such value will be ignored.\" when physics/3d/physics_engine is Jolt Physics and a script calls PhysicsServer3D.space_set_param() (every space parameter: contact recycle radius, max separation, max penetration, default bias, sleep thresholds, sleep time, solver iterations), body_set_user_flags() or body_set_contacts_reported_depth_threshold() with a non-default value.",
+    "suggestion": "Use the physics/jolt_physics_3d project settings for the equivalent tuning, or drop the calls under Jolt.",
+    "tradeoff": "Jolt's settings are project-wide rather than per space or body.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/modules/jolt_physics/spaces/jolt_space_3d.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

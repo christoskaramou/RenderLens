@@ -1,0 +1,2207 @@
+{
+ "scope": "Every native get_configuration_warnings() message in scene/ and modules/ of Godot 4.4-stable, 4.5.2-stable, 4.6.3-stable and 4.7.2-stable, extracted from source.",
+ "versions": {
+  "4.4": "4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41",
+  "4.5.2": "6ce3de25aa58466e14ef354703ba8d9791a417da",
+  "4.6.3": "35e80b3a8822a9df9be390814b62f44c0a9c69e8",
+  "4.7.2": "ed1daf0bf001b61586d9930840f2f1394092c079"
+ },
+ "method": "Godot does not expose get_configuration_warnings() to scripts, so each predicate is reimplemented from the native body and tested with positive and negative fixtures on each version where the warning exists (tests/test_source_rules.gd). Script _get_configuration_warnings() overrides are never executed.",
+ "summary": {
+  "warnings": 189,
+  "implemented": 181,
+  "excluded": 8
+ },
+ "warnings": [
+  {
+   "class": "AimModifier3D",
+   "warning": "Forward axis and primary rotation axis must not be parallel in setting %s.",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/aim_modifier_3d.cpp#L94",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/aim_modifier_3d.cpp#L99",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/aim_modifier_3d.cpp#L101"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.aim_modifier_axes"
+  },
+  {
+   "class": "AnimatedSprite2D",
+   "warning": "A SpriteFrames resource must be created or set in the \"Sprite Frames\" property in order for AnimatedSprite2D to display frames.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/animated_sprite_2d.cpp#L576",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/animated_sprite_2d.cpp#L592",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/animated_sprite_2d.cpp#L591",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/animated_sprite_2d.cpp#L611"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.sprite_frames_missing"
+  },
+  {
+   "class": "AnimatedSprite3D",
+   "warning": "A SpriteFrames resource must be created or set in the \"Sprite Frames\" property in order for AnimatedSprite3D to display frames.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/sprite_3d.cpp#L1436",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/sprite_3d.cpp#L1475",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/sprite_3d.cpp#L1469",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/sprite_3d.cpp#L1485"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.sprite_frames_missing"
+  },
+  {
+   "class": "AnimationTree",
+   "warning": "No root AnimationNode for the graph is set.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/animation/animation_tree.cpp#L712",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/animation/animation_tree.cpp#L717",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/animation/animation_tree.cpp#L717",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/animation/animation_tree.cpp#L749"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.animation_tree_root"
+  },
+  {
+   "class": "AreaLight3D",
+   "warning": "Projector texture is not supported for area lights. Use the area_texture field instead.",
+   "source": {
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/light_3d.cpp#L771"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.area_projector"
+  },
+  {
+   "class": "AreaLight3D",
+   "warning": "Rendering area light shadows does not work in the Compatibility rendering mode.",
+   "source": {
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/light_3d.cpp#L771"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.area_shadows"
+  },
+  {
+   "class": "AreaLight3D",
+   "warning": "Rendering textured area lights is not implemented in the Compatibility rendering mode.",
+   "source": {
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/light_3d.cpp#L771"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.area_texture"
+  },
+  {
+   "class": "BaseButton",
+   "warning": "ButtonGroup is intended to be used only with buttons that have toggle_mode set to true.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/gui/base_button.cpp#L455",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/gui/base_button.cpp#L521",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/gui/base_button.cpp#L522",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/base_button.cpp#L569"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.button_group_toggle"
+  },
+  {
+   "class": "Bone2D",
+   "warning": "A Bone2D only works with a Skeleton2D or another Bone2D as parent node.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/skeleton_2d.cpp#L414",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/skeleton_2d.cpp#L414",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/skeleton_2d.cpp#L414",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/skeleton_2d.cpp#L418"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.bone2d_hierarchy"
+  },
+  {
+   "class": "Bone2D",
+   "warning": "This Bone2D chain should end at a Skeleton2D node.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/skeleton_2d.cpp#L414",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/skeleton_2d.cpp#L414",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/skeleton_2d.cpp#L414",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/skeleton_2d.cpp#L418"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.bone2d_hierarchy"
+  },
+  {
+   "class": "Bone2D",
+   "warning": "This bone lacks a proper REST pose. Go to the Skeleton2D node and set one.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/skeleton_2d.cpp#L414",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/skeleton_2d.cpp#L414",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/skeleton_2d.cpp#L414",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/skeleton_2d.cpp#L418"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.bone2d_rest"
+  },
+  {
+   "class": "BoneAttachment3D",
+   "warning": "BoneAttachment3D node is not bound to any bones! Please select a bone to attach this node.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/bone_attachment_3d.cpp#L83",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/bone_attachment_3d.cpp#L60",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/bone_attachment_3d.cpp#L60",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/bone_attachment_3d.cpp#L65"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.bone_attachment_bone"
+  },
+  {
+   "class": "BoneAttachment3D",
+   "warning": "External Skeleton3D node not set! Please set a path to an external Skeleton3D node.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/bone_attachment_3d.cpp#L83",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/bone_attachment_3d.cpp#L60",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/bone_attachment_3d.cpp#L60",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/bone_attachment_3d.cpp#L65"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.bone_attachment_external"
+  },
+  {
+   "class": "BoneAttachment3D",
+   "warning": "Parent node is not a Skeleton3D node! Please use an external Skeleton3D if you intend to use the BoneAttachment3D without it being a child of a Skeleton3D node.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/bone_attachment_3d.cpp#L83",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/bone_attachment_3d.cpp#L60",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/bone_attachment_3d.cpp#L60",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/bone_attachment_3d.cpp#L65"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.bone_attachment_parent"
+  },
+  {
+   "class": "CPUParticles2D",
+   "warning": "CPUParticles2D animation requires the usage of a CanvasItemMaterial with \"Particles Animation\" enabled.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/cpu_particles_2d.cpp#L292",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/cpu_particles_2d.cpp#L299",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/cpu_particles_2d.cpp#L299",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/cpu_particles_2d.cpp#L304"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.particles_animation_2d"
+  },
+  {
+   "class": "CPUParticles3D",
+   "warning": "CPUParticles3D animation requires the usage of a StandardMaterial3D whose Billboard Mode is set to \"Particle Billboard\".",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/cpu_particles_3d.cpp#L213",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/cpu_particles_3d.cpp#L213",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/cpu_particles_3d.cpp#L214",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/cpu_particles_3d.cpp#L218"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.particles_animation_3d"
+  },
+  {
+   "class": "CPUParticles3D",
+   "warning": "Nothing is visible because no mesh has been assigned.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/cpu_particles_3d.cpp#L213",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/cpu_particles_3d.cpp#L213",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/cpu_particles_3d.cpp#L214",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/cpu_particles_3d.cpp#L218"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.cpu_mesh_missing"
+  },
+  {
+   "class": "CSGShape3D",
+   "warning": "The CSGShape3D has an empty shape.\nCSGShape3D empty shapes typically occur because the mesh is not manifold.\nA manifold mesh forms a solid object without gaps, holes, or loose edges.\nEach edge must be a member of exactly two faces.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/modules/csg/csg_shape.cpp#L951",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/modules/csg/csg_shape.cpp#L977",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/csg/csg_shape.cpp#L977",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/csg/csg_shape.cpp#L1152"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.csg_empty_shape",
+   "note": "Partial: only root results are exposed; an empty child brush under a non-empty root is not detected."
+  },
+  {
+   "class": "CanvasGroup",
+   "warning": "Ancestor \"%s\" clips its children, so this CanvasGroup will not function properly.",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/canvas_group.cpp#L67",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/canvas_group.cpp#L67",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/canvas_group.cpp#L70"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.canvas_group_ancestor"
+  },
+  {
+   "class": "CanvasGroup",
+   "warning": "Ancestor \"%s\" is a CanvasGroup, so this CanvasGroup will not function properly.",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/canvas_group.cpp#L67",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/canvas_group.cpp#L67",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/canvas_group.cpp#L70"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.canvas_group_ancestor"
+  },
+  {
+   "class": "CanvasItem",
+   "warning": "Ancestor \"%s\" clips its children, so this node will not be able to clip its children.",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/main/canvas_item.cpp#L1264",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/main/canvas_item.cpp#L1299",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/canvas_item.cpp#L1403"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.canvas_nested_clip"
+  },
+  {
+   "class": "CanvasItem",
+   "warning": "Ancestor \"%s\" is a CanvasGroup, so this node will not be able to clip its children.",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/main/canvas_item.cpp#L1264",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/main/canvas_item.cpp#L1299",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/canvas_item.cpp#L1403"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.canvas_group_clip"
+  },
+  {
+   "class": "CanvasModulate",
+   "warning": "Only one visible CanvasModulate is allowed per canvas.\nWhen there are more than one, only one of them will be active. Which one is undefined.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/canvas_modulate.cpp#L116",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/canvas_modulate.cpp#L116",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/canvas_modulate.cpp#L116",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/canvas_modulate.cpp#L120"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.canvas_modulate_multiple"
+  },
+  {
+   "class": "CollisionObject2D",
+   "warning": "This node has no shape, so it can't collide or interact with other objects.\nConsider adding a CollisionShape2D or CollisionPolygon2D as a child to define its shape.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/collision_object_2d.cpp#L584",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/collision_object_2d.cpp#L584",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/collision_object_2d.cpp#L584",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/collision_object_2d.cpp#L605"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_object_empty"
+  },
+  {
+   "class": "CollisionObject3D",
+   "warning": "This node has no shape, so it can't collide or interact with other objects.\nConsider adding a CollisionShape3D or CollisionPolygon3D as a child to define its shape.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/collision_object_3d.cpp#L733",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/collision_object_3d.cpp#L733",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/collision_object_3d.cpp#L735",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/collision_object_3d.cpp#L740"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_object_empty"
+  },
+  {
+   "class": "CollisionObject3D",
+   "warning": "With a non-uniform scale this node will probably not function as expected.\nPlease make its scale uniform (i.e. the same on all axes), and change the size in children collision shapes instead.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/collision_object_3d.cpp#L733",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/collision_object_3d.cpp#L733",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/collision_object_3d.cpp#L735",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/collision_object_3d.cpp#L740"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_nonuniform"
+  },
+  {
+   "class": "CollisionPolygon2D",
+   "warning": "An empty CollisionPolygon2D has no effect on collision.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/collision_polygon_2d.cpp#L236"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_polygon_empty"
+  },
+  {
+   "class": "CollisionPolygon2D",
+   "warning": "CollisionPolygon2D only serves to provide a collision shape to a CollisionObject2D derived node. Please only use it as a child of Area2D, StaticBody2D, RigidBody2D, CharacterBody2D, etc. to give them a shape.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/collision_polygon_2d.cpp#L236"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_polygon_parent"
+  },
+  {
+   "class": "CollisionPolygon2D",
+   "warning": "Invalid polygon. At least 2 points are needed in 'Segments' build mode.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/collision_polygon_2d.cpp#L236"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_polygon_points"
+  },
+  {
+   "class": "CollisionPolygon2D",
+   "warning": "Invalid polygon. At least 3 points are needed in 'Solids' build mode.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/collision_polygon_2d.cpp#L236"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_polygon_points"
+  },
+  {
+   "class": "CollisionPolygon2D",
+   "warning": "The One Way Collision property will be ignored when the collision object is an Area2D.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/collision_polygon_2d.cpp#L232",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/collision_polygon_2d.cpp#L236"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.one_way_area"
+  },
+  {
+   "class": "CollisionPolygon3D",
+   "warning": "A non-uniformly scaled CollisionPolygon3D node will probably not function as expected.\nPlease make its scale uniform (i.e. the same on all axes), and change its polygon's vertices instead.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/collision_polygon_3d.cpp#L235",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/collision_polygon_3d.cpp#L235",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/collision_polygon_3d.cpp#L235",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/collision_polygon_3d.cpp#L237"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_nonuniform"
+  },
+  {
+   "class": "CollisionPolygon3D",
+   "warning": "An empty CollisionPolygon3D has no effect on collision.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/collision_polygon_3d.cpp#L235",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/collision_polygon_3d.cpp#L235",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/collision_polygon_3d.cpp#L235",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/collision_polygon_3d.cpp#L237"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_polygon_empty"
+  },
+  {
+   "class": "CollisionPolygon3D",
+   "warning": "CollisionPolygon3D only serves to provide a collision shape to a CollisionObject3D derived node.\nPlease only use it as a child of Area3D, StaticBody3D, RigidBody3D, CharacterBody3D, etc. to give them a shape.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/collision_polygon_3d.cpp#L235",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/collision_polygon_3d.cpp#L235",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/collision_polygon_3d.cpp#L235",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/collision_polygon_3d.cpp#L237"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_polygon_parent"
+  },
+  {
+   "class": "CollisionShape2D",
+   "warning": "A shape must be provided for CollisionShape2D to function. Please create a shape resource for it!",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/collision_shape_2d.cpp#L171",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/collision_shape_2d.cpp#L171",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/collision_shape_2d.cpp#L171",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/collision_shape_2d.cpp#L177"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_resource"
+  },
+  {
+   "class": "CollisionShape2D",
+   "warning": "CollisionShape2D only serves to provide a collision shape to a CollisionObject2D derived node.\nPlease only use it as a child of Area2D, StaticBody2D, RigidBody2D, CharacterBody2D, etc. to give them a shape.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/collision_shape_2d.cpp#L171",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/collision_shape_2d.cpp#L171",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/collision_shape_2d.cpp#L171",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/collision_shape_2d.cpp#L177"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_parent"
+  },
+  {
+   "class": "CollisionShape2D",
+   "warning": "The CollisionShape2D node has limited editing options for polygon-based shapes. Consider using a CollisionPolygon2D node instead.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/collision_shape_2d.cpp#L171",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/collision_shape_2d.cpp#L171",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/collision_shape_2d.cpp#L171",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/collision_shape_2d.cpp#L177"
+   },
+   "status": "excluded",
+   "reason": "Editor editing-tool advice for polygon shapes; the shape collides normally at runtime."
+  },
+  {
+   "class": "CollisionShape2D",
+   "warning": "The One Way Collision property will be ignored when the collision object is an Area2D.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/collision_shape_2d.cpp#L171",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/collision_shape_2d.cpp#L171",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/collision_shape_2d.cpp#L171",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/collision_shape_2d.cpp#L177"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.one_way_area"
+  },
+  {
+   "class": "CollisionShape3D",
+   "warning": "A non-uniformly scaled CollisionShape3D node will probably not function as expected.\nPlease make its scale uniform (i.e. the same on all axes), and change the size of its shape resource instead.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/collision_shape_3d.cpp#L125"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_nonuniform"
+  },
+  {
+   "class": "CollisionShape3D",
+   "warning": "A shape must be provided for CollisionShape3D to function. Please create a shape resource for it.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/collision_shape_3d.cpp#L125"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_resource"
+  },
+  {
+   "class": "CollisionShape3D",
+   "warning": "CollisionShape3D only serves to provide a collision shape to a CollisionObject3D derived node.\nPlease only use it as a child of Area3D, StaticBody3D, RigidBody3D, CharacterBody3D, etc. to give them a shape.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/collision_shape_3d.cpp#L125"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.collision_parent"
+  },
+  {
+   "class": "CollisionShape3D",
+   "warning": "When used for collision, ConcavePolygonShape3D is intended to work with static CollisionObject3D nodes like StaticBody3D.\nIt will likely not behave well for %ss (except when frozen and freeze_mode set to FREEZE_MODE_STATIC).",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/collision_shape_3d.cpp#L125"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.concave_dynamic"
+  },
+  {
+   "class": "CollisionShape3D",
+   "warning": "When used for collision, ConcavePolygonShape3D is intended to work with static CollisionObject3D nodes like StaticBody3D.\nIt will likely not behave well for CharacterBody3Ds.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/collision_shape_3d.cpp#L125"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.concave_dynamic"
+  },
+  {
+   "class": "CollisionShape3D",
+   "warning": "WorldBoundaryShape3D doesn't support RigidBody3D in another mode than static.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/collision_shape_3d.cpp#L122",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/collision_shape_3d.cpp#L125"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.boundary_dynamic"
+  },
+  {
+   "class": "Container",
+   "warning": "Container by itself serves no purpose unless a script configures its children placement behavior.\nIf you don't intend to add a script, use a plain Control node instead.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/gui/container.cpp#L201",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/gui/container.cpp#L207",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/gui/container.cpp#L207",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/container.cpp#L250"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.container_plain"
+  },
+  {
+   "class": "Control",
+   "warning": "The Hint Tooltip won't be displayed as the control's Mouse Filter is set to \"Ignore\". To solve this, set the Mouse Filter to \"Stop\" or \"Pass\".",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/gui/control.cpp#L246",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/gui/control.cpp#L240",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/gui/control.cpp#L247",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/control.cpp#L255"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.tooltip_mouse_filter"
+  },
+  {
+   "class": "Decal",
+   "warning": "Decals are only available when using the Forward+ or Mobile renderer.",
+   "source": {
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/decal.cpp#L175",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/decal.cpp#L179"
+   },
+   "status": "implemented",
+   "rule": "decals.compatibility_renderer"
+  },
+  {
+   "class": "Decal",
+   "warning": "Decals are only available when using the Forward+ or Mobile renderers.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/decal.cpp#L179",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/decal.cpp#L179"
+   },
+   "status": "implemented",
+   "rule": "decals.compatibility_renderer"
+  },
+  {
+   "class": "Decal",
+   "warning": "The decal has a Normal and/or ORM texture, but no Albedo texture is set.\nAn Albedo texture with an alpha channel is required to blend the normal/ORM maps onto the underlying surface.\nIf you don't want the Albedo texture to be visible, set Albedo Mix to 0.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/decal.cpp#L179",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/decal.cpp#L179",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/decal.cpp#L175",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/decal.cpp#L179"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.decal_albedo"
+  },
+  {
+   "class": "Decal",
+   "warning": "The decal has no textures loaded into any of its texture properties, and will therefore not be visible.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/decal.cpp#L179",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/decal.cpp#L179",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/decal.cpp#L175",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/decal.cpp#L179"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.decal_textures"
+  },
+  {
+   "class": "Decal",
+   "warning": "The decal's Cull Mask has no bits enabled, which means the decal will not paint objects on any layer.\nTo resolve this, enable at least one bit in the Cull Mask property.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/decal.cpp#L179",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/decal.cpp#L179",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/decal.cpp#L175",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/decal.cpp#L179"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.decal_mask"
+  },
+  {
+   "class": "FogVolume",
+   "warning": "Fog Volumes are only visible when using the Forward+ renderer.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/fog_volume.cpp#L120",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/fog_volume.cpp#L120",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/fog_volume.cpp#L120",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/fog_volume.cpp#L122"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.fog_renderer"
+  },
+  {
+   "class": "FogVolume",
+   "warning": "Fog Volumes need volumetric fog to be enabled in the scene's Environment in order to be visible.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/fog_volume.cpp#L120",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/fog_volume.cpp#L120",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/fog_volume.cpp#L120",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/fog_volume.cpp#L122"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.fog_environment"
+  },
+  {
+   "class": "GPUParticles2D",
+   "warning": "A material to process the particles is not assigned, so no behavior is imprinted.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/gpu_particles_2d.cpp#L355",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/gpu_particles_2d.cpp#L373",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/gpu_particles_2d.cpp#L373",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/gpu_particles_2d.cpp#L385"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.gpu_process_missing"
+  },
+  {
+   "class": "GPUParticles2D",
+   "warning": "Particle sub-emitters are not available when using the Compatibility renderer.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/gpu_particles_2d.cpp#L355",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/gpu_particles_2d.cpp#L373",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/gpu_particles_2d.cpp#L373",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/gpu_particles_2d.cpp#L385"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.subemitter_renderer"
+  },
+  {
+   "class": "GPUParticles2D",
+   "warning": "Particle trails are only available when using the Forward+ or Mobile renderer.",
+   "source": {
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/gpu_particles_2d.cpp#L373",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/gpu_particles_2d.cpp#L385"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.trails_renderer"
+  },
+  {
+   "class": "GPUParticles2D",
+   "warning": "Particle trails are only available when using the Forward+ or Mobile renderers.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/gpu_particles_2d.cpp#L355",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/gpu_particles_2d.cpp#L373"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.trails_renderer"
+  },
+  {
+   "class": "GPUParticles2D",
+   "warning": "Particles2D animation requires the usage of a CanvasItemMaterial with \"Particles Animation\" enabled.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/gpu_particles_2d.cpp#L355",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/gpu_particles_2d.cpp#L373",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/gpu_particles_2d.cpp#L373",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/gpu_particles_2d.cpp#L385"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.particles_animation_2d"
+  },
+  {
+   "class": "GPUParticles3D",
+   "warning": "A material to process the particles is not assigned, so no behavior is imprinted.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/gpu_particles_3d.cpp#L336",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/gpu_particles_3d.cpp#L341"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.gpu_process_missing"
+  },
+  {
+   "class": "GPUParticles3D",
+   "warning": "Nothing is visible because meshes have not been assigned to draw passes.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/gpu_particles_3d.cpp#L336",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/gpu_particles_3d.cpp#L341"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.gpu_mesh_missing"
+  },
+  {
+   "class": "GPUParticles3D",
+   "warning": "Only one Trail mesh is supported. If you want to use more than a single mesh, a Skin is needed (see documentation).",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/gpu_particles_3d.cpp#L336",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/gpu_particles_3d.cpp#L341"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.trails_multiple"
+  },
+  {
+   "class": "GPUParticles3D",
+   "warning": "Particle sub-emitters are only available when using the Forward+ or Mobile renderer.",
+   "source": {
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/gpu_particles_3d.cpp#L336",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/gpu_particles_3d.cpp#L341"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.subemitter_renderer"
+  },
+  {
+   "class": "GPUParticles3D",
+   "warning": "Particle sub-emitters are only available when using the Forward+ or Mobile renderers.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/gpu_particles_3d.cpp#L335"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.subemitter_renderer"
+  },
+  {
+   "class": "GPUParticles3D",
+   "warning": "Particle trails are only available when using the Forward+ or Mobile renderer.",
+   "source": {
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/gpu_particles_3d.cpp#L336",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/gpu_particles_3d.cpp#L341"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.trails_renderer"
+  },
+  {
+   "class": "GPUParticles3D",
+   "warning": "Particle trails are only available when using the Forward+ or Mobile renderers.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/gpu_particles_3d.cpp#L335"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.trails_renderer"
+  },
+  {
+   "class": "GPUParticles3D",
+   "warning": "Particles animation requires the usage of a BaseMaterial3D whose Billboard Mode is set to \"Particle Billboard\".",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/gpu_particles_3d.cpp#L336",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/gpu_particles_3d.cpp#L341"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.particles_animation_3d"
+  },
+  {
+   "class": "GPUParticles3D",
+   "warning": "Trails active, but neither Trail meshes or a Skin were found.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/gpu_particles_3d.cpp#L336",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/gpu_particles_3d.cpp#L341"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.trails_no_pose"
+  },
+  {
+   "class": "GPUParticles3D",
+   "warning": "Trails enabled, but one or more mesh materials are either missing or not set for trails rendering.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/gpu_particles_3d.cpp#L336",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/gpu_particles_3d.cpp#L341"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.trails_material"
+  },
+  {
+   "class": "GPUParticles3D",
+   "warning": "Using Trail meshes with a skin causes Skin to override Trail poses. Suggest removing the Skin.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/gpu_particles_3d.cpp#L335",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/gpu_particles_3d.cpp#L336",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/gpu_particles_3d.cpp#L341"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.trails_skin"
+  },
+  {
+   "class": "GPUParticlesCollisionSDF3D",
+   "warning": "The Bake Mask has no bits enabled, which means baking will not produce any collision for this GPUParticlesCollisionSDF3D.\nTo resolve this, enable at least one bit in the Bake Mask property.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/gpu_particles_collision_3d.cpp#L526",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/gpu_particles_collision_3d.cpp#L526",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/gpu_particles_collision_3d.cpp#L526",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/gpu_particles_collision_3d.cpp#L530"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.particle_sdf_bake_mask"
+  },
+  {
+   "class": "GeometryInstance3D",
+   "warning": "GeometryInstance3D transparency is only available when using the Forward+ renderer.",
+   "source": {
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/visual_instance_3d.cpp#L509",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/visual_instance_3d.cpp#L516"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.geometry_transparency"
+  },
+  {
+   "class": "GeometryInstance3D",
+   "warning": "GeometryInstance3D transparency is only available when using the Forward+ rendering method.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/visual_instance_3d.cpp#L524",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/visual_instance_3d.cpp#L513"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.geometry_transparency"
+  },
+  {
+   "class": "GeometryInstance3D",
+   "warning": "GeometryInstance3D visibility range transparency fade is only available when using the Forward+ renderer.",
+   "source": {
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/visual_instance_3d.cpp#L509",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/visual_instance_3d.cpp#L516"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.geometry_fade"
+  },
+  {
+   "class": "GeometryInstance3D",
+   "warning": "GeometryInstance3D visibility range transparency fade is only available when using the Forward+ rendering method.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/visual_instance_3d.cpp#L524",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/visual_instance_3d.cpp#L513"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.geometry_fade"
+  },
+  {
+   "class": "GeometryInstance3D",
+   "warning": "The GeometryInstance3D is configured to fade in smoothly over distance, but the fade transition distance is set to 0.\nTo resolve this, increase Visibility Range Begin Margin above 0.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/visual_instance_3d.cpp#L524",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/visual_instance_3d.cpp#L513",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/visual_instance_3d.cpp#L509",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/visual_instance_3d.cpp#L516"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.visibility_fade_begin"
+  },
+  {
+   "class": "GeometryInstance3D",
+   "warning": "The GeometryInstance3D is configured to fade out smoothly over distance, but the fade transition distance is set to 0.\nTo resolve this, increase Visibility Range End Margin above 0.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/visual_instance_3d.cpp#L524",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/visual_instance_3d.cpp#L513",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/visual_instance_3d.cpp#L509",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/visual_instance_3d.cpp#L516"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.visibility_fade_end"
+  },
+  {
+   "class": "GeometryInstance3D",
+   "warning": "The GeometryInstance3D visibility range's End distance is set to a non-zero value, but is lower than the Begin distance.\nThis means the GeometryInstance3D will never be visible.\nTo resolve this, set the End distance to 0 or to a value greater than the Begin distance.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/visual_instance_3d.cpp#L524",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/visual_instance_3d.cpp#L513",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/visual_instance_3d.cpp#L509",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/visual_instance_3d.cpp#L516"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.visibility_range_invalid"
+  },
+  {
+   "class": "GraphEdit",
+   "warning": "Please be aware that GraphEdit and GraphNode will undergo extensive refactoring in a future 4.x version involving compatibility-breaking API changes.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/gui/graph_edit.cpp#L254",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/gui/graph_edit.cpp#L254"
+   },
+   "status": "excluded",
+   "reason": "API-stability notice for GraphEdit/GraphNode, not a configuration problem."
+  },
+  {
+   "class": "IterateIK3D",
+   "warning": "Detecting settings with no target set! IterateIK3D must have a target to work.",
+   "source": {
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/iterate_ik_3d.cpp#L158",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/iterate_ik_3d.cpp#L161"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.iterate_ik_target",
+   "note": "The rule follows _process_ik: an unresolved target also aborts the setting, not only an empty path."
+  },
+  {
+   "class": "Label",
+   "warning": "Labels with autowrapping enabled must have a custom minimum size configured to work correctly inside a container.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/gui/label.cpp#L617",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/gui/label.cpp#L651",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/gui/label.cpp#L622"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.label_autowrap_width"
+  },
+  {
+   "class": "Label",
+   "warning": "Labels with autowrapping enabled must have a positive custom minimum or maximum width configured to work correctly.",
+   "source": {
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/label.cpp#L643"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.label_autowrap_width"
+  },
+  {
+   "class": "Label",
+   "warning": "MSDF font pixel range is too small, some outlines/shadows will not render. Set MSDF pixel range to be at least %d to render all outlines/shadows.",
+   "source": {
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/gui/label.cpp#L622",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/label.cpp#L643"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.label_msdf_pixel_range"
+  },
+  {
+   "class": "Label",
+   "warning": "The current font does not support rendering one or more characters used in this Label's text.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/gui/label.cpp#L617",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/gui/label.cpp#L651",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/gui/label.cpp#L622",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/label.cpp#L643"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.label_missing_glyphs",
+   "note": "Shapes untranslated source text (uppercase applied) up to 4096 characters."
+  },
+  {
+   "class": "Light3D",
+   "warning": "A light's scale does not affect the visual size of the light.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/light_3d.cpp#L181",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/light_3d.cpp#L180",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/light_3d.cpp#L180",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/light_3d.cpp#L193"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.light_scale"
+  },
+  {
+   "class": "LightOccluder2D",
+   "warning": "An occluder polygon must be set (or drawn) for this occluder to take effect.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/light_occluder_2d.cpp#L266",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/light_occluder_2d.cpp#L266",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/light_occluder_2d.cpp#L266",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/light_occluder_2d.cpp#L269"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.light_occluder_missing"
+  },
+  {
+   "class": "LightOccluder2D",
+   "warning": "The occluder polygon for this occluder is empty. Please draw a polygon.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/light_occluder_2d.cpp#L266",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/light_occluder_2d.cpp#L266",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/light_occluder_2d.cpp#L266",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/light_occluder_2d.cpp#L269"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.light_occluder_empty"
+  },
+  {
+   "class": "LightmapGI",
+   "warning": "Lightmaps can only be baked from a GPU that supports the RenderingDevice backends.\nYour GPU (%s) does not support RenderingDevice, as it does not support Vulkan, Direct3D 12, or Metal.\nLightmap baking will not be available on this device, although rendering existing baked lightmaps will work.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/lightmap_gi.cpp#L1762",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/lightmap_gi.cpp#L1780",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/lightmap_gi.cpp#L1803",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/lightmap_gi.cpp#L2002"
+   },
+   "status": "excluded",
+   "reason": "Describes the editing machine's bake capability, not the scene."
+  },
+  {
+   "class": "LightmapGI",
+   "warning": "Lightmaps cannot be baked on %s. Rendering existing baked lightmaps will still work.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/lightmap_gi.cpp#L1762",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/lightmap_gi.cpp#L1780",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/lightmap_gi.cpp#L1803",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/lightmap_gi.cpp#L2002"
+   },
+   "status": "excluded",
+   "reason": "Platform build notice (Android/iOS editors cannot bake), not the scene."
+  },
+  {
+   "class": "LightmapGI",
+   "warning": "Lightmaps cannot be baked, as the `lightmapper_rd` module was disabled at compile-time. Rendering existing baked lightmaps will still work.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/lightmap_gi.cpp#L1762",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/lightmap_gi.cpp#L1780",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/lightmap_gi.cpp#L1803",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/lightmap_gi.cpp#L2002"
+   },
+   "status": "excluded",
+   "reason": "Custom-build notice (lightmapper module disabled), not the scene."
+  },
+  {
+   "class": "LightmapGI",
+   "warning": "The lightmap has no baked shadowmask textures. Please rebake with the Shadowmask Mode set to anything other than None.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/lightmap_gi.cpp#L1762",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/lightmap_gi.cpp#L1780",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/lightmap_gi.cpp#L1803",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/lightmap_gi.cpp#L2002"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.lightmap_shadowmask"
+  },
+  {
+   "class": "LineEdit",
+   "warning": "Secret Character property supports only one character. Extra characters will be ignored.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/gui/line_edit.cpp#L2588",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/gui/line_edit.cpp#L2946",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/gui/line_edit.cpp#L3072",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/line_edit.cpp#L3087"
+   },
+   "status": "excluded",
+   "reason": "Unreachable from stored state: set_secret_character truncates to one character in 4.4 and 4.7.2."
+  },
+  {
+   "class": "LookAtModifier3D",
+   "warning": "Forward axis and primary rotation axis must not be parallel.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/look_at_modifier_3d.cpp#L70",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/look_at_modifier_3d.cpp#L68",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/look_at_modifier_3d.cpp#L70",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/look_at_modifier_3d.cpp#L72"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.look_at_axes"
+  },
+  {
+   "class": "MeshInstance2D",
+   "warning": "MeshInstance2D requires a Mesh to render anything. Please add a mesh resource for it!",
+   "source": {
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/mesh_instance_2d.cpp#L221"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.mesh_missing"
+  },
+  {
+   "class": "MeshInstance3D",
+   "warning": "MeshInstance3D requires a Mesh to render anything. Please add a mesh resource for it!",
+   "source": {
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/mesh_instance_3d.cpp#L943"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.mesh_missing"
+  },
+  {
+   "class": "MissingNode",
+   "warning": "Data from the original node is kept as a placeholder until this type of node is available again. It can hence be safely re-saved without risk of data loss.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/main/missing_node.cpp#L85",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/main/missing_node.cpp#L85",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/main/missing_node.cpp#L104",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/missing_node.cpp#L106"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.missing_node"
+  },
+  {
+   "class": "MissingNode",
+   "warning": "Saving current scene will discard instance and all its properties, including editable children edits (if existing).",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/main/missing_node.cpp#L85",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/main/missing_node.cpp#L85",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/main/missing_node.cpp#L104",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/missing_node.cpp#L106"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.missing_node"
+  },
+  {
+   "class": "MissingNode",
+   "warning": "This node was an instance of scene '%s', which was no longer available when this scene was loaded.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/main/missing_node.cpp#L85",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/main/missing_node.cpp#L85",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/main/missing_node.cpp#L104",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/missing_node.cpp#L106"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.missing_node"
+  },
+  {
+   "class": "MissingNode",
+   "warning": "This node was saved as class type '%s', which was no longer available when this scene was loaded.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/main/missing_node.cpp#L85",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/main/missing_node.cpp#L85",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/main/missing_node.cpp#L104",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/missing_node.cpp#L106"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.missing_node"
+  },
+  {
+   "class": "MissingNode",
+   "warning": "Unrecognized missing node. Check scene dependency errors for details.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/main/missing_node.cpp#L85",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/main/missing_node.cpp#L85",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/main/missing_node.cpp#L104",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/missing_node.cpp#L106"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.missing_node"
+  },
+  {
+   "class": "MultiplayerSpawner",
+   "warning": "A valid NodePath must be set in the \"Spawn Path\" property in order for MultiplayerSpawner to be able to spawn Nodes.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/modules/multiplayer/multiplayer_spawner.cpp#L87",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/modules/multiplayer/multiplayer_spawner.cpp#L87",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/multiplayer/multiplayer_spawner.cpp#L88",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/multiplayer/multiplayer_spawner.cpp#L91"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.multiplayer_spawner_path"
+  },
+  {
+   "class": "MultiplayerSynchronizer",
+   "warning": "A valid NodePath must be set in the \"Root Path\" property in order for MultiplayerSynchronizer to be able to synchronize properties.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/modules/multiplayer/multiplayer_synchronizer.cpp#L146",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/modules/multiplayer/multiplayer_synchronizer.cpp#L146",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/multiplayer/multiplayer_synchronizer.cpp#L146",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/multiplayer/multiplayer_synchronizer.cpp#L147"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.multiplayer_synchronizer_root"
+  },
+  {
+   "class": "NavigationAgent2D",
+   "warning": "The NavigationAgent2D can be used only under a Node2D inheriting parent node.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/navigation_agent_2d.cpp#L661",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/navigation/navigation_agent_2d.cpp#L722",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/navigation/navigation_agent_2d.cpp#L722",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/navigation/navigation_agent_2d.cpp#L726"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.navigation_agent_parent"
+  },
+  {
+   "class": "NavigationAgent3D",
+   "warning": "The NavigationAgent3D can be used only under a Node3D inheriting parent node.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/navigation_agent_3d.cpp#L727",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/navigation/navigation_agent_3d.cpp#L789",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/navigation/navigation_agent_3d.cpp#L789",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/navigation/navigation_agent_3d.cpp#L793"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.navigation_agent_parent"
+  },
+  {
+   "class": "NavigationLink2D",
+   "warning": "NavigationLink2D start position should be different than the end position to be useful.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/navigation_link_2d.cpp#L333",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/navigation/navigation_link_2d.cpp#L331",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/navigation/navigation_link_2d.cpp#L331",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/navigation/navigation_link_2d.cpp#L333"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.navigation_link_endpoints"
+  },
+  {
+   "class": "NavigationLink3D",
+   "warning": "NavigationLink3D start position should be different than the end position to be useful.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/navigation_link_3d.cpp#L488",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/navigation/navigation_link_3d.cpp#L494",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/navigation/navigation_link_3d.cpp#L494",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/navigation/navigation_link_3d.cpp#L497"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.navigation_link_endpoints"
+  },
+  {
+   "class": "NavigationObstacle2D",
+   "warning": "NavigationObstacle2D does not support negative or zero scaling.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/navigation_obstacle_2d.cpp#L328",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/navigation/navigation_obstacle_2d.cpp#L328",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/navigation/navigation_obstacle_2d.cpp#L328",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/navigation/navigation_obstacle_2d.cpp#L333"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.navigation_obstacle_scale"
+  },
+  {
+   "class": "NavigationObstacle2D",
+   "warning": "Skew has no effect on the agent radius.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/navigation_obstacle_2d.cpp#L328",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/navigation/navigation_obstacle_2d.cpp#L328",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/navigation/navigation_obstacle_2d.cpp#L328",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/navigation/navigation_obstacle_2d.cpp#L333"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.navigation_obstacle_skew"
+  },
+  {
+   "class": "NavigationObstacle2D",
+   "warning": "The agent radius can only be scaled uniformly. The largest value along the two axes of the global scale will be used to scale the radius. This value may change in unexpected ways when the node is rotated.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/navigation_obstacle_2d.cpp#L328",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/navigation/navigation_obstacle_2d.cpp#L328",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/navigation/navigation_obstacle_2d.cpp#L328",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/navigation/navigation_obstacle_2d.cpp#L333"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.navigation_obstacle_nonuniform"
+  },
+  {
+   "class": "NavigationObstacle3D",
+   "warning": "NavigationObstacle3D does not support negative or zero scaling.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/navigation_obstacle_3d.cpp#L408",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/navigation/navigation_obstacle_3d.cpp#L408",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/navigation/navigation_obstacle_3d.cpp#L408",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/navigation/navigation_obstacle_3d.cpp#L413"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.navigation_obstacle_scale"
+  },
+  {
+   "class": "NavigationObstacle3D",
+   "warning": "NavigationObstacle3D only takes global rotation around the y-axis into account. Rotations around the x-axis or z-axis might lead to unexpected results.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/navigation_obstacle_3d.cpp#L408",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/navigation/navigation_obstacle_3d.cpp#L408",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/navigation/navigation_obstacle_3d.cpp#L408",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/navigation/navigation_obstacle_3d.cpp#L413"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.navigation_obstacle_rotation"
+  },
+  {
+   "class": "NavigationObstacle3D",
+   "warning": "The agent radius can only be scaled uniformly. The largest scale value along the three axes will be used.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/navigation_obstacle_3d.cpp#L408",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/navigation/navigation_obstacle_3d.cpp#L408",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/navigation/navigation_obstacle_3d.cpp#L408",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/navigation/navigation_obstacle_3d.cpp#L413"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.navigation_obstacle_nonuniform"
+  },
+  {
+   "class": "NavigationRegion2D",
+   "warning": "A NavigationMesh resource must be set or created for this node to work. Please set a property or draw a polygon.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/navigation_region_2d.cpp#L301"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.navigation_region_missing"
+  },
+  {
+   "class": "NavigationRegion2D",
+   "warning": "A NavigationPolygon resource must be set or created for this node to work. Please set a property or draw a polygon.",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/navigation/navigation_region_2d.cpp#L299",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/navigation/navigation_region_2d.cpp#L299",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/navigation/navigation_region_2d.cpp#L304"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.navigation_region_missing"
+  },
+  {
+   "class": "NavigationRegion3D",
+   "warning": "A NavigationMesh resource must be set or created for this node to work.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/navigation_region_3d.cpp#L275",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/navigation/navigation_region_3d.cpp#L252",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/navigation/navigation_region_3d.cpp#L252",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/navigation/navigation_region_3d.cpp#L256"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.navigation_region_missing"
+  },
+  {
+   "class": "OccluderInstance3D",
+   "warning": "No occluder mesh is defined in the Occluder property, so no occlusion culling will be performed using this OccluderInstance3D.\nTo resolve this, set the Occluder property to one of the primitive occluder types or bake the scene meshes by selecting the OccluderInstance3D and pressing the Bake Occluders button at the top of the 3D editor viewport.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/occluder_instance_3d.cpp#L698"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.occluder_missing"
+  },
+  {
+   "class": "OccluderInstance3D",
+   "warning": "Occlusion culling is disabled in the Project Settings, which means occlusion culling won't be performed in the root viewport.\nTo resolve this, open the Project Settings and enable Rendering > Occlusion Culling > Use Occlusion Culling.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/occluder_instance_3d.cpp#L698"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.occluder_culling_disabled"
+  },
+  {
+   "class": "OccluderInstance3D",
+   "warning": "The Bake Mask has no bits enabled, which means baking will not produce any occluder meshes for this OccluderInstance3D.\nTo resolve this, enable at least one bit in the Bake Mask property.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/occluder_instance_3d.cpp#L698"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.occluder_bake_mask"
+  },
+  {
+   "class": "OccluderInstance3D",
+   "warning": "The occluder mesh has less than 3 vertices, so no occlusion culling will be performed using this OccluderInstance3D.\nTo generate a proper occluder mesh, select the OccluderInstance3D then use the Bake Occluders button at the top of the 3D editor viewport.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/occluder_instance_3d.cpp#L698"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.occluder_empty"
+  },
+  {
+   "class": "OccluderInstance3D",
+   "warning": "The polygon occluder has less than 3 vertices, so no occlusion culling will be performed using this OccluderInstance3D.\nVertices can be added in the inspector or using the polygon editing tools at the top of the 3D editor viewport.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/occluder_instance_3d.cpp#L693",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/occluder_instance_3d.cpp#L698"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.occluder_empty"
+  },
+  {
+   "class": "OmniLight3D",
+   "warning": "Projector texture only works with shadows active.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/light_3d.cpp#L628",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/light_3d.cpp#L621",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/light_3d.cpp#L620",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/light_3d.cpp#L634"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.projector_shadows"
+  },
+  {
+   "class": "OmniLight3D",
+   "warning": "Projector textures are not supported when using the Compatibility renderer yet. Support will be added in a future release.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/light_3d.cpp#L628",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/light_3d.cpp#L621",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/light_3d.cpp#L620",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/light_3d.cpp#L634"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.projector_renderer"
+  },
+  {
+   "class": "OpenXRCompositionLayer",
+   "warning": "Hole punching won't work as expected unless the sort order is less than zero.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/modules/openxr/scene/openxr_composition_layer.cpp#L478",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/modules/openxr/scene/openxr_composition_layer.cpp#L707",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/openxr/scene/openxr_composition_layer.cpp#L759",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/scene/openxr_composition_layer.cpp#L837"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.openxr_layer_hole_punch"
+  },
+  {
+   "class": "OpenXRCompositionLayer",
+   "warning": "OpenXR composition layers must have an XROrigin3D node as their parent.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/modules/openxr/scene/openxr_composition_layer.cpp#L478",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/modules/openxr/scene/openxr_composition_layer.cpp#L707",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/openxr/scene/openxr_composition_layer.cpp#L759"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.openxr_layer_parent"
+  },
+  {
+   "class": "OpenXRCompositionLayer",
+   "warning": "OpenXR composition layers must have orthonormalized transforms (ie. no scale or shearing).",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/modules/openxr/scene/openxr_composition_layer.cpp#L478",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/modules/openxr/scene/openxr_composition_layer.cpp#L707",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/openxr/scene/openxr_composition_layer.cpp#L759",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/scene/openxr_composition_layer.cpp#L837"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.openxr_layer_transform"
+  },
+  {
+   "class": "OpenXRRenderModel",
+   "warning": "The render model extension is not enabled in project settings!",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/modules/openxr/scene/openxr_render_model.cpp#L144",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/openxr/scene/openxr_render_model.cpp#L146",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/scene/openxr_render_model.cpp#L146"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.openxr_render_model_extension"
+  },
+  {
+   "class": "OpenXRRenderModel",
+   "warning": "This node must be a child of either a XROrigin3D or OpenXRRenderModelManager node!",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/modules/openxr/scene/openxr_render_model.cpp#L144",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/openxr/scene/openxr_render_model.cpp#L146",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/scene/openxr_render_model.cpp#L146"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.openxr_render_model_parent"
+  },
+  {
+   "class": "OpenXRRenderModelManager",
+   "warning": "Must specify a tracker to make node local to pose.",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/modules/openxr/scene/openxr_render_model_manager.cpp#L197",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/openxr/scene/openxr_render_model_manager.cpp#L199",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/scene/openxr_render_model_manager.cpp#L204"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.openxr_render_model_pose"
+  },
+  {
+   "class": "OpenXRRenderModelManager",
+   "warning": "The render model extension is not enabled in project settings!",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/modules/openxr/scene/openxr_render_model_manager.cpp#L197",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/openxr/scene/openxr_render_model_manager.cpp#L199",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/scene/openxr_render_model_manager.cpp#L204"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.openxr_render_model_extension"
+  },
+  {
+   "class": "OpenXRRenderModelManager",
+   "warning": "This node must be a child of an XROrigin3D node!",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/modules/openxr/scene/openxr_render_model_manager.cpp#L197",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/openxr/scene/openxr_render_model_manager.cpp#L199",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/scene/openxr_render_model_manager.cpp#L204"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.openxr_render_model_parent"
+  },
+  {
+   "class": "OpenXRVisibilityMask",
+   "warning": "OpenXR visibility mask must have an XRCamera3D node as their parent.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/modules/openxr/scene/openxr_visibility_mask.cpp#L67",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/modules/openxr/scene/openxr_visibility_mask.cpp#L67",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/modules/openxr/scene/openxr_visibility_mask.cpp#L67",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/scene/openxr_visibility_mask.cpp#L67"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.openxr_visibility_mask_parent"
+  },
+  {
+   "class": "ParallaxLayer",
+   "warning": "ParallaxLayer node only works when set as child of a ParallaxBackground node.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/parallax_layer.cpp#L135",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/parallax_layer.cpp#L135",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/parallax_layer.cpp#L135",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/parallax_layer.cpp#L138"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.parallax_layer_parent"
+  },
+  {
+   "class": "PathFollow2D",
+   "warning": "PathFollow2D only works when set as a child of a Path2D node.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/path_2d.cpp#L290",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/path_2d.cpp#L380",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/path_2d.cpp#L381",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/path_2d.cpp#L382"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.path_follow_parent"
+  },
+  {
+   "class": "PathFollow3D",
+   "warning": "PathFollow3D only works when set as a child of a Path3D node.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/path_3d.cpp#L304",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/path_3d.cpp#L352",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/path_3d.cpp#L354",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/path_3d.cpp#L359"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.path_follow_parent"
+  },
+  {
+   "class": "PathFollow3D",
+   "warning": "PathFollow3D's ROTATION_ORIENTED requires \"Up Vector\" to be enabled in its parent Path3D's Curve resource.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/path_3d.cpp#L304",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/path_3d.cpp#L352",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/path_3d.cpp#L354",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/path_3d.cpp#L359"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.path_follow_up_vector"
+  },
+  {
+   "class": "PhysicalBone2D",
+   "warning": "A PhysicalBone2D needs to be assigned to a Bone2D node in order to function! Please set a Bone2D node in the inspector.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/physical_bone_2d.cpp#L109",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/physical_bone_2d.cpp#L109",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/physical_bone_2d.cpp#L109",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/physical_bone_2d.cpp#L110"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.physical_bone2d_bone"
+  },
+  {
+   "class": "PhysicalBone2D",
+   "warning": "A PhysicalBone2D node should have a Joint2D-based child node to keep bones connected! Please add a Joint2D-based node as a child to this node!",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/physical_bone_2d.cpp#L109",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/physical_bone_2d.cpp#L109",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/physical_bone_2d.cpp#L109",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/physical_bone_2d.cpp#L110"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.physical_bone2d_joint"
+  },
+  {
+   "class": "PhysicalBone2D",
+   "warning": "A PhysicalBone2D only works with a Skeleton2D or another PhysicalBone2D as a parent node!",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/physical_bone_2d.cpp#L109",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/physical_bone_2d.cpp#L109",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/physical_bone_2d.cpp#L109",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/physical_bone_2d.cpp#L110"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.physical_bone2d_parent"
+  },
+  {
+   "class": "PhysicsBody2D",
+   "warning": "PhysicsBody2D will not work correctly on a non-interpolated branch of the SceneTree.\nCheck the node's inherited physics_interpolation_mode.",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/physics_body_2d.cpp#L173",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/physics_body_2d.cpp#L173",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/physics_body_2d.cpp#L176"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.physics_body_interpolation"
+  },
+  {
+   "class": "PhysicsBody3D",
+   "warning": "PhysicsBody3D will not work correctly on a non-interpolated branch of the SceneTree.\nCheck the node's inherited physics_interpolation_mode.",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/physics_body_3d.cpp#L213",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/physics_body_3d.cpp#L214",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/physics_body_3d.cpp#L217"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.physics_body_interpolation"
+  },
+  {
+   "class": "PointLight2D",
+   "warning": "A texture with the shape of the light must be supplied to the \"Texture\" property.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/light_2d.cpp#L433",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/light_2d.cpp#L431",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/light_2d.cpp#L431",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/light_2d.cpp#L436"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.point_light_texture"
+  },
+  {
+   "class": "PopupMenu",
+   "warning": "The current theme style has shadows and/or rounded corners for popups, but those won't display correctly if \"display/window/per_pixel_transparency/allowed\" isn't enabled in the Project Settings, nor if it isn't supported.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/gui/popup_menu.cpp#L2720",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/gui/popup_menu.cpp#L2934",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/gui/popup_menu.cpp#L3069",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/popup_menu.cpp#L3327"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.popup_transparency"
+  },
+  {
+   "class": "PopupPanel",
+   "warning": "The current theme style has shadows and/or rounded corners for popups, but those won't display correctly if \"display/window/per_pixel_transparency/allowed\" isn't enabled in the Project Settings, nor if it isn't supported.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/gui/popup.cpp#L228",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/gui/popup.cpp#L232",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/gui/popup.cpp#L232",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/popup.cpp#L236"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.popup_transparency"
+  },
+  {
+   "class": "Range",
+   "warning": "If \"Exp Edit\" is enabled, \"Min Value\" must be greater or equal to 0.",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/gui/range.cpp#L72",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/gui/range.cpp#L72",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/range.cpp#L76"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.range_exp_min"
+  },
+  {
+   "class": "Range",
+   "warning": "If \"Exp Edit\" is enabled, \"Min Value\" must be greater than 0.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/gui/range.cpp#L33"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.range_exp_min"
+  },
+  {
+   "class": "RemoteTransform2D",
+   "warning": "Path property must point to a valid Node2D node to work.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/remote_transform_2d.cpp#L213",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/remote_transform_2d.cpp#L213",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/remote_transform_2d.cpp#L213",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/remote_transform_2d.cpp#L215"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.remote_transform_target"
+  },
+  {
+   "class": "RemoteTransform3D",
+   "warning": "The \"Remote Path\" property must point to a valid Node3D or Node3D-derived node to work.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/remote_transform_3d.cpp#L213",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/remote_transform_3d.cpp#L205",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/remote_transform_3d.cpp#L205",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/remote_transform_3d.cpp#L207"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.remote_transform_target"
+  },
+  {
+   "class": "RetargetModifier3D",
+   "warning": "There is no child Skeleton3D!",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/retarget_modifier_3d.cpp#L33",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/retarget_modifier_3d.cpp#L33",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/retarget_modifier_3d.cpp#L33",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/retarget_modifier_3d.cpp#L36"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.retarget_children"
+  },
+  {
+   "class": "RigidBody2D",
+   "warning": "Size changes to RigidBody2D will be overridden by the physics engine when running.\nChange the size in children collision shapes instead.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/rigid_body_2d.cpp#L641",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/rigid_body_2d.cpp#L642",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/rigid_body_2d.cpp#L642",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/rigid_body_2d.cpp#L648"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.rigid_scale"
+  },
+  {
+   "class": "RigidBody3D",
+   "warning": "Scale changes to RigidBody3D will be overridden by the physics engine when running.\nPlease change the size in children collision shapes instead.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/rigid_body_3d.cpp#L661",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/rigid_body_3d.cpp#L662",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/rigid_body_3d.cpp#L662",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/rigid_body_3d.cpp#L670"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.rigid_scale"
+  },
+  {
+   "class": "ScrollContainer",
+   "warning": "ScrollContainer is intended to work with a single child control.\nUse a container as child (VBox, HBox, etc.), or a Control and set the custom minimum size manually.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/gui/scroll_container.cpp#L563",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/gui/scroll_container.cpp#L687",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/gui/scroll_container.cpp#L769",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/scroll_container.cpp#L833"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.scroll_container_children"
+  },
+  {
+   "class": "ShaderGlobalsOverride",
+   "warning": "ShaderGlobalsOverride is not active because another node of the same type is in the scene.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/main/shader_globals_override.cpp#L278",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/main/shader_globals_override.cpp#L278",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/main/shader_globals_override.cpp#L278",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/shader_globals_override.cpp#L279"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.shader_globals_inactive"
+  },
+  {
+   "class": "ShapeCast2D",
+   "warning": "This node cannot interact with other objects unless a Shape2D is assigned.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/physics/shape_cast_2d.cpp#L404",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/physics/shape_cast_2d.cpp#L404",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/physics/shape_cast_2d.cpp#L404",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/physics/shape_cast_2d.cpp#L407"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.shape_cast_resource"
+  },
+  {
+   "class": "ShapeCast3D",
+   "warning": "ShapeCast3D does not support ConcavePolygonShape3Ds. Collisions will not be reported.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/shape_cast_3d.cpp#L181",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/shape_cast_3d.cpp#L181",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/shape_cast_3d.cpp#L182",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/shape_cast_3d.cpp#L187"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.shape_cast_concave"
+  },
+  {
+   "class": "ShapeCast3D",
+   "warning": "This node cannot interact with other objects unless a Shape3D is assigned.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/shape_cast_3d.cpp#L181",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/shape_cast_3d.cpp#L181",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/shape_cast_3d.cpp#L182",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/shape_cast_3d.cpp#L187"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.shape_cast_resource"
+  },
+  {
+   "class": "SkeletonModifier3D",
+   "warning": "Skeleton3D node not set! SkeletonModifier3D must be child of Skeleton3D.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/skeleton_modifier_3d.cpp#L37",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/skeleton_modifier_3d.cpp#L33",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/skeleton_modifier_3d.cpp#L33",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/skeleton_modifier_3d.cpp#L36"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.skeleton_modifier_parent"
+  },
+  {
+   "class": "SoftBody3D",
+   "warning": "This body will be ignored until you set a mesh.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/soft_body_3d.cpp#L392",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/soft_body_3d.cpp#L401",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/soft_body_3d.cpp#L401",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/soft_body_3d.cpp#L405"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.mesh_missing"
+  },
+  {
+   "class": "SplineIK3D",
+   "warning": "Detecting settings with no Path3D set! SplineIK3D must have a Path3D to work.",
+   "source": {
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/spline_ik_3d.cpp#L109",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/spline_ik_3d.cpp#L112"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.spline_ik_path",
+   "note": "The rule follows _process_ik: an unresolved Path3D or an empty curve also aborts the setting."
+  },
+  {
+   "class": "SpotLight3D",
+   "warning": "A SpotLight3D with an angle wider than 90 degrees cannot cast shadows.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/light_3d.cpp#L660",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/light_3d.cpp#L653",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/light_3d.cpp#L652",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/light_3d.cpp#L666"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.spot_shadows"
+  },
+  {
+   "class": "SpotLight3D",
+   "warning": "Projector texture only works with shadows active.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/light_3d.cpp#L660",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/light_3d.cpp#L653",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/light_3d.cpp#L652",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/light_3d.cpp#L666"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.projector_shadows"
+  },
+  {
+   "class": "SpotLight3D",
+   "warning": "Projector textures are not supported when using the Compatibility renderer yet. Support will be added in a future release.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/light_3d.cpp#L660",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/light_3d.cpp#L653",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/light_3d.cpp#L652",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/light_3d.cpp#L666"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.projector_renderer"
+  },
+  {
+   "class": "SpringBoneCollision3D",
+   "warning": "Parent node should be a SpringBoneSimulator3D node.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/spring_bone_collision_3d.cpp#L35",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/spring_bone_collision_3d.cpp#L35",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/spring_bone_collision_3d.cpp#L35",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/spring_bone_collision_3d.cpp#L37"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.spring_bone_collision_parent"
+  },
+  {
+   "class": "SubViewportContainer",
+   "warning": "The default mouse cursor shape of SubViewportContainer has no effect.\nConsider leaving it at its initial value `CURSOR_ARROW`.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/gui/subviewport_container.cpp#L269",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/gui/subviewport_container.cpp#L269",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/gui/subviewport_container.cpp#L269",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/subviewport_container.cpp#L270"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.subviewport_cursor"
+  },
+  {
+   "class": "SubViewportContainer",
+   "warning": "This node doesn't have a SubViewport as child, so it can't display its intended content.\nConsider adding a SubViewport as a child to provide something displayable.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/gui/subviewport_container.cpp#L269",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/gui/subviewport_container.cpp#L269",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/gui/subviewport_container.cpp#L269",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/subviewport_container.cpp#L270"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.viewport_container_child"
+  },
+  {
+   "class": "TextureRect",
+   "warning": "STRETCH_TILE mode is not supported for an AtlasTexture with non-zero margin.",
+   "source": {
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/texture_rect.cpp#L156"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.texture_rect_atlas_tile"
+  },
+  {
+   "class": "TileMap",
+   "warning": "A TileMap layer is set as Y-sorted, but Y-sort is not enabled on the TileMap node itself.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/tile_map.cpp#L834",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/tile_map.cpp#L844",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/tile_map.cpp#L840",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/tile_map.cpp#L833"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.tilemap_layer_ysort"
+  },
+  {
+   "class": "TileMap",
+   "warning": "A Y-sorted layer has the same Z-index value as a not Y-sorted layer.\nThis may lead to unwanted behaviors, as a layer that is not Y-sorted will be Y-sorted as a whole with tiles from Y-sorted layers.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/tile_map.cpp#L834",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/tile_map.cpp#L844",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/tile_map.cpp#L840",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/tile_map.cpp#L833"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.tilemap_ysort_z"
+  },
+  {
+   "class": "TileMap",
+   "warning": "Isometric TileSet will likely not look as intended without Y-sort enabled for the TileMap and all of its layers.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/tile_map.cpp#L834",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/tile_map.cpp#L844",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/tile_map.cpp#L840",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/tile_map.cpp#L833"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.tilemap_isometric_ysort"
+  },
+  {
+   "class": "TileMap",
+   "warning": "The TileMap node is deprecated as it is superseded by the use of multiple TileMapLayer nodes.\nTo convert a TileMap to a set of TileMapLayer nodes, open the TileMap bottom panel with this node selected, click the toolbox icon in the top-right corner and choose \"Extract TileMap layers as individual TileMapLayer nodes\".",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/tile_map.cpp#L834",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/tile_map.cpp#L844",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/tile_map.cpp#L840",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/tile_map.cpp#L833"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.tilemap_deprecated"
+  },
+  {
+   "class": "TileMap",
+   "warning": "The TileMap node is set as Y-sorted, but Y-sort is not enabled on any of the TileMap's layers.\nThis may lead to unwanted behaviors, as a layer that is not Y-sorted will be Y-sorted as a whole.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/2d/tile_map.cpp#L834",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/2d/tile_map.cpp#L844",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/2d/tile_map.cpp#L840",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/tile_map.cpp#L833"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.tilemap_node_ysort"
+  },
+  {
+   "class": "Timer",
+   "warning": "Very low timer wait times (< 0.05 seconds) may behave in significantly different ways depending on the rendered or physics frame rate.\nConsider using a script's process loop instead of relying on a Timer for very low wait times.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/main/timer.cpp#L199",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/main/timer.cpp#L199",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/main/timer.cpp#L201",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/timer.cpp#L202"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.timer_short_wait"
+  },
+  {
+   "class": "TwoBoneIK3D",
+   "warning": "Detecting settings with no pole target set! TwoBoneIK3D must have a pole target to work.",
+   "source": {
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/two_bone_ik_3d.cpp#L192",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/two_bone_ik_3d.cpp#L194"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.two_bone_ik_targets",
+   "note": "Godot 4.7.2's pole warning re-tests target_node; the rule follows _process_ik, which aborts without either node."
+  },
+  {
+   "class": "TwoBoneIK3D",
+   "warning": "Detecting settings with no target set! TwoBoneIK3D must have a target to work.",
+   "source": {
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/two_bone_ik_3d.cpp#L192",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/two_bone_ik_3d.cpp#L194"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.two_bone_ik_targets",
+   "note": "Godot 4.7.2's pole warning re-tests target_node; the rule follows _process_ik, which aborts without either node."
+  },
+  {
+   "class": "VehicleWheel3D",
+   "warning": "VehicleWheel3D serves to provide a wheel system to a VehicleBody3D. Please use it as a child of a VehicleBody3D.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/physics/vehicle_body_3d.cpp#L108",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/physics/vehicle_body_3d.cpp#L144",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/physics/vehicle_body_3d.cpp#L144",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/physics/vehicle_body_3d.cpp#L145"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.vehicle_wheel_parent"
+  },
+  {
+   "class": "Viewport",
+   "warning": "The Viewport size must be greater than or equal to 2 pixels on both dimensions to render anything.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/main/viewport.cpp#L3454",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/main/viewport.cpp#L3661",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/main/viewport.cpp#L3706",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/viewport.cpp#L3765"
+   },
+   "status": "excluded",
+   "reason": "Unreachable from stored state: Viewport::_set_size clamps both axes to at least 2 pixels in 4.4 and 4.7.2."
+  },
+  {
+   "class": "VoxelGI",
+   "warning": "No VoxelGI data set, so this node is disabled. Bake static objects to enable GI.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/voxel_gi.cpp#L540",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/voxel_gi.cpp#L540",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/voxel_gi.cpp#L540",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/voxel_gi.cpp#L544"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.voxel_gi_data"
+  },
+  {
+   "class": "VoxelGI",
+   "warning": "VoxelGI nodes are not supported when using the Compatibility renderer yet. Support will be added in a future release.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/voxel_gi.cpp#L540",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/voxel_gi.cpp#L540",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/voxel_gi.cpp#L540",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/voxel_gi.cpp#L544"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.voxel_renderer"
+  },
+  {
+   "class": "VoxelGI",
+   "warning": "VoxelGI nodes are not supported when using the Dummy renderer.",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/voxel_gi.cpp#L540",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/voxel_gi.cpp#L540",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/voxel_gi.cpp#L544"
+   },
+   "status": "excluded",
+   "reason": "Dummy renderer (headless) only; no frame is rendered."
+  },
+  {
+   "class": "WorldEnvironment",
+   "warning": "Only one WorldEnvironment is allowed per scene (or set of instantiated scenes).",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/world_environment.cpp#L184",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/world_environment.cpp#L184",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/world_environment.cpp#L184",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/world_environment.cpp#L186"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.worldenv_conflict"
+  },
+  {
+   "class": "WorldEnvironment",
+   "warning": "To have any visible effect, WorldEnvironment requires its \"Environment\" property to contain an Environment, its \"Camera Attributes\" property to contain a CameraAttributes resource, or both.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/world_environment.cpp#L184",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/world_environment.cpp#L184",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/world_environment.cpp#L184",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/world_environment.cpp#L186"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.worldenv_empty"
+  },
+  {
+   "class": "XRCamera3D",
+   "warning": "XRCamera3D may not function as expected without an XROrigin3D node as its parent.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/xr_nodes.cpp#L79",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/xr/xr_nodes.cpp#L84",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/xr/xr_nodes.cpp#L94",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/xr/xr_nodes.cpp#L98"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.xr_camera_parent"
+  },
+  {
+   "class": "XRCamera3D",
+   "warning": "XRCamera3D should have physics_interpolation_mode set to OFF in order to avoid jitter.",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/xr/xr_nodes.cpp#L84",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/xr/xr_nodes.cpp#L94",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/xr/xr_nodes.cpp#L98"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.xr_interpolation"
+  },
+  {
+   "class": "XRHandModifier3D",
+   "warning": "XRHandModifier3D requires the OpenXR Hand Tracking extension to be enabled.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/xr_hand_modifier_3d.cpp#L286",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/xr/xr_hand_modifier_3d.cpp#L290",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/xr/xr_hand_modifier_3d.cpp#L290",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/xr/xr_hand_modifier_3d.cpp#L292"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.xr_hand_tracking"
+  },
+  {
+   "class": "XRNode3D",
+   "warning": "No pose is set.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/xr_nodes.cpp#L463",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/xr/xr_nodes.cpp#L485",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/xr/xr_nodes.cpp#L495",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/xr/xr_nodes.cpp#L499"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.xr_node_pose"
+  },
+  {
+   "class": "XRNode3D",
+   "warning": "No tracker name is set.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/xr_nodes.cpp#L463",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/xr/xr_nodes.cpp#L485",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/xr/xr_nodes.cpp#L495",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/xr/xr_nodes.cpp#L499"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.xr_node_tracker"
+  },
+  {
+   "class": "XRNode3D",
+   "warning": "XRNode3D may not function as expected without an XROrigin3D node as its parent.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/xr_nodes.cpp#L463",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/xr/xr_nodes.cpp#L485",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/xr/xr_nodes.cpp#L495",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/xr/xr_nodes.cpp#L499"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.xr_node_parent"
+  },
+  {
+   "class": "XRNode3D",
+   "warning": "XRNode3D should have physics_interpolation_mode set to OFF in order to avoid jitter.",
+   "source": {
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/xr/xr_nodes.cpp#L485",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/xr/xr_nodes.cpp#L495",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/xr/xr_nodes.cpp#L499"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.xr_interpolation"
+  },
+  {
+   "class": "XROrigin3D",
+   "warning": "Changing the scale on the XROrigin3D node is not supported. Change the World Scale instead.",
+   "source": {
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/xr/xr_nodes.cpp#L682",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/xr/xr_nodes.cpp#L686"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.xr_origin_scale"
+  },
+  {
+   "class": "XROrigin3D",
+   "warning": "XR shaders are not enabled in project settings. Stereoscopic output is not supported unless they are enabled. Please enable `xr/shaders/enabled` to use stereoscopic output.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/xr_nodes.cpp#L646",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/xr/xr_nodes.cpp#L672",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/xr/xr_nodes.cpp#L682",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/xr/xr_nodes.cpp#L686"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.xr_shaders_disabled"
+  },
+  {
+   "class": "XROrigin3D",
+   "warning": "XROrigin3D requires an XRCamera3D child node.",
+   "source": {
+    "4.4": "https://github.com/godotengine/godot/blob/4c311cbee68c0b66ff8ebb8b0defdd9979dd2a41/scene/3d/xr_nodes.cpp#L646",
+    "4.5.2": "https://github.com/godotengine/godot/blob/6ce3de25aa58466e14ef354703ba8d9791a417da/scene/3d/xr/xr_nodes.cpp#L672",
+    "4.6.3": "https://github.com/godotengine/godot/blob/35e80b3a8822a9df9be390814b62f44c0a9c69e8/scene/3d/xr/xr_nodes.cpp#L682",
+    "4.7.2": "https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/3d/xr/xr_nodes.cpp#L686"
+   },
+   "status": "implemented",
+   "rule": "scene_validation.xr_origin_camera"
+  }
+ ]
+}

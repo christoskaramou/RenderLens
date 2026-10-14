@@ -1,0 +1,1326 @@
+[
+  {
+    "id": "scripts.many_process",
+    "category": "scripts",
+    "title": "Several nodes run _process",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "The CPU optimization page says _process propagates through the tree and each node has a cost, with the visible range starting at thousands of nodes. Eight is only a prompt to look.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "nodes_with_process_count",
+        "value": 8
+      }
+    },
+    "evidence": "_process() and _physics_process() propagate through the tree",
+    "suggestion": "Disable _process on nodes that can wait for a signal. The CPU optimization page says those callbacks propagate through every node.",
+    "node_property": "Node._process",
+    "offender_key": "nodes_with_process",
+    "tradeoff": "That node stops seeing per-frame callbacks.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/cpu_optimization.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.many_physics_process",
+    "category": "scripts",
+    "title": "Several nodes run _physics_process",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "The CPU optimization page groups _physics_process with _process as tree propagation cost. Eight is only a prompt to look, below the documented thousands of nodes.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "nodes_with_physics_process_count",
+        "value": 8
+      }
+    },
+    "evidence": "_process() and _physics_process() propagate through the tree",
+    "suggestion": "Move work that does not need the physics tick out of _physics_process. The CPU optimization page says both callbacks propagate through the tree.",
+    "node_property": "Node._physics_process",
+    "offender_key": "nodes_with_physics_process",
+    "tradeoff": "That node stops seeing physics ticks.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/cpu_optimization.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.node_count_high",
+    "category": "scripts",
+    "title": "The project has many autoloads",
+    "severity": "low",
+    "kind": "info",
+    "heuristic": true,
+    "heuristic_rationale": "Autoloads are nodes that stay for the whole run. The CPU optimization page says every node has a cost. Sixteen autoloads is a review prompt, not a Godot limit.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "autoload_count",
+        "value": 16
+      }
+    },
+    "evidence": "every node has a cost",
+    "suggestion": "The CPU optimization page says every node has a cost. Review autoloads that do not need to exist for the whole session.",
+    "node_property": "Node",
+    "offender_key": "autoloads",
+    "tradeoff": "A removed autoload is not available as a singleton.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/cpu_optimization.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_texture_readback",
+    "category": "scripts",
+    "title": "A texture is read back from the GPU every frame",
+    "severity": "high",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_texture_readback",
+        "value": 1
+      }
+    },
+    "evidence": "This will fetch the texture data from the GPU, which might cause performance problems when overused.",
+    "suggestion": "Read the image once and cache it, or keep the data on the GPU (shaders, compute) instead of reading it back each frame.",
+    "node_property": "Texture2D.get_image",
+    "offender_key": "check_frame_texture_readback",
+    "tradeoff": "Cached images go stale if the texture keeps changing.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_texture2d.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_mesh_bake",
+    "category": "scripts",
+    "title": "A skinned or blend-shape mesh is baked from the GPU every frame",
+    "severity": "high",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_mesh_bake",
+        "value": 1
+      }
+    },
+    "evidence": "data needs to be received from the GPU",
+    "suggestion": "Bake only when the pose actually changes, or derive the needed data on the CPU from bone transforms.",
+    "node_property": "MeshInstance3D.bake_mesh_from_current_skeleton_pose",
+    "offender_key": "check_frame_mesh_bake",
+    "tradeoff": "Less frequent bakes lag behind the animated pose.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_meshinstance3d.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_multimesh_buffer",
+    "category": "scripts",
+    "title": "A MultiMesh buffer is read back every frame",
+    "severity": "high",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_multimesh_buffer",
+        "value": 1
+      }
+    },
+    "evidence": "is potentially a slow operation and should be avoided whenever possible.",
+    "suggestion": "Keep the instance data the script last wrote instead of reading the buffer back from the server.",
+    "node_property": "RenderingServer.multimesh_get_buffer",
+    "offender_key": "check_frame_multimesh_buffer",
+    "tradeoff": "The script must own a copy of the instance data.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_renderingserver.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_global_shader_get",
+    "category": "scripts",
+    "title": "A global shader parameter is read from the rendering server every frame",
+    "severity": "high",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_global_shader_get",
+        "value": 1
+      }
+    },
+    "evidence": "has a large performance penalty as the rendering thread needs to synchronize with the calling thread, which is slow.",
+    "suggestion": "Store the value in a script variable when setting it and read that copy instead.",
+    "node_property": "RenderingServer.global_shader_parameter_get",
+    "offender_key": "check_frame_global_shader_get",
+    "tradeoff": "The script copy must be kept in sync with every writer.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_renderingserver.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_force_sync",
+    "category": "scripts",
+    "title": "The rendering server is force-synchronized every frame",
+    "severity": "high",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_force_sync",
+        "value": 1
+      }
+    },
+    "evidence": "Forces a synchronization between the CPU and GPU, which may be required in certain cases.",
+    "suggestion": "Call force_sync only where the result is needed, not on every frame.",
+    "node_property": "RenderingServer.force_sync",
+    "offender_key": "check_frame_force_sync",
+    "tradeoff": "Results that depend on GPU work may arrive a frame later.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_renderingserver.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_find_nodes",
+    "category": "scripts",
+    "title": "The scene tree is searched by name every frame",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_find_nodes",
+        "value": 1
+      }
+    },
+    "evidence": "This method can be very slow.",
+    "suggestion": "Find the node once (in _ready or with an @onready variable or a unique name) and keep the reference.",
+    "node_property": "Node.find_child",
+    "offender_key": "check_frame_find_nodes",
+    "tradeoff": "A cached reference must be refreshed if the node is replaced.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_node.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_group_calls",
+    "category": "scripts",
+    "title": "A whole node group is called or notified every frame",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_group_calls",
+        "value": 1
+      }
+    },
+    "evidence": "acts immediately on all selected nodes at once, which may cause stuttering in some performance-intensive situations.",
+    "suggestion": "Let group members run their own per-frame logic, use call_group_flags with GROUP_CALL_DEFERRED, or call only when state changes.",
+    "node_property": "SceneTree.call_group",
+    "offender_key": "check_frame_group_calls",
+    "tradeoff": "Deferred calls run at the end of the frame instead of immediately.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_scenetree.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_output_latency",
+    "category": "scripts",
+    "title": "Audio output latency is queried every frame",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_output_latency",
+        "value": 1
+      }
+    },
+    "evidence": "This can be expensive; it is not recommended to call every frame.",
+    "suggestion": "Query the latency once (or rarely) and cache it.",
+    "node_property": "AudioServer.get_output_latency",
+    "offender_key": "check_frame_output_latency",
+    "tradeoff": "Latency changes from device switches are picked up later.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_audioserver.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_window_title",
+    "category": "scripts",
+    "title": "The window title is changed every frame",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_window_title",
+        "value": 1
+      }
+    },
+    "evidence": "Avoid changing the window title every frame, as this can cause performance issues on certain window managers.",
+    "suggestion": "Update the title only when its text changes, or show the value in an in-game label.",
+    "node_property": "DisplayServer.window_set_title",
+    "offender_key": "check_frame_window_title",
+    "tradeoff": "The title updates less often.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_displayserver.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_capture_rect",
+    "category": "scripts",
+    "title": "GPU particle bounds are captured every frame",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_capture_rect",
+        "value": 1
+      }
+    },
+    "evidence": "Calling it often may have a negative impact on performance.",
+    "suggestion": "Capture the visibility rectangle once (editor tool or on demand) and store it in visibility_rect.",
+    "node_property": "GPUParticles2D.capture_rect",
+    "offender_key": "check_frame_capture_rect",
+    "tradeoff": "A stored rectangle can be too small if the effect changes.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_gpuparticles2d.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_tile_update",
+    "category": "scripts",
+    "title": "Runtime tile data is invalidated every frame",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_tile_update",
+        "value": 1
+      }
+    },
+    "evidence": "is computationally expensive and may impact performance.",
+    "suggestion": "Notify only when the runtime tile data actually changes.",
+    "node_property": "TileMapLayer.notify_runtime_tile_data_update",
+    "offender_key": "check_frame_tile_update",
+    "tradeoff": "Tiles keep their previous runtime data until notified.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_tilemaplayer.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_bone_global_pose",
+    "category": "scripts",
+    "title": "Global bone poses are written every frame",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_bone_global_pose",
+        "value": 1
+      }
+    },
+    "evidence": "this method executes a dirty poses recalculation and will cause performance to deteriorate.",
+    "suggestion": "Set local poses (set_bone_pose_*) or use a SkeletonModifier3D, which avoids the dirty-pose recalculation per call.",
+    "node_property": "Skeleton3D.set_bone_global_pose",
+    "offender_key": "check_frame_bone_global_pose",
+    "tradeoff": "Local-space poses need the parent transforms to be accounted for.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_skeleton3d.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_navigation_parse",
+    "category": "scripts",
+    "title": "Navigation source geometry is parsed every frame",
+    "severity": "high",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_navigation_parse",
+        "value": 1
+      }
+    },
+    "evidence": "reading data arrays from resources can affect the frame rate negatively.",
+    "suggestion": "Parse source geometry only when the level changes, ideally with collision shapes rather than meshes.",
+    "node_property": "NavigationServer3D.parse_source_geometry_data",
+    "offender_key": "check_frame_navigation_parse",
+    "tradeoff": "Navigation updates follow geometry changes less closely.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_navigationserver3d.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_navigation_force_update",
+    "category": "scripts",
+    "title": "A navigation map is force-updated every frame",
+    "severity": "high",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_navigation_force_update",
+        "value": 1
+      }
+    },
+    "evidence": "Not only can this severely impact the performance of a game but it can also introduce bugs if used inappropriately without much foresight.",
+    "suggestion": "Let maps synchronize at the end of the physics frame, and force an update only after a structural change that needs an immediate path query.",
+    "node_property": "NavigationServer3D.map_force_update",
+    "offender_key": "check_frame_navigation_force_update",
+    "tradeoff": "Path queries in the same frame as a map change see the previous map.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_navigationserver3d.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_navigation_bake",
+    "category": "scripts",
+    "title": "A navigation mesh is baked every frame",
+    "severity": "high",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_navigation_bake",
+        "value": 1
+      }
+    },
+    "evidence": "navigation baking is not a cheap operation",
+    "suggestion": "Bake when the level geometry changes, not every frame; bake in the editor where the level is static.",
+    "node_property": "NavigationRegion3D.bake_navigation_mesh",
+    "offender_key": "check_frame_navigation_bake",
+    "tradeoff": "Navigation follows geometry changes later.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_navigationregion3d.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_image_texture_set",
+    "category": "scripts",
+    "title": "An ImageTexture is recreated every frame",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_image_texture_set",
+        "value": 1
+      }
+    },
+    "evidence": "If you want to update the image, but don't need to change its parameters (format, size), use instead for better performance.",
+    "suggestion": "Use ImageTexture.update() when only the pixels change.",
+    "node_property": "ImageTexture.set_image",
+    "offender_key": "check_frame_image_texture_set",
+    "tradeoff": "update() requires the same format and size.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_imagetexture.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_file_flush",
+    "category": "scripts",
+    "title": "A file is flushed to disk every frame",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_file_flush",
+        "value": 1
+      }
+    },
+    "evidence": "Otherwise, it will decrease performance due to constant disk writes.",
+    "suggestion": "Flush only when the data must survive a crash, or batch writes.",
+    "node_property": "FileAccess.flush",
+    "offender_key": "check_frame_file_flush",
+    "tradeoff": "Unflushed data can be lost on a crash.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_fileaccess.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_impulse",
+    "category": "scripts",
+    "title": "An impulse not scaled by the frame time is applied every frame",
+    "severity": "medium",
+    "kind": "correctness",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces (nothing after the first return is reported; nested branches and loops are skipped). Methods match by name, so a script method with the same name can match; get_image, set_image and flush must be called on an object.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_impulse",
+        "value": 1
+      }
+    },
+    "evidence": "Applying an impulse every frame would result in a framerate-dependent force.",
+    "suggestion": "Use apply_force/apply_central_force for continuous pushes; keep impulses for one-off events.",
+    "node_property": "RigidBody3D.apply_impulse",
+    "offender_key": "check_frame_impulse",
+    "tradeoff": "Forces act over time; impulses change velocity instantly.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_rigidbody3d.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.tile_runtime_update_all",
+    "category": "scripts",
+    "title": "Every tile is marked for runtime tile-data updates",
+    "severity": "high",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan: the first statement of a _use_tile_data_runtime_update override is `return true`, so every tile of the layer is processed at runtime.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_tile_runtime_update_all",
+        "value": 1
+      }
+    },
+    "evidence": "Any tile processed at runtime without a need for it will imply a significant performance penalty.",
+    "suggestion": "Return true only for the cells that need runtime tile data (for example a set of changed coordinates), and call notify_runtime_tile_data_update when that set changes.",
+    "node_property": "TileMapLayer._use_tile_data_runtime_update",
+    "offender_key": "check_tile_runtime_update_all",
+    "tradeoff": "The script must track which cells need runtime data.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_tilemaplayer.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.draw_line_loop",
+    "category": "scripts",
+    "title": "Lines are drawn one draw_line call at a time inside a loop",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Text scan of _draw: draw_line calls inside for or while loops, including one-line loops. Loop counts are not known, so a short fixed loop is reported too.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_draw_line_loop",
+        "value": 1
+      }
+    },
+    "evidence": "When drawing large amounts of lines, this is faster than using individual calls.",
+    "suggestion": "Collect the points and draw them with one draw_multiline (separate segments) or draw_polyline (connected) call, or the _colors variants for per-segment colours.",
+    "node_property": "CanvasItem.draw_multiline",
+    "offender_key": "check_draw_line_loop",
+    "tradeoff": "All lines in one call share the width and antialiasing setting.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_canvasitem.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.profile_top_self",
+    "category": "scripts",
+    "title": "One script function uses a large share of the frame",
+    "severity": "high",
+    "heuristic": true,
+    "heuristic_rationale": "The CPU optimization page says to focus on the function that takes much more time than the others. One fifth of the frame budget is the cutoff used here.",
+    "requires": [
+      "metrics",
+      "frame"
+    ],
+    "condition": {
+      "metric_gt_budget_ratio": {
+        "name": "PROFILE_TOP_SELF_SEC",
+        "ratio": 0.2
+      }
+    },
+    "evidence": "The top script self time from the servers profiler exceeds 20% of the frame budget.",
+    "suggestion": "Open script_profile and start with the function at the top of the self-time list. The CPU optimization page says the built-in profiler shows scripting cost separately from physics and audio.",
+    "tradeoff": "Depends on what that function is doing.",
+    "expected_effect": "PROFILE_TOP_SELF_SEC should drop on the next script_profile. No percentage is predicted.",
+    "verify_step": "script_profile",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/cpu_optimization.html",
+    "share_from": "PROFILE_TOP_SELF_SEC",
+    "share_unit": "seconds",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.frame_navigation_reachable",
+    "category": "scripts",
+    "title": "Path reachability is checked every frame",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_frame_navigation_reachable",
+        "value": 1
+      }
+    },
+    "offender_key": "check_frame_navigation_reachable",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "Text scan of unconditional top-level statements in _process, _physics_process and _integrate_forces finds is_target_reachable(). Methods match by name. Godot docs: \"Do not check beforehand if a target position is reachable every frame. What looks like an innocent check is the equivalent of an expensive path query behind the scene.\"",
+    "suggestion": "Request the path directly and compare its last point with the target, as the page suggests, instead of checking reachability every frame.",
+    "tradeoff": "None; the path query is needed anyway.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/navigation/navigation_optimizing_performance.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "scripts.deprecated_engine_call",
+    "category": "scripts",
+    "title": "A script calls a deprecated Godot API that does nothing",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_script_deprecated_call",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_script_deprecated_call",
+    "evidence": "Godot prints \"Deprecated. Barriers are automatically inserted by RenderingDevice.\" when a script calls RenderingDevice.barrier() or full_barrier(), or draw_command_insert_label(); Godot also warns that RenderingServer.reflection_probe_set_resolution() is not available in Godot 4, that environment_set_ssr_roughness_quality() no longer does anything (4.6+), and that NavigationServer3D.region_bake_navigation_mesh() and NavigationMeshGenerator.bake() are deprecated. Calls in comments and strings are ignored.",
+    "suggestion": "Remove the no-op calls; for navigation, parse source geometry and bake with NavigationServer3D.bake_from_source_geometry_data(); set reflection-probe size in the project settings.",
+    "tradeoff": "None for the no-op calls; the navigation replacement needs code changes.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/rendering_device.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "scripts.draw_argument_ignored",
+    "category": "scripts",
+    "title": "A draw call passes an argument Godot ignores",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_script_draw_ignored",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_script_draw_ignored",
+    "evidence": "Godot prints \"The draw_rect() \"width\" argument has no effect when \"filled\" is \"true\".\" when a script calls draw_rect() or draw_circle() with filled set to true and a literal width other than -1, or draw_polyline()/draw_multiline() with a literal negative width and antialiased set to true (thin line strips cannot be antialiased). Only literal arguments are judged.",
+    "suggestion": "Drop the width for filled shapes, or draw an outline separately; use a positive width when antialiasing lines.",
+    "tradeoff": "A positive width draws triangle strips instead of thin lines.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/scene/main/canvas_item.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "scripts.theme_in_init",
+    "category": "scripts",
+    "title": "A script reads theme items in _init",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_script_theme_in_init",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_script_theme_in_init",
+    "evidence": "Godot prints \"Attempting to access theme items too early in Control; prefer NOTIFICATION_POSTINITIALIZE and NOTIFICATION_THEME_CHANGED\" when a script's _init calls get_theme_* or has_theme_*; the Control (or Window) is not initialized yet, so the theme lookup has no owner theme or overrides.",
+    "suggestion": "Read theme items in _notification for NOTIFICATION_THEME_CHANGED (or NOTIFICATION_POSTINITIALIZE), or in _ready.",
+    "tradeoff": "None.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/scene/gui/control.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

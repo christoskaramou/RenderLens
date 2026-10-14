@@ -1,0 +1,1834 @@
+[
+  {
+    "id": "gi.sdfgi_enabled",
+    "category": "gi",
+    "title": "SDFGI is enabled",
+    "severity": "high",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_eq": {
+        "name": "env_sdfgi",
+        "value": 1
+      }
+    },
+    "evidence": "Environment.sdfgi_enabled is true. The SDFGI page says the effect is Forward+ only.",
+    "suggestion": "Turn sdfgi_enabled off and compare, or lower cascades and probe rays. Use a LightmapGI for static scenes.",
+    "node_property": "Environment.sdfgi_enabled",
+    "offender_key": "environments",
+    "tradeoff": "Dynamic indirect light from SDFGI disappears.",
+    "expected_effect": "Removes the SDFGI passes. Read Render SDFGI when the game is running.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_sdfgi.html",
+    "when_pass": [
+      "Render SDFGI"
+    ],
+    "dedupe_key": "sdfgi",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "environment": true,
+        "property": "sdfgi_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "gi.sdfgi_cascades",
+    "category": "gi",
+    "title": "SDFGI cascade count is above the Environment default",
+    "severity": "high",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_sdfgi",
+            "value": 1
+          }
+        },
+        {
+          "scene_gte": {
+            "name": "env_sdfgi_cascades",
+            "value": 5
+          }
+        }
+      ]
+    },
+    "evidence": "sdfgi_cascades is above 4. The Environment default printed from Godot 4.4 is 4, and the property range is 1\u20138. The SDFGI page says more cascades are significantly more expensive on the CPU and GPU.",
+    "suggestion": "Set Environment.sdfgi_cascades to 4 or fewer.",
+    "node_property": "Environment.sdfgi_cascades",
+    "tradeoff": "GI distance or detail drops.",
+    "expected_effect": "Fewer SDFGI cascades, which the page calls out as expensive.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_sdfgi.html",
+    "dedupe_key": "sdfgi",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render SDFGI"
+    ],
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.sdfgi_occlusion",
+    "category": "gi",
+    "title": "SDFGI use-occlusion is on",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_sdfgi",
+            "value": 1
+          }
+        },
+        {
+          "scene_eq": {
+            "name": "env_sdfgi_use_occlusion",
+            "value": 1
+          }
+        }
+      ]
+    },
+    "evidence": "sdfgi_use_occlusion is true. The SDFGI page says this throws extra rays to hide leaks and has a performance cost, so it should be enabled only when leaks are visible.",
+    "suggestion": "Set Environment.sdfgi_use_occlusion to false unless light leaks are visible.",
+    "node_property": "Environment.sdfgi_use_occlusion",
+    "tradeoff": "Light leaks through thin walls can return.",
+    "expected_effect": "Fewer SDFGI occlusion rays.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_sdfgi.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render SDFGI"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.sdfgi_probe_rays",
+    "category": "gi",
+    "title": "SDFGI probe ray count is at the slow end",
+    "severity": "high",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_sdfgi",
+            "value": 1
+          }
+        },
+        {
+          "setting_gte": {
+            "path": "rendering/global_illumination/sdfgi/probe_ray_count",
+            "value": 4
+          }
+        }
+      ]
+    },
+    "evidence": "probe_ray_count index is 4 or 5. The hint is 8, 16, 32, 64, 96, 128 (Slowest). The default index is 1 (16 rays).",
+    "suggestion": "Set rendering/global_illumination/sdfgi/probe_ray_count to 1 (16) or 2 (32).",
+    "setting": "rendering/global_illumination/sdfgi/probe_ray_count",
+    "tradeoff": "Indirect light is noisier and converges with less detail.",
+    "expected_effect": "Fewer rays per probe. The SDFGI page ties ray count to quality and cost.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_sdfgi.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render SDFGI"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.sdfgi_frames_to_converge",
+    "category": "gi",
+    "title": "SDFGI frames-to-converge is the high-latency end",
+    "severity": "medium",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_sdfgi",
+            "value": 1
+          }
+        },
+        {
+          "setting_gte": {
+            "path": "rendering/global_illumination/sdfgi/frames_to_converge",
+            "value": 5
+          }
+        }
+      ]
+    },
+    "evidence": "frames_to_converge index is 5. The hint lists 5, 10, 15, 20, 25, 30 frames, and the stored default is 5, which is the last entry (30, more latency, higher quality). The SDFGI page says higher values take longer to converge.",
+    "suggestion": "Lower the index (for example to 2 or 3) so GI converges in fewer frames after a light change.",
+    "setting": "rendering/global_illumination/sdfgi/frames_to_converge",
+    "tradeoff": "The converged result is lower quality, which the hint states.",
+    "expected_effect": "Less latency before GI settles. Not a single-frame GPU cut.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_sdfgi.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render SDFGI"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.sdfgi_light_update_slow",
+    "category": "gi",
+    "title": "SDFGI updates dynamic lights every frame",
+    "severity": "medium",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_eq": {
+            "name": "env_sdfgi",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/global_illumination/sdfgi/frames_to_update_lights",
+            "value": 0
+          }
+        }
+      ]
+    },
+    "evidence": "frames_to_update_lights is 0. The hint is 1 (Slower), 2, 4, 8, 16 (Faster). The default index is 2, which is 4 frames. The SDFGI page says fast-moving lights can use 16 to improve performance.",
+    "suggestion": "Raise the index toward 2 (4) or 4 (16).",
+    "setting": "rendering/global_illumination/sdfgi/frames_to_update_lights",
+    "tradeoff": "Dynamic lights show up in GI a few frames later.",
+    "expected_effect": "SDFGI light updates happen less often.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_sdfgi.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render SDFGI"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.half_resolution_off",
+    "category": "gi",
+    "title": "GI half-resolution buffer is off while GI is enabled",
+    "severity": "medium",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/global_illumination/gi/use_half_resolution",
+            "value": false
+          }
+        },
+        {
+          "any": [
+            {
+              "scene_eq": {
+                "name": "env_sdfgi",
+                "value": 1
+              }
+            },
+            {
+              "scene_gte": {
+                "name": "voxel_gi_count",
+                "value": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "evidence": "gi/use_half_resolution is false (the default) and SDFGI or VoxelGI is in use. The SDFGI and VoxelGI pages say enabling it renders the GI buffer at half resolution.",
+    "suggestion": "Set rendering/global_illumination/gi/use_half_resolution to true.",
+    "setting": "rendering/global_illumination/gi/use_half_resolution",
+    "tradeoff": "Indirect light is blurrier. The pages give 3840\u00d72160 rendering a 1920\u00d71080 GI buffer as the example.",
+    "expected_effect": "A smaller GI buffer. Measure Render SDFGI or the voxel GI cost after the change.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_sdfgi.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.voxel_quality_high",
+    "category": "gi",
+    "title": "VoxelGI cone tracing is set to High",
+    "severity": "medium",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "voxel_gi_count",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/global_illumination/voxel_gi/quality",
+            "value": 1
+          }
+        }
+      ]
+    },
+    "evidence": "A VoxelGI node is present and voxel_gi/quality is 1. The hint is Low (4 cones) and High (6 cones). The default is 0. The VoxelGI page says High uses 6 taps instead of 4.",
+    "suggestion": "Set rendering/global_illumination/voxel_gi/quality to 0.",
+    "setting": "rendering/global_illumination/voxel_gi/quality",
+    "tradeoff": "Ambient occlusion from voxel cones is less pronounced.",
+    "expected_effect": "Four cone taps instead of six.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_voxel_gi.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.voxel_subdiv",
+    "category": "gi",
+    "title": "VoxelGI subdivision is above the default 128",
+    "severity": "high",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "voxel_gi_subdiv_above_default_count",
+        "value": 1
+      }
+    },
+    "evidence": "VoxelGI.subdiv index is 2 or 3 (256 or 512). The enum is 64, 128, 256, 512 and the Godot 4.4 default is 1 (128). The VoxelGI page says bake time depends on the subdivision.",
+    "suggestion": "Set VoxelGI.subdiv to 1 (128) or 0 (64) and bake again.",
+    "node_property": "VoxelGI.subdiv",
+    "offender_key": "voxel_subdiv",
+    "tradeoff": "Coarser voxels and a longer visual leak through thin walls.",
+    "expected_effect": "Less voxel memory and a shorter bake. The page tells you not to make the VoxelGI extents larger than necessary.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_voxel_gi.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.voxel_count",
+    "category": "gi",
+    "title": "More than one VoxelGI is in the scene",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "Two VoxelGI nodes means two baked volumes. The page does not forbid more than one; overlapping volumes still both store data.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "voxel_gi_count",
+        "value": 2
+      }
+    },
+    "evidence": "The scan found at least two VoxelGI nodes.",
+    "suggestion": "Cover the play space with one VoxelGI where you can. Keep each volume's size tight.",
+    "node_property": "VoxelGI",
+    "offender_key": "voxel_gi",
+    "tradeoff": "A single volume cannot follow the camera. Large extents lower quality, which the page warns about.",
+    "expected_effect": "Fewer voxel volumes to sample.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_voxel_gi.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.probe_always",
+    "category": "gi",
+    "title": "A ReflectionProbe updates every frame",
+    "severity": "high",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "reflection_probe_always_count",
+        "value": 1
+      }
+    },
+    "evidence": "ReflectionProbe.update_mode is Always (1). The reflection probe page says Once renders when the probe moves and is much faster, and Always re-renders every frame. The default is Once (0).",
+    "suggestion": "Set update_mode to Once unless the reflected scene moves every frame.",
+    "node_property": "ReflectionProbe.update_mode",
+    "offender_key": "probes_always",
+    "tradeoff": "Reflections stay frozen until the probe moves.",
+    "expected_effect": "The probe stops re-rendering the scene every frame.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/reflection_probes.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.probe_shadows",
+    "category": "gi",
+    "title": "A ReflectionProbe renders real-time shadows",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "reflection_probe_shadow_count",
+        "value": 1
+      }
+    },
+    "evidence": "ReflectionProbe.enable_shadows is true. The page says this improves quality at a performance cost and should stay off for the Once update mode in most cases. The default is false.",
+    "suggestion": "Set ReflectionProbe.enable_shadows to false.",
+    "node_property": "ReflectionProbe.enable_shadows",
+    "offender_key": "probes_shadows",
+    "tradeoff": "Reflections lose real-time shadow detail.",
+    "expected_effect": "The probe render skips real-time shadow maps.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/reflection_probes.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.reflection_atlas_size",
+    "category": "gi",
+    "title": "Reflection atlas size is above the default",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "reflection_size defaults to 256. Above that stores a larger reflection atlas than the default.",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/reflections/reflection_atlas/reflection_size",
+        "value": 256
+      }
+    },
+    "evidence": "reflection_size is above 256. On 4.4 the range starts at 0; on 4.7 it starts at 4. The default is 256 on both.",
+    "suggestion": "Set rendering/reflections/reflection_atlas/reflection_size to 256.",
+    "setting": "rendering/reflections/reflection_atlas/reflection_size",
+    "tradeoff": "Reflection probes look softer.",
+    "expected_effect": "Less reflection-atlas memory.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/reflection_probes.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.reflection_count",
+    "category": "gi",
+    "title": "Reflection atlas count is above the default",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "reflection_count defaults to 64. A higher count reserves more atlas slots than the default.",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/reflections/reflection_atlas/reflection_count",
+        "value": 64
+      }
+    },
+    "evidence": "reflection_count is above 64.",
+    "suggestion": "Lower reflection_count toward 64 unless probes are being dropped.",
+    "setting": "rendering/reflections/reflection_atlas/reflection_count",
+    "tradeoff": "Fewer probes can be resident.",
+    "expected_effect": "A smaller reflection atlas allocation.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.ggx_samples",
+    "category": "gi",
+    "title": "Sky GGX sample count is above the default",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/reflections/sky_reflections/ggx_samples",
+        "value": 32
+      }
+    },
+    "evidence": "ggx_samples is above 32. The default is 32 (16 on the .mobile override). The Sky class points at this setting when reflections sparkle.",
+    "suggestion": "Set ggx_samples back to 32 unless specular fireflies are visible.",
+    "setting": "rendering/reflections/sky_reflections/ggx_samples",
+    "tradeoff": "Rough sky reflections sparkle more.",
+    "expected_effect": "Fewer GGX samples in the sky radiance filter.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_sky.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.ssil_enabled",
+    "category": "gi",
+    "title": "Screen-space indirect lighting is enabled",
+    "severity": "high",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_eq": {
+        "name": "env_ssil",
+        "value": 1
+      }
+    },
+    "evidence": "Environment.ssil_enabled is true. The environment page says SSIL is Forward+ only.",
+    "suggestion": "Turn ssil_enabled off, or lower rendering/environment/ssil/quality (default index 2, Medium) and keep half_size true.",
+    "node_property": "Environment.ssil_enabled",
+    "tradeoff": "Small-scale bounced light from SSIL disappears.",
+    "expected_effect": "Removes the SSIL pass. Read Process SSIL.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "when_pass": [
+      "Process SSIL"
+    ],
+    "dedupe_key": "ssil",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "environment": true,
+        "property": "ssil_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "gi.lightmap_bicubic_off",
+    "category": "gi",
+    "title": "Lightmap bicubic filter is off",
+    "severity": "low",
+    "kind": "quality_up",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "lightmap_gi_count",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/lightmapping/lightmap_gi/use_bicubic_filter",
+            "value": false
+          }
+        }
+      ]
+    },
+    "evidence": "A LightmapGI is present and use_bicubic_filter is false. The default is true.",
+    "suggestion": "Turn rendering/lightmapping/lightmap_gi/use_bicubic_filter back on if lightmaps look blocky and there is GPU headroom.",
+    "setting": "rendering/lightmapping/lightmap_gi/use_bicubic_filter",
+    "tradeoff": "Bicubic filtering costs more taps at sample time.",
+    "expected_effect": "Smoother lightmaps. Measure if the scene is already over budget.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_lightmap_gi.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pass.ssil",
+    "category": "gi",
+    "title": "Process SSIL is in the capture",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The trigger is a RenderingDevice timestamp label substring from Godot's clustered renderer. Labels are not a stable public API. The rule fires only when that pass has exclusive time above 0.",
+    "requires": [
+      "passes"
+    ],
+    "condition": {
+      "pass_present": {
+        "names": [
+          "Process SSIL"
+        ]
+      }
+    },
+    "evidence": "The Process SSIL timestamp is present. SSIL is Forward+ only.",
+    "suggestion": "Turn Environment.ssil_enabled off or lower ssil/quality.",
+    "tradeoff": "Turning the feature off changes the look described on the cited page.",
+    "expected_effect": "That pass should shrink or disappear on the next gpu_passes capture. No percentage is predicted.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "when_pass": [
+      "Process SSIL"
+    ],
+    "dedupe_key": "ssil",
+    "pass_only": true,
+    "kind": "performance",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "environment": true,
+        "property": "ssil_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "pass.sdfgi",
+    "category": "gi",
+    "title": "SDFGI is in the capture",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The trigger is a RenderingDevice timestamp label substring from Godot's clustered renderer. Labels are not a stable public API. The rule fires only when that pass has exclusive time above 0.",
+    "requires": [
+      "passes"
+    ],
+    "condition": {
+      "pass_present": {
+        "names": [
+          "Render SDFGI"
+        ]
+      }
+    },
+    "evidence": "Render SDFGI is present. SDFGI is Forward+ only.",
+    "suggestion": "Turn sdfgi_enabled off or lower cascades and probe_ray_count.",
+    "tradeoff": "Turning the feature off changes the look described on the cited page.",
+    "expected_effect": "That pass should shrink or disappear on the next gpu_passes capture. No percentage is predicted.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_sdfgi.html",
+    "when_pass": [
+      "Render SDFGI"
+    ],
+    "dedupe_key": "sdfgi",
+    "pass_only": true,
+    "kind": "performance",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "environment": true,
+        "property": "sdfgi_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "gi.texture_array_reflections",
+    "category": "gi",
+    "title": "Reflections use texture arrays instead of mipmaps",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "frame",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/reflections/sky_reflections/texture_array_reflections",
+            "value": true
+          }
+        },
+        {
+          "frame_over_budget": true
+        }
+      ]
+    },
+    "evidence": "significantly slower to compute and uses This is Godot's default, so it is reported only when the measured frame is over budget.",
+    "suggestion": "Set rendering/reflections/sky_reflections/texture_array_reflections to false if reflection cost shows up. The description says texture arrays are significantly slower and use more memory.",
+    "setting": "rendering/reflections/sky_reflections/texture_array_reflections",
+    "tradeoff": "Reflections pick up more jitter noise.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.roughness_layers_high",
+    "category": "gi",
+    "title": "Radiance roughness layers are above 8",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/reflections/sky_reflections/roughness_layers",
+        "value": 8
+      }
+    },
+    "evidence": "A lower number will be slightly faster and take up less VRAM",
+    "suggestion": "Lower rendering/reflections/sky_reflections/roughness_layers toward 8.",
+    "setting": "rendering/reflections/sky_reflections/roughness_layers",
+    "tradeoff": "Rough reflections have fewer layers.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.fast_filter_high_quality",
+    "category": "gi",
+    "title": "Sky reflections use the high-quality fast filter",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/reflections/sky_reflections/fast_filter_high_quality",
+        "value": true
+      }
+    },
+    "evidence": "Significantly slower than using default quality",
+    "suggestion": "Turn rendering/reflections/sky_reflections/fast_filter_high_quality off unless the scene is especially detailed. The description says to use it only then.",
+    "setting": "rendering/reflections/sky_reflections/fast_filter_high_quality",
+    "tradeoff": "Reflections look less smooth.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.reflection_mobile_size",
+    "category": "gi",
+    "title": "The mobile reflection atlas is above 128",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/reflections/reflection_atlas/reflection_size.mobile",
+        "value": 128
+      }
+    },
+    "evidence": "due to performance concerns or driver support",
+    "suggestion": "Lower rendering/reflections/reflection_atlas/reflection_size.mobile toward 128.",
+    "setting": "rendering/reflections/reflection_atlas/reflection_size.mobile",
+    "tradeoff": "Mobile reflections lose detail.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.ggx_mobile_high",
+    "category": "gi",
+    "title": "Mobile GGX samples are above 16",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/reflections/sky_reflections/ggx_samples.mobile",
+        "value": 16
+      }
+    },
+    "evidence": "due to performance concerns or driver support",
+    "suggestion": "Lower rendering/reflections/sky_reflections/ggx_samples.mobile toward 16.",
+    "setting": "rendering/reflections/sky_reflections/ggx_samples.mobile",
+    "tradeoff": "Mobile specular looks noisier.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.lightmap_ultra_rays",
+    "category": "gi",
+    "title": "Ultra lightmap bakes use more than 2048 rays",
+    "severity": "info",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/lightmapping/bake_quality/ultra_quality_ray_count",
+        "value": 2048
+      }
+    },
+    "evidence": "The number of rays to use for baking lightmaps",
+    "suggestion": "Lower rendering/lightmapping/bake_quality/ultra_quality_ray_count toward 2048. This is the documented ray count for LightmapGI ultra bakes, not a frame-time measurement.",
+    "setting": "rendering/lightmapping/bake_quality/ultra_quality_ray_count",
+    "tradeoff": "The bake is noisier.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.lightmap_high_rays",
+    "category": "gi",
+    "title": "High lightmap bakes use more than 512 rays",
+    "severity": "info",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/lightmapping/bake_quality/high_quality_ray_count",
+        "value": 512
+      }
+    },
+    "evidence": "The number of rays to use for baking lightmaps",
+    "suggestion": "Lower rendering/lightmapping/bake_quality/high_quality_ray_count toward 512.",
+    "setting": "rendering/lightmapping/bake_quality/high_quality_ray_count",
+    "tradeoff": "The bake is noisier.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.texture_array_reflections_mobile",
+    "category": "gi",
+    "title": "Mobile devices use texture-array sky reflections",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/reflections/sky_reflections/texture_array_reflections.mobile",
+        "value": true
+      }
+    },
+    "evidence": "on mobile devices, due to performance concerns or driver support.",
+    "suggestion": "Keep rendering/reflections/sky_reflections/texture_array_reflections.mobile off, the lower-end default.",
+    "setting": "rendering/reflections/sky_reflections/texture_array_reflections.mobile",
+    "tradeoff": "Rough sky reflections are lower quality on mobile devices.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.lightmap_unbaked",
+    "category": "gi",
+    "title": "A LightmapGI node has no baked data",
+    "severity": "medium",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "lightmap_unbaked_count",
+        "value": 1
+      }
+    },
+    "evidence": "This resource is automatically created after baking, and is not meant to be created manually",
+    "suggestion": "Bake LightmapGI or remove the node. light_data stays empty until a bake. Realtime lights keep doing the work the bake would have captured.",
+    "node_property": "LightmapGI.light_data",
+    "offender_key": "lightmap_unbaked",
+    "tradeoff": "You have to rebake after you move static geometry.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_lightmapgi.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.voxel_unbaked",
+    "category": "gi",
+    "title": "A VoxelGI node has no baked data",
+    "severity": "medium",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "voxel_unbaked_count",
+        "value": 1
+      }
+    },
+    "evidence": "The resource that holds the data for this",
+    "suggestion": "Bake the VoxelGI or remove it. The data resource is what holds the bake.",
+    "node_property": "VoxelGI.data",
+    "offender_key": "voxel_unbaked",
+    "tradeoff": "Moving geometry requires another bake.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_voxelgi.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.lightmap_data_embedded",
+    "category": "gi",
+    "title": "Lightmap data is embedded in a text scene",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_lightmap_data_embedded",
+        "value": 1
+      }
+    },
+    "offender_key": "check_lightmap_data_embedded",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A LightmapGI's light_data is built into a .tscn scene (or not saved to its own file), so the capture data is stored as Base64 text in the scene. Godot docs: \"If you are using a scene in .tscn format, you should save this resource to an external binary .lmbake file to avoid bloating the .tscn scene with binary data encoded in Base64.\"",
+    "suggestion": "Save light_data to an external .lmbake file (Godot's bake does this when given a path) and reference it from the LightmapGI.",
+    "tradeoff": "One more file to keep with the scene.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_lightmap_gi.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.gi_dynamic",
+    "category": "gi",
+    "title": "Geometry uses dynamic GI with a VoxelGI in the scene",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_gi_dynamic",
+            "value": 1
+          }
+        },
+        {
+          "scene_gte": {
+            "name": "voxel_gi_count",
+            "value": 1
+          }
+        }
+      ]
+    },
+    "offender_key": "check_gi_dynamic",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible GeometryInstance3D uses GI_MODE_DYNAMIC and the scan found a VoxelGI, the only GI that dynamic mode affects. Godot class reference: \"but it has a higher performance impact than .\"",
+    "suggestion": "Use GI_MODE_STATIC for objects that do not move, and keep dynamic mode for moving objects that must contribute to VoxelGI.",
+    "tradeoff": "Static objects stop contributing correctly if they later move.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/GeometryInstance3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.lightmap_directional",
+    "category": "gi",
+    "title": "Directional lightmaps add shader work",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_lightmap_directional",
+        "value": 1
+      }
+    },
+    "offender_key": "check_lightmap_directional",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A baked LightmapGI has directional enabled. Godot class reference: \"This has a small run-time performance cost as the shader has to perform more work to interpret the direction information from the lightmap.\"",
+    "suggestion": "Rebake without directional where normal-mapped detail under baked light is not needed.",
+    "tradeoff": "Normal maps react less to baked light, and rough baked reflections are lost.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/LightmapGI.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.sdfgi_small_cells",
+    "category": "gi",
+    "title": "SDFGI cells are smaller than the default",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_sdfgi_small_cells",
+        "value": 1
+      }
+    },
+    "offender_key": "check_sdfgi_small_cells",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An assigned Environment enables SDFGI with sdfgi_min_cell_size below the 0.2 default. Smaller cells make updates more demanding and can increase stutter during camera movement. The default is a review threshold, not a minimum.",
+    "suggestion": "Compare larger cells while repeating the same camera movement, checking both lighting detail and frame-time spikes.",
+    "tradeoff": "Fine indirect-lighting detail decreases and cascade coverage changes.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Environment.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render SDFGI"
+    ],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.probe_lod_disabled",
+    "category": "gi",
+    "title": "A reflection probe disables automatic mesh LOD",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_probe_lod_disabled",
+        "value": 1
+      }
+    },
+    "offender_key": "check_probe_lod_disabled",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A ReflectionProbe with a nonzero cull mask has mesh_lod_threshold set to zero, disabling automatic mesh LOD in its captures. A saving requires captured meshes with generated LODs; update-once probes pay during their capture rather than every frame.",
+    "suggestion": "Compare a threshold of one pixel or higher and measure the reflection capture, especially for continuously updated probes.",
+    "tradeoff": "Reflected geometry may lose detail; manual visibility ranges remain independent.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/ReflectionProbe.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "gi.probe_always_atlas",
+    "category": "gi",
+    "title": "An Always-updating ReflectionProbe resizes the reflection atlas to 256",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "reflection_probe_always_count",
+            "value": 1
+          }
+        },
+        {
+          "setting_neq": {
+            "path": "rendering/reflections/reflection_atlas/reflection_size",
+            "value": 256
+          }
+        }
+      ]
+    },
+    "setting": "rendering/reflections/reflection_atlas/reflection_size",
+    "offender_key": "probes_always",
+    "evidence": "Godot prints \"ReflectionProbes set to UPDATE_ALWAYS must have an atlas size of 256.\" when a probe with update_mode Always renders into an atlas whose size is not 256, then resizes the atlas to 256 for every probe. The .mobile override (128 by default) also triggers it on mobile devices.",
+    "suggestion": "Set rendering/reflections/reflection_atlas/reflection_size (and its .mobile override) to 256, or use update_mode Once.",
+    "tradeoff": "A 256 atlas lowers reflection detail for probes that would have used a larger size.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/renderer_rd/storage_rd/light_storage.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "gi.lightmap_missing_nodes",
+    "category": "gi",
+    "title": "Baked lightmap data refers to nodes that no longer exist",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_lightmap_missing_nodes",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_lightmap_missing_nodes",
+    "evidence": "Godot prints \"LightmapGI couldn't find previously baked nodes and needs a rebake (missing nodes: ../Wall).\" when a LightmapGI's baked data lists a mesh path that does not resolve; that mesh renders without its lightmap.",
+    "suggestion": "Rebake the LightmapGI after moving, renaming or deleting baked meshes.",
+    "tradeoff": "Baking takes time and replaces the lightmap files.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/scene/3d/lightmap_gi.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

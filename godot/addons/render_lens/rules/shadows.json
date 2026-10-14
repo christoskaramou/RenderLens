@@ -1,0 +1,1436 @@
+[
+  {
+    "id": "shadows.directional_size_above_default",
+    "category": "shadows",
+    "title": "Directional shadow map is larger than the default",
+    "severity": "high",
+    "heuristic": true,
+    "heuristic_rationale": "The default directional shadow size is 4096 (2048 on the .mobile override). Larger than 4096 is above that default, which stores more shadow texels.",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/lights_and_shadows/directional_shadow/size",
+        "value": 4096
+      }
+    },
+    "evidence": "rendering/lights_and_shadows/directional_shadow/size is above 4096. The setting range is 256\u201316384 and the default is 4096.",
+    "suggestion": "Set the size back to 4096, or 2048 on a mobile target. The lights page says the directional shadow atlas is shared by every DirectionalLight3D.",
+    "setting": "rendering/lights_and_shadows/directional_shadow/size",
+    "tradeoff": "Shadow edges on the directional light look blockier.",
+    "expected_effect": "Fewer directional shadow texels. Read the shadow timestamps.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/lights_and_shadows.html",
+    "when_pass": [
+      "Render Shadows",
+      "Directional/SpotLight Shadows"
+    ],
+    "dedupe_key": "dir_shadow_size",
+    "kind": "performance",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/lights_and_shadows/directional_shadow/size",
+        "value": 4096
+      }
+    ]
+  },
+  {
+    "id": "shadows.positional_atlas_above_default",
+    "category": "shadows",
+    "title": "Positional shadow atlas is larger than the default",
+    "severity": "high",
+    "heuristic": true,
+    "heuristic_rationale": "The positional atlas default is 4096. Values above that increase the atlas beyond the documented default.",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/lights_and_shadows/positional_shadow/atlas_size",
+        "value": 4096
+      }
+    },
+    "evidence": "positional shadow atlas_size is above 4096 (default 4096, range 256\u201316384).",
+    "suggestion": "Set rendering/lights_and_shadows/positional_shadow/atlas_size to 4096 or 2048.",
+    "setting": "rendering/lights_and_shadows/positional_shadow/atlas_size",
+    "tradeoff": "Omni and spot shadows lose resolution.",
+    "expected_effect": "A smaller shadow atlas. Measure the shadow passes.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/lights_and_shadows.html",
+    "kind": "performance",
+    "when_pass": [
+      "Render OmniLight Shadows",
+      "Directional/SpotLight Shadows",
+      "Render Shadows"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/lights_and_shadows/positional_shadow/atlas_size",
+        "value": 4096
+      }
+    ]
+  },
+  {
+    "id": "shadows.directional_filter_high",
+    "category": "shadows",
+    "title": "Directional soft shadow filter is High or Ultra",
+    "severity": "high",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gte": {
+        "path": "rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality",
+        "value": 4
+      }
+    },
+    "evidence": "directional soft_shadow_filter_quality is 4 or 5. The hint is Hard, Soft Very Low, Soft Low, Soft Medium, Soft High (Slow), Soft Ultra (Slowest). The default is 2 (Soft Low).",
+    "suggestion": "Set the filter to 2 (Soft Low) or 0 (Hard).",
+    "setting": "rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality",
+    "tradeoff": "Shadow penumbras look harder.",
+    "expected_effect": "Fewer directional shadow filter taps, matching the Slow and Slowest labels.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/lights_and_shadows.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "shadows.positional_filter_high",
+    "category": "shadows",
+    "title": "Positional soft shadow filter is High or Ultra",
+    "severity": "high",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gte": {
+        "path": "rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality",
+        "value": 4
+      }
+    },
+    "evidence": "positional soft_shadow_filter_quality is 4 or 5 (Soft High / Soft Ultra). The default is 2 (Soft Low). The .mobile override defaults to 0 (Hard).",
+    "suggestion": "Set positional soft_shadow_filter_quality to 2 or 0.",
+    "setting": "rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality",
+    "tradeoff": "Omni and spot shadow edges look harder.",
+    "expected_effect": "Cheaper positional shadow filtering.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/lights_and_shadows.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "shadows.directional_32_bit",
+    "category": "shadows",
+    "title": "Directional shadows are not 16-bit",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/lights_and_shadows/directional_shadow/16_bits",
+        "value": false
+      }
+    },
+    "evidence": "directional_shadow/16_bits is false. The default is true.",
+    "suggestion": "Set rendering/lights_and_shadows/directional_shadow/16_bits to true.",
+    "setting": "rendering/lights_and_shadows/directional_shadow/16_bits",
+    "tradeoff": "16-bit shadow maps have less depth precision, which can need a slightly higher bias.",
+    "expected_effect": "Half the directional shadow depth bandwidth versus a 32-bit map. Measure shadows if acne appears.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.positional_32_bit",
+    "category": "shadows",
+    "title": "Positional shadow atlas is not 16-bit",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/lights_and_shadows/positional_shadow/atlas_16_bits",
+        "value": false
+      }
+    },
+    "evidence": "positional atlas_16_bits is false. The default is true.",
+    "suggestion": "Set atlas_16_bits to true.",
+    "setting": "rendering/lights_and_shadows/positional_shadow/atlas_16_bits",
+    "tradeoff": "Same precision tradeoff as directional 16-bit maps.",
+    "expected_effect": "Smaller positional shadow atlas bandwidth.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.quadrant_subdiv_high",
+    "category": "shadows",
+    "title": "A positional shadow quadrant allows 256 or more shadows",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "any": [
+        {
+          "setting_gte": {
+            "path": "rendering/lights_and_shadows/positional_shadow/atlas_quadrant_0_subdiv",
+            "value": 5
+          }
+        },
+        {
+          "setting_gte": {
+            "path": "rendering/lights_and_shadows/positional_shadow/atlas_quadrant_1_subdiv",
+            "value": 5
+          }
+        },
+        {
+          "setting_gte": {
+            "path": "rendering/lights_and_shadows/positional_shadow/atlas_quadrant_2_subdiv",
+            "value": 5
+          }
+        },
+        {
+          "setting_gte": {
+            "path": "rendering/lights_and_shadows/positional_shadow/atlas_quadrant_3_subdiv",
+            "value": 5
+          }
+        }
+      ]
+    },
+    "evidence": "A quadrant subdiv index is 5 or 6. The hint is Disabled, 1, 4, 16, 64, 256, 1024 shadows. Defaults are 2, 2, 3, 4 (4, 4, 16, and 64 shadows).",
+    "suggestion": "Lower that quadrant toward the defaults. Index 4 is 64 shadows, which is already the default for quadrant 3.",
+    "setting": "rendering/lights_and_shadows/positional_shadow/atlas_quadrant_3_subdiv",
+    "tradeoff": "Fewer shadows can be stored in that quadrant, so distant lights lose shadows sooner.",
+    "expected_effect": "Less atlas subdivision work. The lights page describes lights popping when the shadow budget is exceeded.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/lights_and_shadows.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render OmniLight Shadows",
+      "Directional/SpotLight Shadows",
+      "Render Shadows"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.tighter_culling_off",
+    "category": "shadows",
+    "title": "Tighter shadow caster culling is off",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/lights_and_shadows/tighter_shadow_caster_culling",
+        "value": false
+      }
+    },
+    "evidence": "tighter_shadow_caster_culling is false. The default is true.",
+    "suggestion": "Set rendering/lights_and_shadows/tighter_shadow_caster_culling to true.",
+    "setting": "rendering/lights_and_shadows/tighter_shadow_caster_culling",
+    "tradeoff": "The default tighter test can cull casters the looser test would keep. Watch for missing shadow casters at the edges.",
+    "expected_effect": "Fewer shadow casters submitted. Compare shadow draw calls in collect_metrics.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render Shadows",
+      "Render OmniLight Shadows",
+      "Directional/SpotLight Shadows"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.directional_pssm4",
+    "category": "shadows",
+    "title": "A DirectionalLight3D uses 4 PSSM splits",
+    "severity": "medium",
+    "requires": [
+      "frame",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "all": [
+            {
+              "scene_gte": {
+                "name": "directional_shadow_count",
+                "value": 1
+              }
+            },
+            {
+              "scene_gte": {
+                "name": "directional_pssm4_count",
+                "value": 1
+              }
+            }
+          ]
+        },
+        {
+          "frame_over_budget": true
+        }
+      ]
+    },
+    "evidence": "A shadow-casting DirectionalLight3D has directional_shadow_mode 2. The inspector hint is Orthogonal (Fast), PSSM 2 Splits (Average), PSSM 4 Splits (Slow). The node default printed from Godot 4.4 is 2. This is Godot's default, so it is reported only when the measured frame is over budget.",
+    "suggestion": "Set DirectionalLight3D.directional_shadow_mode to 1 (2 splits) or 0 (orthogonal). Also lower directional_shadow_max_distance if it is above the node default of 100.",
+    "node_property": "DirectionalLight3D.directional_shadow_mode",
+    "offender_key": "directional_pssm4",
+    "tradeoff": "2 splits and orthogonal cover the same distance with less shadow resolution up close. The lights page describes PSSM as the fix for blocky distant shadows.",
+    "expected_effect": "Fewer directional shadow cascades to render.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/lights_and_shadows.html",
+    "when_pass": [
+      "Render Shadows",
+      "Directional/SpotLight Shadows"
+    ],
+    "dedupe_key": "pssm4",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "class": "DirectionalLight3D",
+        "property": "directional_shadow_mode",
+        "value": 1,
+        "only_above": 1
+      }
+    ]
+  },
+  {
+    "id": "shadows.directional_max_distance",
+    "category": "shadows",
+    "title": "Directional shadow max distance is above the node default",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "DirectionalLight3D.directional_shadow_max_distance defaults to 100 in Godot 4.4. Above that spreads the same shadow map over more world space.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "directional_max_distance_above_default_count",
+        "value": 1
+      }
+    },
+    "evidence": "At least one DirectionalLight3D has directional_shadow_max_distance above 100.",
+    "suggestion": "Lower directional_shadow_max_distance toward the distance that actually needs shadows.",
+    "node_property": "DirectionalLight3D.directional_shadow_max_distance",
+    "offender_key": "directional_max_distance",
+    "tradeoff": "Beyond the new distance, directional shadows disappear.",
+    "expected_effect": "Shadow texels cover a shorter range. The lights page says the shared atlas resolution drops when more of the frustum is shadowed.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/lights_and_shadows.html",
+    "kind": "performance",
+    "when_pass": [
+      "Render Shadows",
+      "Directional/SpotLight Shadows"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.omni_cube",
+    "category": "shadows",
+    "title": "Omni shadows use cube maps",
+    "severity": "medium",
+    "requires": [
+      "frame",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "omni_shadow_cube_count",
+            "value": 1
+          }
+        },
+        {
+          "frame_over_budget": true
+        }
+      ]
+    },
+    "evidence": "shadow_enabled OmniLight3D nodes use omni_shadow_mode 1 (Cube). Godot 4.4's default is Cube. The lights page says dual paraboloid renders quickly and cube is more correct but slower. This is Godot's default, so it is reported only when the measured frame is over budget.",
+    "suggestion": "Set OmniLight3D.omni_shadow_mode to 0 (Dual Paraboloid) on lights where the deformation is acceptable.",
+    "node_property": "OmniLight3D.omni_shadow_mode",
+    "offender_key": "omni_shadow_cube",
+    "tradeoff": "Dual paraboloid deforms the shadow.",
+    "expected_effect": "A cheaper omni shadow algorithm, as described on the lights page.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/lights_and_shadows.html",
+    "when_pass": [
+      "Render OmniLight Shadows",
+      "mobile:Render Shadows"
+    ],
+    "dedupe_key": "omni_cube",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "class": "OmniLight3D",
+        "property": "omni_shadow_mode",
+        "value": 0
+      }
+    ]
+  },
+  {
+    "id": "shadows.omni_shadow_count",
+    "category": "shadows",
+    "title": "More than one omni light casts shadows",
+    "severity": "high",
+    "heuristic": true,
+    "heuristic_rationale": "Two or more shadow-casting omni lights is the cut. Each one renders its own shadow map. The number is not a Godot budget.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "omni_shadow_count",
+        "value": 2
+      }
+    },
+    "evidence": "The scan found at least two OmniLight3D nodes with shadow_enabled.",
+    "suggestion": "Disable shadow_enabled on omni lights that do not need grounded contact, or turn on Light3D.distance_fade_enabled so distant ones drop their shadows.",
+    "node_property": "Light3D.shadow_enabled",
+    "offender_key": "omni_shadows",
+    "tradeoff": "Those lights no longer cast real-time shadows.",
+    "expected_effect": "Fewer omni shadow maps. The optimizing-3D page calls multiple real-time shadow lights especially expensive.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/optimizing_3d_performance.html",
+    "when_pass": [
+      "Render OmniLight Shadows",
+      "mobile:Render Shadows"
+    ],
+    "dedupe_key": "omni_count",
+    "kind": "performance",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "class": "OmniLight3D",
+        "property": "shadow_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "shadows.spot_shadow_count",
+    "category": "shadows",
+    "title": "More than one spot light casts shadows",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "Two or more shadow-casting spot lights is a review cut, not an engine limit.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "spot_shadow_count",
+        "value": 2
+      }
+    },
+    "evidence": "At least two SpotLight3D nodes have shadow_enabled.",
+    "suggestion": "Disable shadows on the spots that only need a projected cookie, and enable Light3D.distance_fade_enabled on the rest.",
+    "node_property": "Light3D.shadow_enabled",
+    "offender_key": "spot_shadows",
+    "tradeoff": "Those spots stop casting shadows.",
+    "expected_effect": "Fewer spot shadow passes.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/optimizing_3d_performance.html",
+    "when_pass": [
+      "Render Shadows",
+      "Directional/SpotLight Shadows"
+    ],
+    "kind": "performance",
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "class": "SpotLight3D",
+        "property": "shadow_enabled",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "shadows.no_distance_fade",
+    "category": "shadows",
+    "title": "Shadow-casting positional lights have no distance fade",
+    "severity": "medium",
+    "requires": [
+      "frame",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "positional_shadow_without_distance_fade_count",
+            "value": 1
+          }
+        },
+        {
+          "frame_over_budget": true
+        }
+      ]
+    },
+    "evidence": "Omni or spot lights cast shadows with distance_fade_enabled left off. The lights page says distance fade reduces popping and improves performance when many lights compete for the atlas. This is Godot's default, so it is reported only when the measured frame is over budget.",
+    "suggestion": "Enable Light3D.distance_fade_enabled and set distance_fade_shadow inside the light's useful range.",
+    "node_property": "Light3D.distance_fade_enabled",
+    "offender_key": "positional_shadow_no_fade",
+    "tradeoff": "Shadows fade out before the light itself does, over distance_fade_length.",
+    "expected_effect": "Distant lights drop out of the shadow atlas.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/lights_and_shadows.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render OmniLight Shadows",
+      "Directional/SpotLight Shadows",
+      "Render Shadows"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.light_size_soft",
+    "category": "shadows",
+    "title": "Shadow lights use size or angular distance",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "light_size_shadow_count",
+        "value": 1
+      }
+    },
+    "evidence": "A shadow-casting light has light_size or light_angular_distance above 0. The lights page says blur then softens contact-hardening shadows from Size or Angular Distance, which is a different path from a hard shadow map.",
+    "suggestion": "Set light_size and light_angular_distance to 0 on lights that do not need contact-hardening shadows, and lower shadow_blur.",
+    "node_property": "Light3D.light_size",
+    "offender_key": "light_size_shadows",
+    "tradeoff": "Penumbra width from the light's physical size goes away.",
+    "expected_effect": "Harder, cheaper shadows for those lights.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/lights_and_shadows.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.shadow_2d_atlas",
+    "category": "shadows",
+    "title": "2D shadow atlas is larger than the default",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "rendering/2d/shadow_atlas/size defaults to 2048. Above that is more 2D shadow texels than the default.",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/2d/shadow_atlas/size",
+        "value": 2048
+      }
+    },
+    "evidence": "rendering/2d/shadow_atlas/size is above 2048 (range 128\u201316384, default 2048).",
+    "suggestion": "Set the 2D shadow atlas back to 2048 or lower.",
+    "setting": "rendering/2d/shadow_atlas/size",
+    "tradeoff": "2D shadows look softer or blockier at a smaller atlas.",
+    "expected_effect": "Less 2D shadow-map memory and fill.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/2d/2d_lights_and_shadows.html",
+    "kind": "performance",
+    "when_pass": [
+      "Render PointLight2D Shadow"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.double_sided_casters",
+    "category": "shadows",
+    "title": "Meshes cast double-sided shadows",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "mesh_double_sided_shadow_count",
+        "value": 1
+      }
+    },
+    "evidence": "GeometryInstance3D.cast_shadow is Double-Sided (enum Off, On, Double-Sided, Shadows Only).",
+    "suggestion": "Use cast_shadow On unless the mesh is a single-sided card that must shadow from both sides.",
+    "node_property": "GeometryInstance3D.cast_shadow",
+    "offender_key": "double_sided_shadows",
+    "tradeoff": "Back faces stop casting shadows.",
+    "expected_effect": "Fewer shadow triangles for those meshes.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_geometryinstance3d.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render Shadows",
+      "Render OmniLight Shadows",
+      "Directional/SpotLight Shadows"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pass.shadows",
+    "category": "shadows",
+    "title": "A shadow timestamp is in the capture",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The trigger is a RenderingDevice timestamp label substring from Godot's clustered renderer. Labels are not a stable public API. The rule fires only when that pass has exclusive time above 0.",
+    "requires": [
+      "passes"
+    ],
+    "condition": {
+      "pass_present": {
+        "names": [
+          "Render Shadows",
+          "Render OmniLight Shadows",
+          "Directional/SpotLight Shadows"
+        ]
+      }
+    },
+    "evidence": "Shadow timestamp names were recorded. The lights and optimizing-3D pages treat real-time shadows as one of the expensive features.",
+    "suggestion": "Reduce shadow-casting lights, atlas size, and filter quality, then run gpu_passes again.",
+    "tradeoff": "Turning the feature off changes the look described on the cited page.",
+    "expected_effect": "That pass should shrink or disappear on the next gpu_passes capture. No percentage is predicted.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/lights_and_shadows.html",
+    "when_pass": [
+      "Render Shadows",
+      "Render OmniLight Shadows",
+      "Directional/SpotLight Shadows"
+    ],
+    "dedupe_key": "shadows",
+    "pass_only": true,
+    "kind": "performance",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.directional_mobile_size",
+    "category": "shadows",
+    "title": "The mobile directional shadow map is above 2048",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/lights_and_shadows/directional_shadow/size.mobile",
+        "value": 2048
+      }
+    },
+    "evidence": "due to performance concerns or driver support",
+    "suggestion": "Lower rendering/lights_and_shadows/directional_shadow/size.mobile toward 2048. The description calls this the lower-end override.",
+    "setting": "rendering/lights_and_shadows/directional_shadow/size.mobile",
+    "tradeoff": "Directional shadows lose detail on mobile.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [
+      "Render Shadows",
+      "Directional/SpotLight Shadows"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.positional_mobile_size",
+    "category": "shadows",
+    "title": "The mobile positional shadow atlas is above 2048",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/lights_and_shadows/positional_shadow/atlas_size.mobile",
+        "value": 2048
+      }
+    },
+    "evidence": "due to performance concerns or driver support",
+    "suggestion": "Lower rendering/lights_and_shadows/positional_shadow/atlas_size.mobile toward 2048.",
+    "setting": "rendering/lights_and_shadows/positional_shadow/atlas_size.mobile",
+    "tradeoff": "Positional shadows lose detail on mobile.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [
+      "Render OmniLight Shadows",
+      "Directional/SpotLight Shadows",
+      "Render Shadows"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.mobile_filter_raised",
+    "category": "shadows",
+    "title": "The mobile directional shadow filter is above the low-end default",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality.mobile",
+        "value": 0
+      }
+    },
+    "evidence": "due to performance concerns or driver support",
+    "suggestion": "Set rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality.mobile back to 0 unless the soft edge is required.",
+    "setting": "rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality.mobile",
+    "tradeoff": "Mobile shadow edges look harder.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.positional_mobile_filter_raised",
+    "category": "shadows",
+    "title": "The mobile omni/spot shadow filter is above the low-end default",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality.mobile",
+        "value": 0
+      }
+    },
+    "evidence": "on mobile devices, due to performance concerns or driver support.",
+    "suggestion": "Return rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality.mobile to Hard (0) unless soft omni/spot shadows are required on phones.",
+    "setting": "rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality.mobile",
+    "tradeoff": "Omni and spot shadow edges are harder on mobile devices.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.small_shadow_casters",
+    "category": "shadows",
+    "title": "Many tiny meshes cast shadows",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_small_shadow_casters",
+        "value": 64
+      }
+    },
+    "offender_key": "check_small_shadow_casters",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "At least 64 visible MeshInstance3D nodes cast shadows although their scaled bounds are under 0.2 units on every axis. The size and count cutoffs are review heuristics. Godot class reference: \"Use this to improve performance for small geometry that is unlikely to cast noticeable shadows (such as debris).\"",
+    "suggestion": "Set cast_shadow to Off on small debris and props whose shadows are not noticeable.",
+    "tradeoff": "Small objects lose contact shadows.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/GeometryInstance3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render Shadows",
+      "Render OmniLight Shadows",
+      "Directional/SpotLight Shadows"
+    ],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.light_shadow_fade",
+    "category": "shadows",
+    "title": "A light's shadow fades no earlier than the light",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_light_shadow_fade",
+        "value": 1
+      }
+    },
+    "offender_key": "check_light_shadow_fade",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible OmniLight3D/SpotLight3D casts shadows with distance fade enabled, and distance_fade_shadow is at least distance_fade_begin + distance_fade_length, so shadows render for the light's whole fade range. Godot class reference: \"Set this to a value lower than + to further improve performance, as shadow rendering is often more expensive than light rendering itself.\"",
+    "suggestion": "Lower distance_fade_shadow below the light's fade end so distant lights stop rendering shadows first.",
+    "tradeoff": "Distant lights lose their shadows before the light itself fades.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Light3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render OmniLight Shadows",
+      "Directional/SpotLight Shadows",
+      "Render Shadows"
+    ],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.shadow_blend_splits",
+    "category": "shadows",
+    "title": "Directional shadow splits are blended",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_shadow_blend_splits",
+        "value": 1
+      }
+    },
+    "offender_key": "check_shadow_blend_splits",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible, shadow-casting DirectionalLight3D uses PSSM splits with directional_shadow_blend_splits enabled. Godot class reference: \"Enabling shadow blend splitting also has a moderate performance cost.\"",
+    "suggestion": "Disable directional_shadow_blend_splits unless the seams between shadow splits are visible during play.",
+    "tradeoff": "Transitions between shadow cascades become visible as a sharper change in shadow detail.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/DirectionalLight3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.viewport_shadow_atlas",
+    "category": "shadows",
+    "title": "A SubViewport requests a larger or deeper shadow atlas",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_viewport_shadow_atlas",
+        "value": 1
+      }
+    },
+    "offender_key": "check_viewport_shadow_atlas",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An update-enabled 3D SubViewport requests a positional shadow atlas above its default 2048 size or disables its default 16-bit depth mode. The RD renderer allocates atlas width and height from this size and selects D16 or D32. Allocation and rendering depend on actual shadow use; this is not a measured VRAM value.",
+    "suggestion": "Compare the default atlas size and 16-bit mode one at a time while checking omni/spot shadows in this viewport.",
+    "tradeoff": "Smaller atlases reduce shadow detail; 16-bit depth may introduce shadow acne or precision artifacts.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/rendering/renderer_rd/storage_rd/light_storage.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render OmniLight Shadows",
+      "Directional/SpotLight Shadows",
+      "Render Shadows"
+    ],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "shadows.light_shadow_blur",
+    "category": "shadows",
+    "title": "Shadow blur exceeds the default",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_light_shadow_blur",
+        "value": 1
+      }
+    },
+    "offender_key": "check_light_shadow_blur",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible non-editor-only Light3D enables shadows with shadow_blur above its default of 1.0. Godot documents possible performance impact at high values; the actual effect depends on the shadow filtering path and hardware.",
+    "suggestion": "Compare a blur value near one while holding other shadow settings constant.",
+    "tradeoff": "Shadow edges may look sharper or reveal low-resolution artifacts.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Light3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  }
+]

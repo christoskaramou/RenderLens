@@ -1,0 +1,293 @@
+[
+  {
+    "id": "sky.quality_mode",
+    "category": "sky",
+    "title": "Sky process mode is Quality",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "sky_quality_count",
+        "value": 1
+      }
+    },
+    "evidence": "Sky.process_mode is 1 (Quality). The Sky class says Quality uses importance sampling, looks better than Real-Time (3), takes much longer to generate, and should not be used if the sky changes at runtime. Automatic is 0.",
+    "suggestion": "Use PROCESS_MODE_AUTOMATIC, or REALTIME (3) if the sky changes every frame. Real-Time is the fast filter, not the expensive one.",
+    "node_property": "Sky.process_mode",
+    "offender_key": "sky_quality",
+    "tradeoff": "Real-Time radiance is lower quality. The class says to raise ggx_samples if Quality reflections sparkle.",
+    "expected_effect": "The radiance map generates faster when the sky changes.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_sky.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "sky.radiance_size",
+    "category": "sky",
+    "title": "Sky radiance size is 1024 or 2048",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "sky_radiance_large_count",
+        "value": 1
+      }
+    },
+    "evidence": "Sky.radiance_size index is 5 or 6 (1024 or 2048). The enum runs 32, 64, 128, 256, 512, 1024, 2048. The class reference default is 3 (256).",
+    "suggestion": "Set radiance_size to 3 (256) or 4 (512).",
+    "node_property": "Sky.radiance_size",
+    "offender_key": "sky_radiance",
+    "tradeoff": "Rough reflections of the sky lose detail.",
+    "expected_effect": "A smaller radiance cubemap.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_sky.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "sky.background_keep",
+    "category": "sky",
+    "title": "Environment background mode is Keep",
+    "severity": "info",
+    "kind": "info",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_eq": {
+        "name": "env_background_keep",
+        "value": 1
+      }
+    },
+    "evidence": "background_mode is Keep (index 4 of Clear Color, Custom Color, Sky, Canvas, Keep, Camera Feed). The environment page says Keep skips drawing the sky and is faster for indoor scenes, but mirrors if the sky is ever visible.",
+    "suggestion": "Keep this mode for interiors. Switch to Sky or Custom Color if the background is visible.",
+    "node_property": "Environment.background_mode",
+    "tradeoff": "A real sky costs the sky pass.",
+    "expected_effect": "The page already calls Keep the faster indoor background. No further cut is implied.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "sky.custom_fov",
+    "category": "sky",
+    "title": "Sky custom FOV is set",
+    "severity": "info",
+    "kind": "info",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "sky_custom_fov_count",
+        "value": 1
+      }
+    },
+    "evidence": "Environment.sky_custom_fov is above 0 (the property range is 0\u2013180).",
+    "suggestion": "Set sky_custom_fov to 0 to follow the camera. A custom FOV does not remove the sky pass.",
+    "node_property": "Environment.sky_custom_fov",
+    "tradeoff": "The sky's perspective matches the camera again.",
+    "expected_effect": "No frame-time claim. This is a visual mismatch check.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_environment.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "sky.realtime_radiance_size",
+    "category": "sky",
+    "title": "A real-time sky asks for a radiance size other than 256",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_sky_realtime_radiance",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_sky_realtime_radiance",
+    "evidence": "Godot prints \"Realtime Skies can only use a radiance size of 256. Radiance size will be set to 256 internally.\" when Sky.process_mode is Real-Time and radiance_size is not 256; the radiance map is set to 256 internally.",
+    "suggestion": "Set Sky.radiance_size to 256 for real-time skies, or use another process mode if a different size is needed.",
+    "tradeoff": "None; Godot already renders this sky at 256.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/renderer_rd/environment/sky.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "sky.realtime_roughness_layers",
+    "category": "sky",
+    "title": "A real-time sky runs with roughness layers other than 8",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_sky_realtime",
+            "value": 1
+          }
+        },
+        {
+          "setting_neq": {
+            "path": "rendering/reflections/sky_reflections/roughness_layers",
+            "value": 8
+          }
+        }
+      ]
+    },
+    "setting": "",
+    "offender_key": "check_sky_realtime",
+    "evidence": "Godot prints \"When using the Real-Time sky update mode (or Automatic with a sky shader using \"TIME\"), \"rendering/reflections/sky_reflections/roughness_layers\" should be set to 8 in the project settings for best quality reflections.\" when Sky.process_mode is Real-Time and rendering/reflections/sky_reflections/roughness_layers is not 8 (Godot 4.4 and 4.5); real-time skies always use 8 layers.",
+    "suggestion": "Set roughness_layers to 8, or use a non-real-time sky process mode.",
+    "tradeoff": "None; real-time skies already use 8 layers.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.5.2-stable/servers/rendering/renderer_rd/environment/sky.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

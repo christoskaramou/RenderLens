@@ -1,0 +1,727 @@
+[
+  {
+    "id": "audio.output_latency_low",
+    "category": "audio",
+    "title": "Preferred audio latency is below 15 ms",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_lt": {
+        "path": "audio/driver/output_latency",
+        "value": 15
+      }
+    },
+    "evidence": "Lower values will result in lower audio latency at the cost of increased CPU usage",
+    "suggestion": "Raise audio/driver/output_latency toward 15 if you hear crackling or the mix thread is hot. The description says low values cost CPU and can crackle.",
+    "setting": "audio/driver/output_latency",
+    "tradeoff": "Audible latency increases.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.disable_threshold_strict",
+    "category": "audio",
+    "title": "Audio buses stay awake at quieter levels than the default",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_lt": {
+        "path": "audio/buses/channel_disable_threshold_db",
+        "value": -60.0
+      }
+    },
+    "evidence": "This saves CPU as effects assigned to that bus will no longer do any processing",
+    "suggestion": "Move audio/buses/channel_disable_threshold_db up toward -60 so idle buses disable. The description says disabling the bus skips its effects.",
+    "setting": "audio/buses/channel_disable_threshold_db",
+    "tradeoff": "Very quiet tails get cut sooner.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.disable_time_long",
+    "category": "audio",
+    "title": "Audio buses wait longer than 2 seconds before disabling",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "audio/buses/channel_disable_time",
+        "value": 2.0
+      }
+    },
+    "evidence": "This saves CPU as effects assigned to that bus will no longer do any processing",
+    "suggestion": "Lower audio/buses/channel_disable_time toward the default 2 seconds. A longer window keeps effects running after the sound has dropped.",
+    "setting": "audio/buses/channel_disable_time",
+    "tradeoff": "Short gaps in a loop may click if the bus sleeps.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.tts_enabled",
+    "category": "audio",
+    "title": "Text-to-speech support is enabled",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "audio/general/text_to_speech",
+        "value": true
+      }
+    },
+    "evidence": "idle CPU usage and interfere with the sleep mode",
+    "suggestion": "Turn audio/general/text_to_speech off when the game does not speak. The description warns about idle CPU use and sleep mode.",
+    "setting": "audio/general/text_to_speech",
+    "tradeoff": "DisplayServer TTS calls stop working.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.polyphony",
+    "category": "audio",
+    "title": "An audio player allows more than one voice",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "The class says max_polyphony is how many sounds play at once and that extra sounds cut off the oldest. Above the default of 1 means more simultaneous mixes. No voice budget is documented.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "audio_polyphony_count",
+        "value": 1
+      }
+    },
+    "evidence": "The maximum number of sounds this node can play at the same time",
+    "suggestion": "Lower max_polyphony toward 1 on players that do not need overlapping sounds. The class says extra sounds cut off the oldest.",
+    "node_property": "AudioStreamPlayer3D.max_polyphony",
+    "offender_key": "audio_polyphony",
+    "tradeoff": "Overlapping plays cut off sooner.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_audiostreamplayer3d.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.unbounded_3d",
+    "category": "audio",
+    "title": "An active or autoplay 3D sound has no distance cutoff",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "An assigned stream is playing or configured to autoplay. This does not prove it is currently distant, audible or expensive.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_audio_unbounded_distance",
+        "value": 1
+      }
+    },
+    "evidence": "requiring audio mixing when the listener is far away, which saves CPU resources.",
+    "suggestion": "For local sounds, compare a finite audible distance and profile CPU audio work with the listener moving through the scene.",
+    "node_property": "AudioStreamPlayer3D.max_distance",
+    "offender_key": "check_audio_unbounded_distance",
+    "tradeoff": "A cutoff changes the fade and removes distant sound; preserve intentionally far-reaching ambience.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/3d/audio_stream_player_3d.cpp",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.measured_latency",
+    "category": "audio",
+    "title": "Measured audio output latency is above 50 ms",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The monitor is AudioServer output latency in seconds. 50 ms is above the 15 ms preferred default of audio/driver/output_latency. It is not a hardware measurement from this tool.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt": {
+        "name": "AUDIO_OUTPUT_LATENCY",
+        "value": 0.05
+      }
+    },
+    "evidence": "it is not recommended to call this every frame",
+    "suggestion": "AUDIO_OUTPUT_LATENCY is the measured output latency in seconds. Compare it with audio/driver/output_latency. The class says not to query it every frame.",
+    "tradeoff": "Depends on which objects or allocations you remove.",
+    "expected_effect": "The same Performance monitor should fall on the next collect_metrics.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "share_from": "",
+    "share_unit": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.reverb_dry_only",
+    "category": "audio",
+    "title": "A dry-only reverb still processes its filter network",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_reverb_dry_only",
+        "value": 1
+      }
+    },
+    "offender_key": "check_reverb_dry_only",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled native AudioEffectReverb on a non-bypassed current audio bus has wet exactly 0 and dry exactly 1. Both checked versions call the reverb processor for each stereo channel, and its comb/all-pass loops run before the final wet/dry mix. There is no zero-wet bypass in that path. Bus activity is unknown; scripted/custom effects are skipped. This is a configured processing candidate, not measured CPU cost.",
+    "suggestion": "Compare bypassing this effect if the wet mix stays zero and later automation does not need the reverb's warmed tail.",
+    "tradeoff": "Bypassing stops updating delay/filter history. Re-enabling later can change the tail or transients; preserve intentionally warmed effects and verify the complete mix.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Compare the same active audio mix on target hardware, listening for quality changes and underruns while measuring CPU/frame timing. Runtime code may replace the editor's bus layout.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/audio/effects/reverb_filter.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.stereo_neutral",
+    "category": "audio",
+    "title": "A neutral stereo-enhancement effect still processes samples",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_stereo_neutral",
+        "value": 1
+      }
+    },
+    "offender_key": "check_stereo_neutral",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled native AudioEffectStereoEnhance on a non-bypassed current audio bus has pan_pullout exactly 1, time_pullout_ms exactly 0 and surround exactly 0. The source still computes center/side channels and writes and reads the delay ring for every sample. These settings request no stereo enhancement; this does not assert bit-identical floating-point output or prove that the bus is active. Scripted/custom effects are skipped.",
+    "suggestion": "Compare bypassing this effect when these neutral settings stay fixed throughout the workload.",
+    "tradeoff": "Runtime pan/delay/surround automation may need the effect and its delay history. Bypass can change floating-point rounding and later transients; listen to the full mix.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Compare the same active audio mix on target hardware, listening for quality changes and underruns while measuring CPU/frame timing. Runtime code may replace the editor's bus layout.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/audio/effects/audio_effect_stereo_enhance.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.eq_many_bands",
+    "category": "audio",
+    "title": "An audio equalizer processes more than ten bands",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_eq_many_bands",
+        "value": 1
+      }
+    },
+    "offender_key": "check_eq_many_bands",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled native AudioEffectEQ6/EQ10/EQ21 on a non-bypassed current audio bus reports more than ten bands. The native EQ loop processes every band for both channels on every sample, including bands whose gain is 0 dB. The cutoff distinguishes the 21-band resource from the 6/10-band alternatives; it is a review heuristic, not a device limit. Flat gains are not assumed to make the filter bank an identity operation. Bus activity and actual CPU cost are unknown; scripted/custom effects are skipped.",
+    "suggestion": "Compare EQ6 or EQ10 where the mix does not need 21 separately adjustable bands, retuning the replacement by ear or against an audio reference.",
+    "tradeoff": "Fewer bands change frequency resolution and filter response. Do not copy gain numbers between different band layouts or assume a flat EQ is equivalent to bypass.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Compare the same active audio mix on target hardware, listening for quality changes and underruns while measuring CPU/frame timing. Runtime code may replace the editor's bus layout.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/audio/effects/audio_effect_eq.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.spectrum_history",
+    "category": "audio",
+    "title": "A spectrum analyzer is configured with more than four seconds of history",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_spectrum_history",
+        "value": 1
+      }
+    },
+    "offender_key": "check_spectrum_history",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A native AudioEffectSpectrumAnalyzer on the current audio layout has a finite buffer_length above four seconds. AudioServer creates effect instances independently of bypass/enable state; disabling an effect or bypassing its bus does not release this history, so those states remain eligible. Instantiation allocates floor(buffer_length / (fft_size / mix_rate)) + 1 history arrays, each holding fft_size stereo AudioFrame values. This history grows roughly with duration and mix rate; a longer history does not by itself increase the FFT execution rate. Four seconds is a review cutoff matching the inspector range, not a native limit. Existing instances retain the history allocated at creation; this rule describes resource configuration. Scripted/custom effects are skipped.",
+    "suggestion": "Compare the default two seconds or the shortest history that preserves the application's spectrum queries and audio/display latency tolerance, then recreate or reload the effect.",
+    "tradeoff": "Shorter history can remove spectra needed by delayed visualization or analysis. Changing the resource alone does not resize an existing instance; verify the consumer after recreation.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Recreate/reload the configured analyzer, compare process memory under the same mix, and verify spectrum queries and display timing. Do not infer a CPU or frame-time saving from history duration alone. Runtime code may replace the editor's audio layout.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/audio/effects/audio_effect_spectrum_analyzer.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.pitch_shift_oversampling",
+    "category": "audio",
+    "title": "A pitch-shift effect increases FFT oversampling",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_pitch_shift_oversampling",
+        "value": 1
+      }
+    },
+    "offender_key": "check_pitch_shift_oversampling",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled native AudioEffectPitchShift on a non-bypassed current audio bus has a non-unity pitch scale and oversampling above its default of 4. The source shortens the FFT hop as oversampling increases; Godot documents the higher CPU demand. Unity pitch bypasses this work and is excluded. Zero-hop configurations receive a separate correctness finding. This is a configured processing path, not proof the bus is receiving audio or causing frame-time cost. Scripted/custom effects are skipped.",
+    "suggestion": "Compare the default oversampling of 4 or the lowest value that preserves acceptable pitch-shift quality under the intended mix.",
+    "tradeoff": "Lower oversampling can add pitch-shift artifacts. Preserve automated pitch/quality changes and test during the loudest or busiest mix.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Compare the same active audio mix on target hardware, listening for quality changes and underruns while measuring CPU/frame timing. Runtime code may replace the editor's bus layout.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/audio/effects/audio_effect_pitch_shift.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.chorus_voices",
+    "category": "audio",
+    "title": "A chorus effect processes more than two voices",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_chorus_voices",
+        "value": 1
+      }
+    },
+    "offender_key": "check_chorus_voices",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled native AudioEffectChorus on a non-bypassed current audio bus requests a nonzero wet mix and more than two voices with nonzero cutoff. Each such voice enters its own sample-processing loop. A zero cutoff skips that voice in both checked versions and is excluded. Two voices is the resource default, not a hardware limit; current configuration does not prove audible processing or measured cost.",
+    "suggestion": "Compare two chorus voices or fewer on buses where the extra modulation is not audible in the complete mix.",
+    "tradeoff": "Reducing voices changes modulation, stereo width and texture. Preserve intentional layering and any runtime voice automation.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Compare the same active audio mix on target hardware, listening for quality changes and underruns while measuring CPU/frame timing. Runtime code may replace the editor's bus layout.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/audio/effects/audio_effect_chorus.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.chorus_dry_only",
+    "category": "audio",
+    "title": "A dry-only chorus still has voice processing configured",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_chorus_dry_only",
+        "value": 1
+      }
+    },
+    "offender_key": "check_chorus_dry_only",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled native AudioEffectChorus on a non-bypassed current audio bus has wet exactly 0, dry exactly 1 and at least one voice with nonzero cutoff. The native voice loop still runs when wet is zero, even though no wet contribution is requested. Bus activity is unknown; this is a measurement candidate. Scripted/custom effects are skipped.",
+    "suggestion": "Compare bypassing this effect if the wet mix remains zero throughout the workload. Keep it active when upcoming automation needs its warmed delay/filter history.",
+    "tradeoff": "Bypassing freezes the chorus history and phase; enabling it later can change transients. Do not remove an intentionally warmed effect used by future automation.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Compare the same active audio mix on target hardware, listening for quality changes and underruns while measuring CPU/frame timing. Runtime code may replace the editor's bus layout.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/audio/effects/audio_effect_chorus.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "audio.microphone_input_disabled",
+    "category": "audio",
+    "title": "A microphone stream is used while audio input is off",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_microphone_stream",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "audio/driver/enable_input",
+            "value": false
+          }
+        }
+      ]
+    },
+    "setting": "",
+    "offender_key": "check_microphone_stream",
+    "evidence": "Godot prints \"You must enable the project setting \"audio/driver/enable_input\" to use audio capture.\" when an AudioStreamMicrophone starts while audio/driver/enable_input is off; nothing is captured.",
+    "suggestion": "Enable audio/driver/enable_input (export templates may also need microphone permissions on mobile and web).",
+    "tradeoff": "Enabling input asks the operating system for microphone access.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/audio/audio_server.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

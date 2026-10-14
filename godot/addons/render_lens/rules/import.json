@@ -1,0 +1,574 @@
+[
+  {
+    "id": "import.mesh_lods_off",
+    "category": "import",
+    "title": "A 3D scene import disabled mesh LOD generation",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "import_mesh_lods_off_count",
+        "value": 1
+      }
+    },
+    "evidence": "meshes/generate_lods",
+    "suggestion": "Turn meshes/generate_lods back on. resource_importer_scene.cpp defaults that option to true. The mesh LOD page explains what those generated levels are for.",
+    "node_property": "Mesh",
+    "offender_key": "import_mesh_lods_off",
+    "tradeoff": "Distant meshes stay at full triangle count.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/editor/import/3d/resource_importer_scene.cpp",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "import.mesh_shadow_off",
+    "category": "import",
+    "title": "A 3D scene import disabled shadow meshes",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "import_mesh_shadow_off_count",
+        "value": 1
+      }
+    },
+    "evidence": "meshes/create_shadow_meshes",
+    "suggestion": "Turn meshes/create_shadow_meshes back on unless the mesh never casts a shadow. resource_importer_scene.cpp defaults that option to true.",
+    "node_property": "Mesh",
+    "offender_key": "import_mesh_shadow_off",
+    "tradeoff": "Shadow passes use the full mesh instead of the shadow mesh.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/editor/import/3d/resource_importer_scene.cpp",
+    "when_pass": [
+      "Render Shadows",
+      "Render OmniLight Shadows",
+      "Directional/SpotLight Shadows"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "import.mesh_uncompressed",
+    "category": "import",
+    "title": "A 3D scene import disables mesh compression",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "import_mesh_uncompressed_count",
+        "value": 1
+      }
+    },
+    "evidence": "meshes/force_disable_compression",
+    "suggestion": "Turn meshes/force_disable_compression off. resource_importer_scene.cpp defaults it to false.",
+    "node_property": "Mesh",
+    "offender_key": "import_mesh_uncompressed",
+    "tradeoff": "Compressed meshes can show a tiny difference in vertex positions.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/editor/import/3d/resource_importer_scene.cpp",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "import.audio_pcm",
+    "category": "import",
+    "title": "A WAV import uses PCM instead of a compressed mode",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "import_audio_pcm_count",
+        "value": 1
+      }
+    },
+    "evidence": "PCM (Uncompressed),IMA ADPCM,Quite OK Audio",
+    "suggestion": "Set the WAV compress/mode away from 0 (PCM). resource_importer_wav.cpp lists 0 as PCM uncompressed and defaults to Quite OK Audio.",
+    "node_property": "AudioStreamWAV",
+    "offender_key": "import_audio_pcm",
+    "tradeoff": "Compressed WAV modes lose a bit of fidelity.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/editor/import/resource_importer_wav.cpp",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "import.texture_lossless",
+    "category": "import",
+    "title": "A layered texture import (cubemap, array or 3D texture) uses lossless compression",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "import_texture_lossless_count",
+        "value": 1
+      }
+    },
+    "evidence": "compress/mode",
+    "suggestion": "Use VRAM compression for cubemaps, texture arrays and 3D textures, which are only sampled in 3D. compress/mode 0 is lossless. Plain 2D textures are not counted here: lossless is the recommended 2D default, and textures.lossless_3d covers 2D images used by 3D materials.",
+    "node_property": "Texture2D",
+    "offender_key": "import_texture_lossless",
+    "tradeoff": "The texture can pick up compression artifacts.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/assets_pipeline/importing_images.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "import.texture_no_mipmaps",
+    "category": "import",
+    "title": "A layered texture import (cubemap, array or 3D texture) does not generate mipmaps",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "import_texture_no_mipmaps_count",
+        "value": 1
+      }
+    },
+    "evidence": "mipmaps/generate",
+    "suggestion": "Turn mipmaps/generate on for cubemaps, texture arrays and 3D textures shown at varying distances; sampling smaller versions is faster and needs less memory bandwidth. Plain 2D textures are not counted here (2D mipmaps only help when the camera zooms out); textures.no_mipmaps covers 2D images used by 3D materials.",
+    "node_property": "Texture2D",
+    "offender_key": "import_texture_no_mipmaps",
+    "tradeoff": "UI textures that must stay sharp sometimes leave mipmaps off.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/assets_pipeline/importing_images.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "import.texture_uncompressed",
+    "category": "import",
+    "title": "A texture import is VRAM-uncompressed",
+    "severity": "high",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "import_texture_uncompressed_count",
+        "value": 1
+      }
+    },
+    "evidence": "compress/mode",
+    "suggestion": "compress/mode 3 is VRAM uncompressed. Switch 3D textures to VRAM compressed. The image import tutorial describes the modes.",
+    "node_property": "Texture2D",
+    "offender_key": "import_texture_uncompressed",
+    "tradeoff": "Compressed textures can show block artifacts.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/assets_pipeline/importing_images.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "import.texture_high_quality",
+    "category": "import",
+    "title": "VRAM-compressed textures use high-quality BPTC/ASTC compression",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "The .import file does not record whether the image is opaque; for transparent images both modes use 8 bits per pixel, so only opaque textures lose memory.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "import_texture_high_quality_count",
+        "value": 1
+      }
+    },
+    "evidence": "When using S3TC, DXT1 (BC1) is used for opaque textures and DXT5 (BC3) is used for transparent or normal map (RGTC) textures.",
+    "suggestion": "Turn compress/high_quality off for opaque textures where BC1 block artifacts are acceptable: BC7 (BPTC) stores 8 bits per pixel where DXT1 stores 4.",
+    "node_property": "ResourceImporterTexture.compress/high_quality",
+    "offender_key": "import_texture_high_quality",
+    "tradeoff": "High quality avoids BC1 block artifacts and is required to VRAM-compress HDR images.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_resourceimportertexture.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "import.texture_hdr_uncompressed",
+    "category": "import",
+    "title": "HDR textures are imported without VRAM compression",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "import_texture_hdr_uncompressed_count",
+        "value": 1
+      }
+    },
+    "evidence": "Never use VRAM compression for HDR textures, regardless of whether they're opaque or transparent.",
+    "suggestion": "Set compress/hdr_compression back to Opaque Only (or Always) and enable compress/high_quality so BPTC/ASTC can compress the .exr/.hdr image.",
+    "node_property": "ResourceImporterTexture.compress/hdr_compression",
+    "offender_key": "import_texture_hdr_uncompressed",
+    "tradeoff": "VRAM-compressed HDR loses some precision; keep Disabled where exact HDR values matter.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_resourceimportertexture.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "import.gltf_embedded_uncompressed",
+    "category": "import",
+    "title": "A glTF import embeds its images uncompressed",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "import_gltf_embedded_uncompressed_count",
+        "value": 1
+      }
+    },
+    "evidence": "textures compressed losslessly into the generated scene",
+    "suggestion": "Set gltf/embedded_image_handling back to Extract Textures (the default) so the images can be VRAM-compressed, or to Embed as Basis Universal.",
+    "node_property": "",
+    "offender_key": "import_gltf_embedded_uncompressed",
+    "tradeoff": "Extracted textures become separate files in the project.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_gltfstate.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "import.obj_lods_off",
+    "category": "import",
+    "title": "An OBJ import disables mesh LOD generation",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "import_obj_lods_off_count",
+        "value": 1
+      }
+    },
+    "evidence": "generates lower detail variants of the mesh which will be displayed in the distance to improve rendering performance.",
+    "suggestion": "Turn generate_lods back on for OBJ meshes that are rendered from a distance.",
+    "node_property": "ResourceImporterOBJ.generate_lods",
+    "offender_key": "import_obj_lods_off",
+    "tradeoff": "LODs add import time and file size; meshes always seen up close gain nothing.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_resourceimporterobj.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "import.obj_shadow_off",
+    "category": "import",
+    "title": "An OBJ import disables shadow mesh generation",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "import_obj_shadow_off_count",
+        "value": 1
+      }
+    },
+    "evidence": "This optimizes shadow rendering without reducing quality by welding vertices together when possible.",
+    "suggestion": "Turn generate_shadow_mesh back on unless the mesh never casts shadows.",
+    "node_property": "ResourceImporterOBJ.generate_shadow_mesh",
+    "offender_key": "import_obj_shadow_off",
+    "tradeoff": "Shadow meshes add a little import time and memory.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_resourceimporterobj.html",
+    "when_pass": [
+      "Render Shadows",
+      "Render OmniLight Shadows",
+      "Directional/SpotLight Shadows"
+    ],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  }
+]

@@ -1,0 +1,373 @@
+[
+  {
+    "id": "stutter.shader_cache_off",
+    "category": "stutter",
+    "title": "Shader cache is disabled",
+    "severity": "high",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/shader_compiler/shader_cache/enabled",
+        "value": false
+      }
+    },
+    "evidence": "shader_cache/enabled is false. The default is true. compress and use_zstd_compression also default to true.",
+    "suggestion": "Set rendering/shader_compiler/shader_cache/enabled to true so compiled shaders are reused across runs.",
+    "setting": "rendering/shader_compiler/shader_cache/enabled",
+    "tradeoff": "The cache uses disk. strip_debug defaults to false in the editor and true on release.",
+    "expected_effect": "Later runs skip shader compiles that the cache can serve. The pipeline page separates shader compilation from pipeline compilation.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/pipeline_compilations.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "stutter.pipeline_cache_off",
+    "category": "stutter",
+    "title": "Pipeline cache is disabled",
+    "severity": "high",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/rendering_device/pipeline_cache/enable",
+        "value": false
+      }
+    },
+    "evidence": "pipeline_cache/enable is false. The default is true.",
+    "suggestion": "Set rendering/rendering_device/pipeline_cache/enable to true.",
+    "setting": "rendering/rendering_device/pipeline_cache/enable",
+    "tradeoff": "The pipeline cache file grows on disk (save_chunk_size_mb defaults to 3).",
+    "expected_effect": "Driver pipelines can be reused. The pipeline page describes compilation stutter when they are created during play.",
+    "verify_step": "collect_metrics",
+    "source": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/99fd2cb5761410c0e8cd82395861abd75c9d1f06/layers/best_practices/bp_pipeline.cpp",
+    "upstream_check": "BestPractices-vkCreateGraphicsPipelines-multiple-pipelines-no-cache",
+    "evidence_kind": "godot_adaptation",
+    "heuristic": true,
+    "heuristic_rationale": "Godot exposes the cache setting, not individual Vulkan pipeline creations or cache handles. Compare repeat runs; this is not proof that the upstream API condition fired.",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "stutter.compilations_canvas",
+    "category": "stutter",
+    "title": "Canvas pipeline compilations have occurred",
+    "severity": "medium",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt": {
+        "name": "PIPELINE_COMPILATIONS_CANVAS",
+        "value": 0
+      }
+    },
+    "evidence": "PIPELINE_COMPILATIONS_CANVAS is above 0. The pipeline page says 2D has no precompilation, so the first draw of a CanvasItem can hitch.",
+    "suggestion": "Show every 2D material once during a loading screen. The page says canvas compilations are the 2D case.",
+    "tradeoff": "The loading screen has to instance those canvases.",
+    "expected_effect": "The hitch moves to load time. A later snapshot should not climb on the same items.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/pipeline_compilations.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "stutter.compilations_mesh",
+    "category": "stutter",
+    "title": "Mesh pipeline compilations have occurred",
+    "severity": "medium",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt": {
+        "name": "PIPELINE_COMPILATIONS_MESH",
+        "value": 0
+      }
+    },
+    "evidence": "PIPELINE_COMPILATIONS_MESH is above 0. The page says mesh compilations happen while loading a mesh and show up as longer loads, and a background load avoids a gameplay hitch.",
+    "suggestion": "Load meshes on a background thread before they are needed in gameplay.",
+    "tradeoff": "Background loads still take time and memory.",
+    "expected_effect": "The mesh-step count should not spike during gameplay after the preload.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/pipeline_compilations.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "stutter.compilations_surface",
+    "category": "stutter",
+    "title": "Surface pipeline compilations have occurred",
+    "severity": "medium",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt": {
+        "name": "PIPELINE_COMPILATIONS_SURFACE",
+        "value": 0
+      }
+    },
+    "evidence": "PIPELINE_COMPILATIONS_SURFACE is above 0. The page says a sudden surface-step increase usually means a rendering feature was enabled after load, and that changing features during play hitches.",
+    "suggestion": "Enable MSAA, glow, SSR, and similar features before gameplay, on a loading screen. The page lists features the precompilation system has to see first.",
+    "tradeoff": "The loading screen does the compile.",
+    "expected_effect": "Surface compilations stop appearing mid-game for features that were already enabled.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/pipeline_compilations.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "stutter.compilations_draw",
+    "category": "stutter",
+    "title": "Draw-step pipeline compilations have occurred",
+    "severity": "high",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt": {
+        "name": "PIPELINE_COMPILATIONS_DRAW",
+        "value": 0
+      }
+    },
+    "evidence": "PIPELINE_COMPILATIONS_DRAW is above 0. The pipeline page says draw-step compilations mean an ubershader was not precompiled and the hitch matches pre-4.4 shader stutter. There is no project setting that disables ubershaders.",
+    "suggestion": "Treat a rising draw counter as a bug to reproduce for the engine if your materials are ordinary, which is what the page asks. Also make sure shader_cache and pipeline_cache are enabled.",
+    "tradeoff": "None for leaving caches on.",
+    "expected_effect": "Draw-step compilations should stay at zero in normal play. The page says this case should not happen when the ubershader path works.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/pipeline_compilations.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "stutter.compilations_specialization",
+    "category": "stutter",
+    "title": "Specialization pipeline compilations are climbing",
+    "severity": "low",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt": {
+        "name": "PIPELINE_COMPILATIONS_SPECIALIZATION",
+        "value": 0
+      }
+    },
+    "evidence": "PIPELINE_COMPILATIONS_SPECIALIZATION is above 0. The page says specializations compile in the background to optimize the frame rate and are the expected ubershader follow-up, unlike draw-step hitches.",
+    "suggestion": "Do not treat this counter like DRAW. A large spike in one frame can still hitch; check it next to frame time.",
+    "tradeoff": "Specializations are what make the later frames cheaper.",
+    "expected_effect": "Background specializations, not a settings change.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/pipeline_compilations.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "stutter.draw_calls_high",
+    "category": "stutter",
+    "title": "Frame draw-call count is high",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "300 is not a Godot draw-call budget. RENDER_TOTAL_DRAW_CALLS_IN_FRAME above that is a review cut so a CPU-bound scene with several hundred draws is listed. 1500 is not a Godot budget either. The GPU optimization page describes draw calls as CPU submission cost.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt": {
+        "name": "RENDER_TOTAL_DRAW_CALLS_IN_FRAME",
+        "value": 300
+      }
+    },
+    "evidence": "RENDER_TOTAL_DRAW_CALLS_IN_FRAME is above 300.",
+    "suggestion": "Compare VIEWPORT_VISIBLE_DRAW_CALLS and VIEWPORT_SHADOW_DRAW_CALLS. Merge materials, use MultiMesh, and reduce shadow casters.",
+    "tradeoff": "Batching constraints change how materials are authored.",
+    "expected_effect": "A lower draw-call counter. The page says frame time is the measurement that matters, not the counter alone.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/gpu_optimization.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  }
+]

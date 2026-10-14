@@ -1,0 +1,1355 @@
+[
+  {
+    "id": "materials.alpha_blend",
+    "category": "materials",
+    "title": "Materials use alpha blend transparency",
+    "severity": "high",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "transparent_alpha_blend_count",
+        "value": 1
+      }
+    },
+    "evidence": "An effective BaseMaterial3D uses Alpha transparency, or writes ALPHA with transparency Disabled because pixel-alpha distance fade, proximity fade or shadow-to-opacity is enabled. These implicit cases are excluded for alpha-scissor/hash and explicit depth-prepass modes. Blended surfaces can incur overdraw and reduced depth rejection; their configured state does not measure the cost.",
+    "suggestion": "For opaque-looking surfaces, remove unnecessary fade/shadow-to-opacity features as well as selecting Disabled transparency. Compare dithered distance fading or masked foliage modes when their visual tradeoffs are acceptable; preserve intentionally translucent surfaces.",
+    "node_property": "BaseMaterial3D.transparency",
+    "offender_key": "alpha_blend",
+    "tradeoff": "Alpha scissor and hash are 1-bit and need alpha antialiasing if the edge shimmers. MSAA does not fix alpha-scissor edges by itself.",
+    "expected_effect": "Those surfaces leave the transparent pass and can be rejected by the depth buffer.",
+    "verify_step": "scan_scene",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/resources/material.cpp",
+    "when_pass": [
+      "Render 3D Transparent Pass",
+      "Render Transparent"
+    ],
+    "dedupe_key": "transparency",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.alpha_blend_depth_always",
+    "category": "materials",
+    "title": "Alpha-blend materials write depth every fragment",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "alpha_blend_depth_always_count",
+        "value": 1
+      }
+    },
+    "evidence": "An alpha-blend material has depth_draw_mode Always (index 1 of Opaque Only, Always, Never).",
+    "suggestion": "Use Opaque Only unless a later effect samples that depth. Never skips the depth write entirely and can break sorting.",
+    "node_property": "BaseMaterial3D.depth_draw_mode",
+    "offender_key": "depth_always",
+    "tradeoff": "Effects that need the transparent surface in the depth buffer stop seeing it.",
+    "expected_effect": "Less depth-write traffic on blended surfaces.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_basematerial3d.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.depth_prepass_transparency",
+    "category": "materials",
+    "title": "Materials use the depth-prepass transparency mode",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "transparent_depth_prepass_count",
+        "value": 1
+      }
+    },
+    "evidence": "transparency is Depth Pre-Pass (index 4).",
+    "suggestion": "Prefer Alpha Scissor or Alpha Hash when a hard edge is acceptable. Depth pre-pass transparency draws the surface twice.",
+    "node_property": "BaseMaterial3D.transparency",
+    "offender_key": "depth_prepass_transparency",
+    "tradeoff": "Scissor and hash cannot represent partial coverage as smoothly.",
+    "expected_effect": "One less prepass draw for those materials.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_basematerial3d.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.double_sided",
+    "category": "materials",
+    "title": "Materials disable backface culling",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "double_sided_material_count",
+        "value": 1
+      }
+    },
+    "evidence": "cull_mode is Disabled (index 2 of Back, Front, Disabled).",
+    "suggestion": "Set cull_mode back to Back unless the surface is a leaf card or cloth that must be seen from both sides.",
+    "node_property": "BaseMaterial3D.cull_mode",
+    "offender_key": "double_sided_materials",
+    "tradeoff": "The back face becomes invisible.",
+    "expected_effect": "Half the rasterization for those surfaces.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_basematerial3d.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.per_pixel_particles",
+    "category": "materials",
+    "title": "Particle materials are per-pixel shaded",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "Counts BaseMaterial3D shading_mode Per-Pixel (index 1) used by GPUParticles3D or CPUParticles3D. The GPU optimization page says non-unshaded particles can force vertex shading to cut cost.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "particle_per_pixel_material_count",
+        "value": 1
+      }
+    },
+    "evidence": "A particle node uses a per-pixel BaseMaterial3D. shading_mode values are Unshaded, Per-Pixel, Per-Vertex.",
+    "suggestion": "Set shading_mode to Per-Vertex (2) or Unshaded (0) on particle materials.",
+    "node_property": "BaseMaterial3D.shading_mode",
+    "offender_key": "particle_per_pixel",
+    "tradeoff": "Normal maps and specular on particles get coarser or disappear.",
+    "expected_effect": "Less fragment shading on particles.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/gpu_optimization.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.shader_materials",
+    "category": "materials",
+    "title": "ShaderMaterials are in the scene",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "Any ShaderMaterial is reported because the pipeline-compilations page says material changes create pipelines that are not covered until that variant is seen. The count is not a budget.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "shader_material_count",
+        "value": 1
+      }
+    },
+    "evidence": "The scan found ShaderMaterial resources.",
+    "suggestion": "Prefer BaseMaterial3D when the built-in slots are enough. Load custom shaders during a loading screen so PIPELINE_COMPILATIONS_DRAW does not spike in gameplay. The pipeline page says draw-step compilations mean an ubershader was not ready.",
+    "node_property": "ShaderMaterial",
+    "offender_key": "shader_materials",
+    "tradeoff": "Built-in materials cannot express every custom shader.",
+    "expected_effect": "Fewer unseen shader variants at runtime. Watch the pipeline monitors.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/pipeline_compilations.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.subsurf",
+    "category": "materials",
+    "title": "Materials enable subsurface scattering",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "subsurf_material_count",
+        "value": 1
+      }
+    },
+    "evidence": "BaseMaterial3D.subsurf_scatter_enabled is true.",
+    "suggestion": "Disable subsurface on materials that are not skin, wax, or foliage, and keep subsurface_scattering_quality at Low (1).",
+    "node_property": "BaseMaterial3D.subsurf_scatter_enabled",
+    "offender_key": "subsurf_materials",
+    "tradeoff": "Those surfaces lose translucency.",
+    "expected_effect": "They drop out of the subsurface pass.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_basematerial3d.html",
+    "when_pass": [
+      "Sub-Surface Scattering"
+    ],
+    "dedupe_key": "sss",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.refraction",
+    "category": "materials",
+    "title": "Materials enable refraction",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "refraction_material_count",
+        "value": 1
+      }
+    },
+    "evidence": "BaseMaterial3D.refraction_enabled is true. Refraction samples the screen texture, which is the same class of fullscreen copy the transparent path needs.",
+    "suggestion": "Disable refraction on materials that only need transparency.",
+    "node_property": "BaseMaterial3D.refraction_enabled",
+    "offender_key": "refraction_materials",
+    "tradeoff": "The surface no longer distorts the background.",
+    "expected_effect": "Drops the refraction sample. The Copy Screen Texture timestamp is the related pass.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_basematerial3d.html",
+    "when_pass": [
+      "Copy Screen Texture"
+    ],
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.heightmap",
+    "dedupe_key": "heightmap",
+    "category": "materials",
+    "title": "Materials enable height mapping",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "heightmap_material_count",
+            "value": 1
+          }
+        },
+        {
+          "not": {
+            "scene_gte": {
+              "name": "check_material_deep_parallax",
+              "value": 1
+            }
+          }
+        }
+      ]
+    },
+    "evidence": "heightmap_enabled is true with UV1 triplanar disabled. When a configured deep-parallax texture is present, the more specific deep-parallax rule supplies this advice instead.",
+    "suggestion": "Turn heightmap_enabled off where a normal map is enough. If deep parallax is on, lower heightmap_max_layers.",
+    "node_property": "BaseMaterial3D.heightmap_enabled",
+    "offender_key": "heightmap_materials",
+    "tradeoff": "Silhouette relief from the height map disappears.",
+    "expected_effect": "Fewer relief parallax iterations in the fragment shader.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_basematerial3d.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.proximity_fade",
+    "category": "materials",
+    "title": "Materials enable proximity fade",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "proximity_fade_count",
+        "value": 1
+      }
+    },
+    "evidence": "proximity_fade_enabled is true. The material fades against nearby surfaces, which needs a depth read.",
+    "suggestion": "Disable proximity_fade_enabled on surfaces that do not intersect the camera.",
+    "node_property": "BaseMaterial3D.proximity_fade_enabled",
+    "offender_key": "proximity_fade",
+    "tradeoff": "Meshes no longer fade where they intersect the camera.",
+    "expected_effect": "Drops that depth-based fade.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_basematerial3d.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.shader_material_copies",
+    "category": "materials",
+    "title": "Several ShaderMaterials repeat one shader and differ only in instance-uniform values",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": true,
+    "heuristic_rationale": "Distinct ShaderMaterial resources in the scene that use the same shader and the same textures, matrices and uniform arrays, so they differ at most in scalars, vectors and colors, which per-instance uniforms can hold (shader_language.cpp rejects the instance qualifier on samplers, matrices and arrays). Any copy is reported; the count is not a budget.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_shader_material_copies",
+        "value": 1
+      }
+    },
+    "evidence": "Per-instance uniforms allow for better shader reuse and are therefore faster",
+    "suggestion": "Share one ShaderMaterial and move the values that differ to instance uniforms set with GeometryInstance3D.set_instance_shader_parameter or CanvasItem.set_instance_shader_parameter.",
+    "node_property": "ShaderMaterial.set_shader_parameter",
+    "offender_key": "check_shader_material_copies",
+    "tradeoff": "Instance uniforms cannot be textures, and the shader has a limited number of them.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_shadermaterial.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.material_alpha_to_coverage",
+    "category": "materials",
+    "title": "Materials use alpha to coverage",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_material_alpha_to_coverage",
+        "value": 1
+      }
+    },
+    "offender_key": "check_material_alpha_to_coverage",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A BaseMaterial3D with Alpha Scissor or Alpha Hash transparency has alpha_antialiasing_mode set (material.cpp emits alpha to coverage only for those two modes). Godot docs: \"Alpha to coverage has a moderate performance cost, but it's effective at reducing aliasing on transparent materials without introducing any blurriness.\"",
+    "suggestion": "Keep alpha antialiasing on foliage, fences and hair whose edges visibly alias, and turn it off elsewhere; it has no effect without MSAA.",
+    "tradeoff": "Alpha-tested edges alias again where it is turned off.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/3d_antialiasing.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.shader_discard",
+    "category": "materials",
+    "title": "Custom spatial shaders use discard",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_shader_discard",
+        "value": 1
+      }
+    },
+    "offender_key": "check_shader_discard",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A spatial ShaderMaterial's shader code contains a discard statement (comments ignored). Godot docs: \"Beware that discard has a performance cost when used, as it will prevent the depth prepass from being effective on any surfaces using the shader.\"",
+    "suggestion": "Use discard only where alpha testing is needed, and keep it out of shaders used on large opaque surfaces; BaseMaterial3D alpha scissor has the same cost.",
+    "tradeoff": "Cut-out shapes (foliage, fences) need discard or alpha blending.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/shaders/shader_reference/shading_language.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.parallax_layers",
+    "category": "materials",
+    "title": "Deep parallax uses more layers than the default",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_parallax_layers",
+        "value": 1
+      }
+    },
+    "offender_key": "check_parallax_layers",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An effective BaseMaterial3D uses deep parallax with heightmap_max_layers above 32 or heightmap_min_layers above 8 (the defaults). Godot class reference: \"Higher values have a significant cost on the GPU, so it should only be increased on materials where it makes a significant visual difference.\"",
+    "suggestion": "Return heightmap_max_layers/min_layers toward 32/8 unless steep height changes visibly need more.",
+    "tradeoff": "Steep height changes show more layering artifacts up close.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/BaseMaterial3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.material_orm_pack",
+    "category": "materials",
+    "title": "Separate metallic and roughness maps can share a packed texture",
+    "severity": "low",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_material_orm_pack",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/shading/overrides/force_vertex_shading",
+            "value": false
+          }
+        }
+      ]
+    },
+    "offender_key": "check_material_orm_pack",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An effective per-pixel StandardMaterial3D has metallic and roughness textures with nonzero multipliers. The generated shader samples them separately; ORMMaterial3D reads channels from one ORM sample. AO using UV2 is excluded because packed ORM uses UV1.",
+    "suggestion": "Compare an ORMMaterial3D with correctly packed AO/roughness/metallic channels; preserve scalar multipliers in the packed data and verify texture import/color-space settings.",
+    "tradeoff": "Packing requires asset work and can trade resolution or compression quality between channels. Preserve any AO map and compare the resulting material visually.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/resources/material.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.material_next_pass",
+    "category": "materials",
+    "title": "Materials request additional geometry passes",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_material_next_pass",
+        "value": 1
+      }
+    },
+    "offender_key": "check_material_next_pass",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An effective spatial material has next_pass assigned; the surface is drawn again with that material.",
+    "suggestion": "Remove a next pass only if its outline or other visual effect is unnecessary.",
+    "tradeoff": "The extra pass's visual effect disappears.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Material.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.material_triplanar_uv1",
+    "category": "materials",
+    "title": "Albedo textures use UV1 triplanar sampling",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_material_triplanar_uv1",
+        "value": 1
+      }
+    },
+    "offender_key": "check_material_triplanar_uv1",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An effective BaseMaterial3D has UV1 triplanar enabled and an albedo texture assigned; triplanar sampling combines three projections per texture lookup.",
+    "suggestion": "Compare imported mesh UVs with triplanar mapping on assets where UV authoring is practical.",
+    "tradeoff": "UV mapping changes and seams may appear.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/BaseMaterial3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.material_triplanar_uv2",
+    "category": "materials",
+    "title": "Detail albedo uses UV2 triplanar sampling",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_material_triplanar_uv2",
+        "value": 1
+      }
+    },
+    "offender_key": "check_material_triplanar_uv2",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "Detail mapping is enabled with a detail albedo texture, UV2 selected and UV2 triplanar enabled.",
+    "suggestion": "Use mesh UV2 for detail mapping where its appearance is acceptable.",
+    "tradeoff": "Detail placement and seams change.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/BaseMaterial3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.material_deep_parallax",
+    "category": "materials",
+    "title": "Height maps use deep parallax sampling",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_material_deep_parallax",
+        "value": 1
+      }
+    },
+    "offender_key": "check_material_deep_parallax",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "Height mapping and deep parallax are enabled with a height texture and UV1 triplanar disabled.",
+    "suggestion": "Compare simple parallax, fewer parallax layers or a normal map at the intended viewing distance.",
+    "tradeoff": "Surface relief becomes less convincing.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/BaseMaterial3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "heightmap",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.material_clearcoat",
+    "category": "materials",
+    "title": "Per-pixel materials enable clearcoat lighting",
+    "severity": "low",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_material_clearcoat",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/shading/overrides/force_vertex_shading",
+            "value": false
+          }
+        }
+      ]
+    },
+    "offender_key": "check_material_clearcoat",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An effective per-pixel material enables clearcoat with a positive amount, adding the clearcoat lighting term.",
+    "suggestion": "Compare clearcoat disabled on surfaces where the coating is hard to see.",
+    "tradeoff": "The second specular highlight disappears.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/BaseMaterial3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.material_rim",
+    "category": "materials",
+    "title": "Per-pixel materials enable rim lighting",
+    "severity": "low",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_material_rim",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/shading/overrides/force_vertex_shading",
+            "value": false
+          }
+        }
+      ]
+    },
+    "offender_key": "check_material_rim",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An effective per-pixel material enables rim lighting with a positive amount.",
+    "suggestion": "Compare rim lighting disabled on materials that do not need the stylized edge effect.",
+    "tradeoff": "The rim highlight disappears.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/BaseMaterial3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.material_anisotropy",
+    "category": "materials",
+    "title": "Per-pixel materials enable anisotropic lighting",
+    "severity": "low",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_material_anisotropy",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/shading/overrides/force_vertex_shading",
+            "value": false
+          }
+        }
+      ]
+    },
+    "offender_key": "check_material_anisotropy",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An effective per-pixel material enables nonzero anisotropy, adding anisotropic lighting calculations.",
+    "suggestion": "Compare isotropic lighting on surfaces whose directional highlights are not prominent.",
+    "tradeoff": "Brushed-metal and similar directional highlights change.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/BaseMaterial3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.material_detail",
+    "category": "materials",
+    "title": "Materials sample a detail texture layer",
+    "severity": "low",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_material_detail",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/shading/overrides/force_vertex_shading",
+            "value": false
+          }
+        }
+      ]
+    },
+    "offender_key": "check_material_detail",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "Detail mapping is enabled with detail albedo, or with detail normal on a per-pixel material.",
+    "suggestion": "Compare a baked base texture or disabled detail layer where extra close-up detail is not visible.",
+    "tradeoff": "Close-up surface detail changes; baking can increase base texture size.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/BaseMaterial3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.material_normal",
+    "category": "materials",
+    "title": "Per-pixel materials sample normal maps",
+    "severity": "low",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_material_normal",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/shading/overrides/force_vertex_shading",
+            "value": false
+          }
+        }
+      ]
+    },
+    "offender_key": "check_material_normal",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "Normal mapping is enabled with a normal texture and nonzero normal scale on an effective per-pixel material.",
+    "suggestion": "Compare disabling normal maps only on distant or visually flat surfaces.",
+    "tradeoff": "Fine lighting detail disappears.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/BaseMaterial3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "materials.subsurf_renderer",
+    "category": "materials",
+    "title": "Subsurface scattering is enabled outside Forward+",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "subsurf_material_count",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "subsurf_materials",
+    "evidence": "Godot prints \"Subsurface scattering is only available when using the Forward+ renderer.\" when a material enables subsurface scattering under the Mobile or Compatibility renderer, which do not draw it.",
+    "suggestion": "Turn subsurf_scatter_enabled off for this renderer, or fake the look in the albedo or a custom shader.",
+    "tradeoff": "Skin and wax lose their soft light bleed.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/renderer_rd/forward_mobile/scene_shader_forward_mobile.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "materials.transmittance_renderer",
+    "category": "materials",
+    "title": "Subsurface transmittance is enabled outside Forward+",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_transmittance_material",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_transmittance_material",
+    "evidence": "Godot prints \"Transmittance is only available when using the Forward+ renderer.\" when a material enables subsurface transmittance under the Mobile or Compatibility renderer, which do not draw it.",
+    "suggestion": "Turn subsurf_scatter_transmittance_enabled off for this renderer.",
+    "tradeoff": "Thin objects lose back-lit transmission.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/renderer_rd/forward_mobile/scene_shader_forward_mobile.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "materials.shader_param_old_names",
+    "category": "materials",
+    "title": "A ShaderMaterial is saved with pre-4.0 parameter names",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_shader_param_old_names",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_shader_param_old_names",
+    "evidence": "Godot prints \"This material (containing shader with path: 'res://water.gdshader') uses an old deprecated parameter names. Consider re-saving this resource (or scene which contains it) in order for it to continue working in future versions.\" when a saved ShaderMaterial (in a .tscn or .tres) stores parameters as shader_param/, param/ or shader_uniform/ instead of shader_parameter/; Godot renames them on every load.",
+    "suggestion": "Open and re-save the resource or scene so the parameters are stored as shader_parameter/.",
+    "tradeoff": "None.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/scene/resources/material.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

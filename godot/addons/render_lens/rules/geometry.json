@@ -1,0 +1,1092 @@
+[
+  {
+    "id": "geometry.multimesh_candidate",
+    "category": "geometry",
+    "title": "Many MeshInstance3D nodes share one mesh",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "Four or more MeshInstance3D nodes sharing one mesh resource is the cut. The MultiMesh page is the tool for repeated instances. The optimizing-3D page also notes automatic instancing for identical opaque mesh-and-material pairs, which does not replace MultiMesh for large counts.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "largest_identical_mesh_count",
+        "value": 4
+      }
+    },
+    "evidence": "One mesh resource is used by at least four MeshInstance3D nodes.",
+    "suggestion": "Replace that group with a MultiMeshInstance3D. Keep distant islands in separate MultiMeshes so frustum and occlusion culling can drop a whole node; the mesh LOD page says individual MultiMesh instances are not culled.",
+    "node_property": "MultiMeshInstance3D",
+    "offender_key": "identical_meshes",
+    "tradeoff": "Per-instance script transforms become multimesh buffer updates.",
+    "expected_effect": "Fewer draw submissions for that mesh.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/using_multi_mesh_instance.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.high_surface_count",
+    "category": "geometry",
+    "title": "A mesh has several surfaces",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "Three or more surfaces on one mesh is the cut. Each surface is a separate draw with its own material. The optimizing-3D page says to split only the part that must be transparent.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "mesh_high_surface_count",
+        "value": 1
+      }
+    },
+    "evidence": "At least one mesh reports get_surface_count() >= 3.",
+    "suggestion": "Merge surfaces that share a material. Keep a separate surface only for a genuinely transparent region.",
+    "node_property": "Mesh.get_surface_count",
+    "offender_key": "high_surface_meshes",
+    "tradeoff": "Merging materials can waste texture space.",
+    "expected_effect": "Fewer draws per mesh.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/optimizing_3d_performance.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.no_visibility_range",
+    "category": "geometry",
+    "title": "Many meshes have no visibility range",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "Fires when at least 30 MeshInstance3D nodes leave visibility_range_begin and visibility_range_end at 0. The visibility-range page is aimed at large scenes; 30 is a review cut, not a Godot limit.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "mesh_without_visibility_range_count",
+        "value": 30
+      }
+    },
+    "evidence": "At least 30 MeshInstance3D nodes have no visibility range.",
+    "suggestion": "Set visibility_range_end on distant props, with visibility_range_fade_mode Self or Dependencies. The page describes this as the manual HLOD-style tool next to automatic mesh LOD.",
+    "node_property": "GeometryInstance3D.visibility_range_end",
+    "tradeoff": "Objects pop or fade at that distance.",
+    "expected_effect": "Distant nodes are not drawn. Combine with mesh LOD rather than replacing it.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/visibility_ranges.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.lod_threshold_below_default",
+    "category": "geometry",
+    "title": "Mesh LOD threshold is below the default 1 pixel",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_lt": {
+        "path": "rendering/mesh_lod/lod_change/threshold_pixels",
+        "value": 1.0
+      }
+    },
+    "evidence": "threshold_pixels is below 1. The mesh LOD page says the default of 1 pixel is tuned to look lossless, and higher values switch LOD sooner (more performance, less quality).",
+    "suggestion": "Raise rendering/mesh_lod/lod_change/threshold_pixels to 1 or above. Per-object tweaks belong on GeometryInstance3D.lod_bias, where values below 1 switch sooner.",
+    "setting": "rendering/mesh_lod/lod_change/threshold_pixels",
+    "tradeoff": "A higher threshold drops geometric detail earlier.",
+    "expected_effect": "LOD switches sooner, which the page says increases performance.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/mesh_lod.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.lod_bias_high",
+    "category": "geometry",
+    "title": "Mesh LOD bias is above 1",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "mesh_lod_bias_above_one_count",
+        "value": 1
+      }
+    },
+    "evidence": "GeometryInstance3D.lod_bias is above 1. The mesh LOD page says values above 1 switch later (higher quality, lower performance).",
+    "suggestion": "Set lod_bias to 1, or below 1 on hero-distance props you can simplify.",
+    "node_property": "GeometryInstance3D.lod_bias",
+    "offender_key": "lod_bias_high",
+    "tradeoff": "Detail drops earlier on those nodes.",
+    "expected_effect": "Earlier LOD selection on the flagged nodes.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/mesh_lod.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.occlusion_without_occluders",
+    "category": "geometry",
+    "title": "Occlusion culling is on without occluder nodes",
+    "severity": "medium",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/occlusion_culling/use_occlusion_culling",
+            "value": true
+          }
+        },
+        {
+          "scene_eq": {
+            "name": "occluder_count",
+            "value": 0
+          }
+        }
+      ]
+    },
+    "evidence": "use_occlusion_culling is true and the scan found no OccluderInstance3D. The occlusion page says occluder geometry is what gets rasterized into the occlusion buffer.",
+    "suggestion": "Add OccluderInstance3D nodes (or bake occluders) for large solid walls, or turn the setting off if you have not authored occluders. The page says the feature may not be worth its CPU cost without useful occluders.",
+    "setting": "rendering/occlusion_culling/use_occlusion_culling",
+    "tradeoff": "Turning it off spends the draw calls the occluders would have removed.",
+    "expected_effect": "Either the CPU occlusion pass starts hiding objects, or its CPU cost goes away.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/occlusion_culling.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.occlusion_bvh_high",
+    "category": "geometry",
+    "title": "Occlusion BVH build quality is High",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/occlusion_culling/use_occlusion_culling",
+            "value": true
+          }
+        },
+        {
+          "setting_gte": {
+            "path": "rendering/occlusion_culling/bvh_build_quality",
+            "value": 2
+          }
+        }
+      ]
+    },
+    "evidence": "bvh_build_quality is 2. The hint is Low, Medium, High and the default is High. The occlusion page says to lower BVH build quality or occlusion_rays_per_thread (default 512) when the CPU update shows up.",
+    "suggestion": "Set bvh_build_quality to 1 (Medium) or 0 (Low) if moving occluders rebuild the BVH often.",
+    "setting": "rendering/occlusion_culling/bvh_build_quality",
+    "tradeoff": "The occlusion test is coarser.",
+    "expected_effect": "Cheaper BVH builds. The page warns that moving occluders every frame forces rebuilds.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/occlusion_culling.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.occlusion_rays",
+    "category": "geometry",
+    "title": "Occlusion rays per thread are above the default",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "occlusion_rays_per_thread defaults to 512. Above that is more rays than the default the occlusion page says you can lower.",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/occlusion_culling/use_occlusion_culling",
+            "value": true
+          }
+        },
+        {
+          "setting_gt": {
+            "path": "rendering/occlusion_culling/occlusion_rays_per_thread",
+            "value": 512
+          }
+        }
+      ]
+    },
+    "evidence": "occlusion_rays_per_thread is above 512.",
+    "suggestion": "Set it back to 512 or below.",
+    "setting": "rendering/occlusion_culling/occlusion_rays_per_thread",
+    "tradeoff": "Occlusion results get noisier.",
+    "expected_effect": "Less CPU work per occlusion update.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/occlusion_culling.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.ignore_occlusion",
+    "category": "geometry",
+    "title": "Meshes opt out of occlusion culling",
+    "severity": "low",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/occlusion_culling/use_occlusion_culling",
+            "value": true
+          }
+        },
+        {
+          "scene_gte": {
+            "name": "mesh_ignore_occlusion_count",
+            "value": 1
+          }
+        }
+      ]
+    },
+    "evidence": "GeometryInstance3D.ignore_occlusion_culling is true on at least one mesh while occlusion culling is enabled.",
+    "suggestion": "Clear ignore_occlusion_culling except on meshes that flicker when culled.",
+    "node_property": "GeometryInstance3D.ignore_occlusion_culling",
+    "offender_key": "ignore_occlusion",
+    "tradeoff": "Those meshes can disappear if their occluder test is wrong.",
+    "expected_effect": "Occlusion culling applies to them again.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/occlusion_culling.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.opaque_pass_share",
+    "category": "geometry",
+    "title": "The opaque pass is a large share of measured GPU time",
+    "severity": "high",
+    "heuristic": true,
+    "heuristic_rationale": "25% of the median timestamp-span frame is a review cut so the opaque pass is only flagged when it is a large measured slice. The percentage is not a Godot budget.",
+    "requires": [
+      "passes"
+    ],
+    "condition": {
+      "pass_share_gte": {
+        "name": "Render Opaque",
+        "share": 25
+      }
+    },
+    "evidence": "The opaque pass (Render Opaque Pass on Forward+, Render Opaque on Mobile) exclusive time is at least 25% of the median timestamp-span frame GPU time.",
+    "suggestion": "Use the mesh LOD threshold, visibility ranges, fewer surfaces, and opaque materials. The optimizing-3D page treats draw calls and overdraw as the opaque-pass levers. Automatic instancing already covers identical opaque MeshInstance3D pairs.",
+    "tradeoff": "LOD and visibility ranges change how much detail is visible at a distance.",
+    "expected_effect": "The opaque pass should shrink after those cuts. Re-run gpu_passes; this rule does not predict the new share.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/optimizing_3d_performance.html",
+    "when_pass": [
+      "Render Opaque"
+    ],
+    "dedupe_key": "opaque",
+    "kind": "performance",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.transparent_pass_share",
+    "category": "geometry",
+    "title": "The transparent pass is a large share of measured GPU time",
+    "severity": "high",
+    "heuristic": true,
+    "heuristic_rationale": "15% of measured frame GPU time is a review cut for the transparent pass. It is not a documented budget.",
+    "requires": [
+      "passes"
+    ],
+    "condition": {
+      "pass_share_gte": {
+        "names": [
+          "Render 3D Transparent Pass",
+          "Render Transparent"
+        ],
+        "share": 15
+      }
+    },
+    "evidence": "The transparent pass (Render 3D Transparent Pass on Forward+, Render Transparent on Mobile) is at least 15% of the median timestamp-span frame GPU time.",
+    "suggestion": "Replace alpha blend with alpha scissor or hash, and reduce overlapping transparent layers. The GPU optimization page explains why transparency causes overdraw.",
+    "tradeoff": "Masked transparency cannot do smooth partial coverage.",
+    "expected_effect": "Less transparent overdraw. Measure the pass again.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/gpu_optimization.html",
+    "when_pass": [
+      "Render 3D Transparent Pass",
+      "Render Transparent"
+    ],
+    "dedupe_key": "transparency",
+    "kind": "performance",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.multimesh_many_instances",
+    "category": "geometry",
+    "title": "A MultiMesh permits at least 256 visible instances",
+    "severity": "low",
+    "kind": "info",
+    "heuristic": true,
+    "heuristic_rationale": "The scan caps instance_count by visible_instance_count when set, excludes missing meshes, and covers 2D/3D MultiMesh nodes. 256 is a review prompt, not a Godot limit or a measured draw count.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "multimesh_max_instances",
+        "value": 256
+      }
+    },
+    "evidence": "Number of instances that will get drawn",
+    "suggestion": "If the visible instances are sparse, compare partitioning the MultiMesh so whole batches can be culled. Lower visible_instance_count only when those instances are actually unnecessary.",
+    "node_property": "MultiMesh.visible_instance_count",
+    "offender_key": "multimesh_many_instances",
+    "tradeoff": "Fewer instances are visible or more batches are submitted; profile both effects.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_multimesh.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.multimesh_custom_aabb",
+    "category": "geometry",
+    "title": "A large MultiMesh has no custom AABB",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_multimesh_custom_aabb",
+        "value": 1
+      }
+    },
+    "offender_key": "check_multimesh_custom_aabb",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible MultiMeshInstance3D holds at least 4096 instances and its MultiMesh has no custom_aabb, so every instance change recomputes the bounds. Whether instances change at runtime is not observed. Godot class reference: \"Setting this manually prevents costly runtime AABB recalculations.\"",
+    "suggestion": "Set MultiMesh.custom_aabb to bounds that cover all instances, especially when scripts update instance transforms.",
+    "tradeoff": "A custom AABB that is too small culls instances incorrectly; keep it conservative.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/MultiMesh.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.occluder_dense",
+    "category": "geometry",
+    "title": "An occluder has many triangles or points",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_occluder_dense",
+        "value": 1
+      }
+    },
+    "offender_key": "check_occluder_dense",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An OccluderInstance3D uses an ArrayOccluder3D with more than 10,000 triangles or a PolygonOccluder3D with more than 64 points. Godot class reference: \"The occluder geometry is rendered on the CPU, so it is important to keep its geometry as simple as possible.\"",
+    "suggestion": "Rebake with a higher bake_simplification_distance, or use fewer, simpler occluder shapes.",
+    "tradeoff": "Simpler occluders cull less precisely.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/OccluderInstance3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.gridmap_small_octants",
+    "category": "geometry",
+    "title": "A populated GridMap uses very small rendering octants",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_gridmap_small_octants",
+        "value": 1
+      }
+    },
+    "offender_key": "check_gridmap_small_octants",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible, unbaked GridMap sets cell_octant_size to 1 or 2 and more than 256 inspected cells refer to library items with recognized native meshes containing at least one surface. Custom mesh classes and empty meshes are skipped. Both native versions create a MultiMesh/render instance for each occupied item/octant combination. The cutoff is a review heuristic, not a measured batch count. Baked meshes use a different path and are excluded. At most 4096 cells across qualifying GridMaps are inspected; skipped cells are reported, and the public cell-list getter still returns its full list.",
+    "suggestion": "Compare the default octant size of 8 or a size that fits the level, then measure draw calls and frame time along the same camera route.",
+    "tradeoff": "Larger octants reduce culling granularity and can draw more offscreen geometry. Small octants can be the right choice for sparse or frequently edited maps.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/modules/gridmap/grid_map.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.primitive_density",
+    "category": "geometry",
+    "title": "A procedural primitive requests dense geometry",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_primitive_density",
+        "value": 1
+      }
+    },
+    "offender_key": "check_primitive_density",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A MeshInstance2D/3D uses a PlaneMesh, BoxMesh, SphereMesh, CylinderMesh, CapsuleMesh or TorusMesh whose native subdivision loops generate at least 8192 vertices. The estimate uses only stored segment counts; cylinder caps are omitted, making it a lower bound. No mesh generation or GPU buffer download is requested by this check. 8192 is a review cutoff, not an engine limit.",
+    "suggestion": "Compare fewer subdivisions at the intended viewing distance, retaining enough vertices for displacement and deformation.",
+    "tradeoff": "Silhouettes, curved lighting and displaced surfaces may become faceted. Primitive generation is cached; rendering cost depends on submitted geometry and visibility.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/resources/3d/primitive_meshes.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.textmesh_detail",
+    "category": "geometry",
+    "title": "A TextMesh requests dense glyph geometry",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_textmesh_detail",
+        "value": 1
+      }
+    },
+    "offender_key": "check_textmesh_detail",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A MeshInstance2D/3D assigns a nonblank TextMesh with curve_step below 0.5 or font_size above 63. Native curve subdivision uses curve_step divided by curve length; contours are obtained at font_size. Generated glyph geometry is cached and rebuilt on relevant changes, not automatically every frame. The cutoffs are review heuristics.",
+    "suggestion": "Compare the default curve step and a smaller font size while preserving apparent size. For animated size changes, scale the node instead of regenerating mesh settings.",
+    "tradeoff": "Curves can become faceted. Changing font_size or pixel_size regenerates geometry; node scaling also scales extrusion depth.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/resources/3d/primitive_meshes.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.skin_eight_weights",
+    "category": "geometry",
+    "title": "A live skinned mesh uses eight bone influences",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_skin_eight_weights",
+        "value": 1
+      }
+    },
+    "offender_key": "check_skin_eight_weights",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An ArrayMesh surface with bone attributes uses the eight-weight format and resolves to a nonempty live Skeleton3D. The RD skinning shader loads and combines four additional influences in this format. Only stored surface metadata is read; weight buffers are not downloaded. Skinning updates can be cached when unchanged.",
+    "suggestion": "For measured skinning bottlenecks, compare an asset limited to four normalized influences per vertex and inspect every animation.",
+    "tradeoff": "Reducing influences can deform joints or lose authored detail. This requires asset processing, not a safe automatic scene edit.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/rendering/renderer_rd/shaders/skeleton.glsl",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.mesh_cull_margin",
+    "category": "geometry",
+    "title": "Mesh culling margin exceeds its largest stored bound dimension",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_mesh_cull_margin",
+        "value": 1
+      }
+    },
+    "offender_key": "check_mesh_cull_margin",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An ArrayMesh instance has extra_cull_margin larger than the largest positive AABB dimension. Instance custom bounds take precedence over resource custom bounds and stored mesh bounds. The native culler grows bounds on every side by the margin; this scale-relative review threshold is heuristic.",
+    "suggestion": "Inspect shader deformation and animation extents, then compare a tighter margin only if the expanded bound is unnecessary.",
+    "tradeoff": "A too-small margin makes displaced or animated geometry disappear; stored bounds may not cover every pose.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/rendering/renderer_scene_cull.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.viewport_lod_disabled",
+    "category": "geometry",
+    "title": "A SubViewport disables automatic mesh LOD",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_viewport_lod_disabled",
+        "value": 1
+      }
+    },
+    "offender_key": "check_viewport_lod_disabled",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A SubViewport with updates and 3D enabled has mesh_lod_threshold set to zero. This is its own threshold, independent of the root viewport's project setting. Meshes without generated LODs receive no benefit from changing it.",
+    "suggestion": "Compare a threshold of one pixel or higher in this SubViewport with meshes that have generated LODs.",
+    "tradeoff": "Geometry may lose distant detail; manual visibility ranges remain independent.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Viewport.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.geometry_fade_cost",
+    "category": "geometry",
+    "title": "Visibility ranges enable alpha fading",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_geometry_fade_cost",
+        "value": 1
+      }
+    },
+    "offender_key": "check_geometry_fade_cost",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A valid visibility range enables Self or Dependencies fading with a positive transition margin at a nonzero boundary. Geometry can enter the transparent path while fading; actual camera distance is not evaluated.",
+    "suggestion": "Compare disabled fading with a nonzero hysteresis margin where popping is acceptable.",
+    "tradeoff": "Transitions can pop instead of blending.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/GeometryInstance3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "geometry.mesh_old_surface_format",
+    "category": "geometry",
+    "title": "A saved mesh uses an old surface format that is upgraded on every load",
+    "kind": "performance",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_mesh_old_surface_format",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_mesh_old_surface_format",
+    "evidence": "Godot prints \"A surface of res://props/crate.tres uses an old surface format and needs to be upgraded.\" when an ArrayMesh saved in a .tscn or .tres has a surface format without the current format version (bits 35-42, ARRAY_FLAG_FORMAT_VERSION). Godot's message continues that the upgrade happens automatically at load time every time until the mesh is saved again or re-imported. Binary .res/.mesh files are not read.",
+    "suggestion": "Re-save the scene or resource (or re-import the source model) in the current Godot version.",
+    "tradeoff": "Re-saved meshes cannot be opened by Godot versions before 4.2.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/rendering_server.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

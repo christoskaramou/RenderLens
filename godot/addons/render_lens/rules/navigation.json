@@ -1,0 +1,819 @@
+[
+  {
+    "id": "navigation.path_threads_high",
+    "category": "navigation",
+    "title": "Pathfinding may use more than 4 threads",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "navigation/pathfinding/max_threads",
+        "value": 4
+      }
+    },
+    "evidence": "Additional threads increase memory consumption and synchronization time",
+    "suggestion": "Lower navigation/pathfinding/max_threads toward 4 unless queries are actually waiting. The description says extra threads copy data.",
+    "setting": "navigation/pathfinding/max_threads",
+    "tradeoff": "Fewer path queries run at once.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "navigation.path_threads_unlimited",
+    "category": "navigation",
+    "title": "Pathfinding threads are unlimited",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_lt": {
+        "path": "navigation/pathfinding/max_threads",
+        "value": 0
+      }
+    },
+    "evidence": "A value of -1 means unlimited",
+    "suggestion": "Set navigation/pathfinding/max_threads to a finite count. The description says -1 means unlimited and extra threads cost memory.",
+    "setting": "navigation/pathfinding/max_threads",
+    "tradeoff": "Path queries queue instead of spawning without a cap.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "navigation.sync_on_main_thread",
+    "category": "navigation",
+    "title": "Navigation map sync runs on the main thread",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "navigation/world/map_use_async_iterations",
+        "value": false
+      }
+    },
+    "evidence": "avoids stalling the main thread but adds an additional delay",
+    "suggestion": "Turn navigation/world/map_use_async_iterations on so map sync leaves the main thread. The description says the async path avoids that stall.",
+    "setting": "navigation/world/map_use_async_iterations",
+    "tradeoff": "Map changes show up one step later.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "navigation.avoidance_single_thread",
+    "category": "navigation",
+    "title": "Avoidance is not using multiple threads",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "navigation/avoidance/thread_model/avoidance_use_multiple_threads",
+        "value": false
+      }
+    },
+    "evidence": "If enabled the avoidance calculations use multiple threads",
+    "suggestion": "Turn navigation/avoidance/thread_model/avoidance_use_multiple_threads on when many agents avoid each other.",
+    "setting": "navigation/avoidance/thread_model/avoidance_use_multiple_threads",
+    "tradeoff": "Avoidance shares the threads it is given.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "navigation.avoidance",
+    "category": "navigation",
+    "title": "A NavigationAgent2D/3D has avoidance enabled",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "navigation_avoidance_count",
+        "value": 1
+      }
+    },
+    "evidence": "Avoidance processing with many registered agents has a significant performance cost",
+    "suggestion": "Turn avoidance_enabled off on 2D or 3D agents that do not currently need avoidance. Cost depends on active agents and nearby neighbours.",
+    "node_property": "NavigationAgent2D/3D.avoidance_enabled",
+    "offender_key": "avoidance_agents",
+    "tradeoff": "Those agents no longer receive safe_velocity.",
+    "expected_effect": "scan_scene should show a lower count after the edit. No frame-time percentage is predicted.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_navigationagent3d.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "navigation.agents_44",
+    "category": "navigation",
+    "title": "Navigation agents are processing avoidance",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "In Godot 4.4 this monitor counts 3D agents processing avoidance. Eight is a review prompt. Godot 4.7 renamed it to NAVIGATION_3D_AGENT_COUNT.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gte": {
+        "name": "NAVIGATION_AGENT_COUNT",
+        "value": 8
+      }
+    },
+    "evidence": "Number of active navigation agents processing avoidance",
+    "suggestion": "NAVIGATION_AGENT_COUNT is the 4.4 name for agents processing avoidance. Turn avoidance off on agents that do not need it.",
+    "tradeoff": "Depends on which objects or allocations you remove.",
+    "expected_effect": "The same Performance monitor should fall on the next collect_metrics.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "share_from": "",
+    "share_unit": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4"
+      ],
+      "max_version": "4.4"
+    }
+  },
+  {
+    "id": "navigation.agents_3d",
+    "category": "navigation",
+    "title": "3D navigation agents are processing avoidance",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "From Godot 4.5 this monitor counts 3D agents processing avoidance. Eight is a review prompt.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gte": {
+        "name": "NAVIGATION_3D_AGENT_COUNT",
+        "value": 8
+      }
+    },
+    "evidence": "Number of active navigation agents processing avoidance",
+    "suggestion": "NAVIGATION_3D_AGENT_COUNT counts 3D agents processing avoidance. Turn avoidance off on agents that do not need it.",
+    "tradeoff": "Depends on which objects or allocations you remove.",
+    "expected_effect": "The same Performance monitor should fall on the next collect_metrics.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.7/classes/class_performance.html",
+    "share_from": "",
+    "share_unit": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "min_version": "4.5"
+    }
+  },
+  {
+    "id": "navigation.agents_2d",
+    "category": "navigation",
+    "title": "2D navigation agents are processing avoidance",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "From Godot 4.5 this monitor counts 2D agents processing avoidance. Eight is a review prompt.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gte": {
+        "name": "NAVIGATION_2D_AGENT_COUNT",
+        "value": 8
+      }
+    },
+    "evidence": "Number of active navigation agents processing avoidance",
+    "suggestion": "NAVIGATION_2D_AGENT_COUNT counts 2D agents processing avoidance.",
+    "tradeoff": "Depends on which objects or allocations you remove.",
+    "expected_effect": "The same Performance monitor should fall on the next collect_metrics.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.7/classes/class_performance.html",
+    "share_from": "",
+    "share_unit": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "min_version": "4.5"
+    }
+  },
+  {
+    "id": "navigation.region_sync_on_main_thread",
+    "category": "navigation",
+    "title": "Navigation regions synchronize on the main thread",
+    "severity": "medium",
+    "kind": "performance",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "navigation/world/region_use_async_iterations",
+        "value": false
+      }
+    },
+    "evidence": "navigation/world/region_use_async_iterations is false. Godot docs: \"By default, the regions in a NavigationServer map now update asynchronously using threads to improve performance.\"",
+    "suggestion": "Turn navigation/world/region_use_async_iterations back on so region changes synchronize on a background thread.",
+    "setting": "navigation/world/region_use_async_iterations",
+    "tradeoff": "Region changes take effect after an extra delay.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.5/tutorials/migrating/upgrading_to_godot_4.5.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "navigation.obstacle_static_and_dynamic",
+    "category": "navigation",
+    "title": "A navigation obstacle is both static and dynamic",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_obstacle_static_and_dynamic",
+        "value": 1
+      }
+    },
+    "offender_key": "check_obstacle_static_and_dynamic",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A NavigationObstacle2D/3D with avoidance enabled has both a radius (dynamic) and an outline of three or more vertices (static). Godot docs: \"While both static and dynamic properties can be active at the same time on the same obstacle this is not recommended for performance.\"",
+    "suggestion": "Use the radius while the obstacle moves and the vertices once it rests, as the page describes, instead of both at once.",
+    "tradeoff": "Switching between the two needs a script.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/navigation/navigation_using_navigationobstacles.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "navigation.tilemap_navigation_regions",
+    "category": "navigation",
+    "title": "A TileMapLayer creates many per-cell navigation regions",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_tilemap_navigation_regions",
+        "value": 1
+      }
+    },
+    "offender_key": "check_tilemap_navigation_regions",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled TileMapLayer with navigation_enabled has more than 256 inspected cell/layer navigation polygons containing baked polygons or outlines and nonzero navigation layers. Both native versions create a region per qualifying cell and navigation layer. This is an object-count review cutoff, not a measured pathfinding or map-synchronization cost. Runtime tile-data overrides and scene-collection sources are skipped; resource/cell inspection limits are reported.",
+    "suggestion": "For a mostly static level, compare a consolidated NavigationRegion2D bake and disable per-cell navigation only after the replacement preserves valid paths.",
+    "tradeoff": "Baking changes update granularity, connectivity and layer handling. Preserve doors, streaming and dynamic edits, and avoid overlapping old and replacement regions.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/2d/tile_map_layer.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "navigation.gridmap_navigation_regions",
+    "category": "navigation",
+    "title": "A GridMap creates many per-cell navigation regions",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_gridmap_navigation_regions",
+        "value": 1
+      }
+    },
+    "offender_key": "check_gridmap_navigation_regions",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A GridMap with bake_navigation enabled has more than 256 inspected cells referencing nonempty item navigation meshes with nonzero navigation layers. Native octant updates create a NavigationServer3D region per qualifying cell. The cutoff is a review heuristic; map synchronization and path cost are not measured. At most 4096 cells across qualifying GridMaps are inspected and omitted cells are reported.",
+    "suggestion": "For static levels, compare baking a consolidated NavigationRegion3D from the level geometry, then disable per-cell GridMap navigation only after the replacement works.",
+    "tradeoff": "Consolidation changes bake/update granularity, navigation layers and region boundaries. Preserve dynamic doors, streaming and path connectivity, and avoid overlapping old and replacement navigation.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/modules/gridmap/grid_map.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "navigation.navigation_polygons",
+    "category": "navigation",
+    "title": "A navigation region contains a large polygon graph",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_navigation_polygons",
+        "value": 1
+      }
+    },
+    "offender_key": "check_navigation_polygons",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An enabled NavigationRegion3D with nonzero navigation layers has more than 8192 baked navigation polygons. Native path queries search polygon connections; polygon count bounds graph size but is not the number visited by each query. This reads stored polygon count without rebaking the mesh. The cutoff is heuristic.",
+    "suggestion": "Profile long and unreachable path requests, then simplify unnecessary navigation geometry on flat areas while preserving routes and agent clearance.",
+    "tradeoff": "Coarser navigation geometry can remove narrow routes or change paths. Splitting into regions without reducing polygons does not automatically reduce query work.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/modules/navigation/3d/nav_mesh_queries_3d.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "navigation.navigation_neighbors",
+    "category": "navigation",
+    "title": "Avoidance agents allow more neighbours than the default",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_navigation_neighbors",
+        "value": 1
+      }
+    },
+    "offender_key": "check_navigation_neighbors",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An avoidance-enabled NavigationAgent2D/3D searches a positive distance and allows more than ten neighbours. Godot's RVO code retains up to max_neighbors candidates and builds a constraint for each retained neighbour. Ten is the default-based review cutoff; actual nearby agents determine work.",
+    "suggestion": "Compare a smaller neighbour limit in representative dense crowds and profile CPU avoidance time.",
+    "tradeoff": "Too few neighbours can cause collisions, unstable crowd movement or poor avoidance.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/thirdparty/rvo2/rvo2_3d/Agent3d.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "navigation.mesh_cell_size_mismatch",
+    "category": "navigation",
+    "title": "A navigation mesh cell is smaller than its map's",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene",
+      "settings"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_navmesh_cell_size_mismatch",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_navmesh_cell_size_mismatch",
+    "evidence": "Godot prints \"A navigation mesh that uses a `cell_size` of 0.1 was assigned to a navigation map set to a larger `cell_size` of 0.25.\" when a NavigationRegion's mesh uses a cell_size or cell_height below the map's (the navigation/2d or 3d default_cell_size and default_cell_height settings for default maps). The message says the mismatch can cause rasterization errors with navigation mesh edges on the map.",
+    "suggestion": "Bake the navigation mesh with the map's cell size and height, or change the map defaults to match.",
+    "tradeoff": "Matching a coarser map cell size lowers navigation mesh precision.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/modules/navigation_3d/nav_region_3d.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "navigation.obstacle_vertex_height",
+    "category": "navigation",
+    "title": "Static obstacle vertices have Y values that avoidance ignores",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_obstacle_vertex_height",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_obstacle_vertex_height",
+    "evidence": "Godot prints \"Y coordinates of static obstacle vertices are ignored. Please use obstacle position Y to change elevation of obstacle.\" in editor builds when a NavigationObstacle3D's vertices have a nonzero Y; avoidance ignores the Y in every build.",
+    "suggestion": "Keep obstacle vertices at Y 0 and move the obstacle node to set its elevation.",
+    "tradeoff": "None.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/modules/navigation_3d/nav_map_3d.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "navigation.runtime_bake_visual_meshes",
+    "category": "navigation",
+    "title": "Navigation is baked at runtime from visual meshes",
+    "kind": "performance",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_navigation_runtime_bake",
+            "value": 1
+          }
+        },
+        {
+          "scene_gte": {
+            "name": "check_navmesh_parses_meshes",
+            "value": 1
+          }
+        }
+      ]
+    },
+    "setting": "",
+    "offender_key": "check_navigation_runtime_bake",
+    "evidence": "Godot prints \"Source geometry parsing for navigation mesh baking had to parse RenderingServer meshes at runtime.\" in a running game when a NavigationMesh parses mesh instances (parsed geometry type Mesh Instances, the default, or Both) and a script bakes or parses source geometry (bake_navigation_mesh or parse_source_geometry_data). Godot's message continues that visual meshes store their geometry on the GPU, so reading it back is slow.",
+    "suggestion": "Parse static colliders instead (parsed geometry type Static Colliders), or bake in the editor and load the result.",
+    "tradeoff": "Collision shapes are coarser than visual meshes.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/scene/resources/3d/navigation_mesh_source_geometry_data_3d.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

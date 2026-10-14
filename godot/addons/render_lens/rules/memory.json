@@ -1,0 +1,722 @@
+[
+  {
+    "id": "memory.video_mem",
+    "category": "memory",
+    "title": "Video memory in use is above 512 MiB",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "512 MiB is not a Godot limit and not the GPU's capacity. RENDER_VIDEO_MEM_USED is the engine's byte counter, and the class reference says it includes texture, buffer, and miscellaneous allocations.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gte": {
+        "name": "RENDER_VIDEO_MEM_USED",
+        "value": 536870912
+      }
+    },
+    "evidence": "RENDER_VIDEO_MEM_USED is at least 512 MiB.",
+    "suggestion": "Compare RENDER_TEXTURE_MEM_USED and RENDER_BUFFER_MEM_USED in the same snapshot. Shrink shadow atlases, reflection size, and uncompressed textures. Godot does not report total VRAM capacity through this monitor.",
+    "tradeoff": "Smaller textures and shadow maps lose detail.",
+    "expected_effect": "The byte counters drop after those assets shrink. No capacity percentage is available from the monitor.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "memory.message_queue",
+    "category": "memory",
+    "title": "Message-queue peak is near its cap",
+    "severity": "high",
+    "heuristic": true,
+    "heuristic_rationale": "0.9 is not an engine watermark. MEMORY_MESSAGE_BUFFER_MAX is the peak bytes, compared with memory/limits/message_queue/max_size_mb (default 32).",
+    "requires": [
+      "metrics",
+      "settings"
+    ],
+    "condition": {
+      "message_queue_ratio_gte": {
+        "ratio": 0.9
+      }
+    },
+    "evidence": "The message-buffer peak is at least 90% of max_size_mb.",
+    "suggestion": "Find the deferred calls or resource loads that fill the queue before raising max_size_mb. Raising the cap hides the spike and uses more RAM.",
+    "setting": "memory/limits/message_queue/max_size_mb",
+    "tradeoff": "A higher cap uses more memory. A full queue drops or stalls deferred work.",
+    "expected_effect": "The peak stays under the cap after the spike is removed.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "memory.static_high",
+    "category": "memory",
+    "title": "Static memory is above 512 MiB",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "512 MiB of MEMORY_STATIC is a review cut. The monitor is bytes of statically allocated memory, not a leak by itself. Compare it with MEMORY_STATIC_MAX.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gte": {
+        "name": "MEMORY_STATIC",
+        "value": 536870912
+      }
+    },
+    "evidence": "MEMORY_STATIC is at least 512 MiB.",
+    "suggestion": "Look at loaded resources (OBJECT_RESOURCE_COUNT) and textures. Static memory does not mean a leak unless it grows across snapshots.",
+    "tradeoff": "Unloading resources changes what is available without a load hit.",
+    "expected_effect": "A later snapshot should show a lower MEMORY_STATIC if unused resources were released.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "memory.object_count",
+    "category": "memory",
+    "title": "Object count is very high",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "20000 Object instances is a review cut. OBJECT_COUNT is the Performance monitor for live Objects. Godot does not define this threshold.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt": {
+        "name": "OBJECT_COUNT",
+        "value": 20000
+      }
+    },
+    "evidence": "OBJECT_COUNT is above 20000.",
+    "suggestion": "Compare OBJECT_NODE_COUNT and OBJECT_RESOURCE_COUNT. Free unused resources and orphan nodes.",
+    "tradeoff": "Unloaded resources hitch when requested again.",
+    "expected_effect": "OBJECT_COUNT falls after unused objects are freed.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "memory.resource_count",
+    "category": "memory",
+    "title": "Resource count is very high",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "5000 resources is a review cut on OBJECT_RESOURCE_COUNT so a project that has loaded a large library is visible.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt": {
+        "name": "OBJECT_RESOURCE_COUNT",
+        "value": 5000
+      }
+    },
+    "evidence": "OBJECT_RESOURCE_COUNT is above 5000.",
+    "suggestion": "Load scenes on demand instead of keeping every packed resource in memory.",
+    "tradeoff": "The next use pays a load.",
+    "expected_effect": "Fewer resident resources.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "memory.buffer_mem",
+    "category": "memory",
+    "title": "Buffer memory is above 256 MiB",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "256 MiB of RENDER_BUFFER_MEM_USED is a review cut. The class reference says this is buffer memory in bytes, separate from texture memory.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gte": {
+        "name": "RENDER_BUFFER_MEM_USED",
+        "value": 268435456
+      }
+    },
+    "evidence": "RENDER_BUFFER_MEM_USED is at least 256 MiB.",
+    "suggestion": "Look at mesh vertex buffers and GPU particle buffers. Vertex memory is part of the video total the class reference describes.",
+    "tradeoff": "Simpler meshes lose silhouette detail. Mesh LOD is the documented way to cut that.",
+    "expected_effect": "Buffer bytes drop if large meshes are simplified.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "memory.staging_block_large",
+    "category": "memory",
+    "title": "Staging buffer blocks are above 256 KiB",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/rendering_device/staging_buffer/block_size_kb",
+        "value": 256
+      }
+    },
+    "evidence": "Increasing this will result in faster data transfers at the cost of extra",
+    "suggestion": "Lower rendering/rendering_device/staging_buffer/block_size_kb toward 256 if upload memory is the problem. The description says larger blocks transfer faster and cost memory.",
+    "setting": "rendering/rendering_device/staging_buffer/block_size_kb",
+    "tradeoff": "Copies move less data per operation.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "memory.staging_cap_high",
+    "category": "memory",
+    "title": "The staging buffer cap is above 128 MiB",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/rendering_device/staging_buffer/max_size_mb",
+        "value": 128
+      }
+    },
+    "evidence": "The maximum amount of memory allowed to be used by staging buffers",
+    "suggestion": "Lower rendering/rendering_device/staging_buffer/max_size_mb toward 128. The description says exceeding the cap stalls the GPU, so only raise it when uploads actually stall.",
+    "setting": "rendering/rendering_device/staging_buffer/max_size_mb",
+    "tradeoff": "Large uploads may stall instead of using more memory.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "memory.gdscript_track_locals",
+    "category": "memory",
+    "title": "GDScript local variables are tracked in export builds",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "debug/settings/gdscript/always_track_local_variables",
+        "value": true
+      }
+    },
+    "evidence": "Enabling this comes at the cost of roughly 50 bytes of memory per local variable, for every compiled class in the entire project, so can be several MiB in larger projects.",
+    "suggestion": "Turn debug/settings/gdscript/always_track_local_variables off unless shipped builds capture script backtraces with variables.",
+    "setting": "debug/settings/gdscript/always_track_local_variables",
+    "tradeoff": "Exported builds can no longer include local variables in captured script backtraces.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.7/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "min_version": "4.5"
+    }
+  },
+  {
+    "id": "memory.texture_mem",
+    "category": "memory",
+    "title": "Texture memory is above 256 MiB",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "256 MiB is not a Godot limit. RENDER_TEXTURE_MEM_USED is the texture byte counter and the class says lower is better.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gte": {
+        "name": "RENDER_TEXTURE_MEM_USED",
+        "value": 268435456
+      }
+    },
+    "evidence": "The amount of texture memory used (in bytes)",
+    "suggestion": "RENDER_TEXTURE_MEM_USED is texture bytes. vram_report names the resources when a game is running.",
+    "tradeoff": "Depends on which objects or allocations you remove.",
+    "expected_effect": "The same Performance monitor should fall on the next collect_metrics.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "share_from": "",
+    "share_unit": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "memory.node_count",
+    "category": "memory",
+    "title": "The scene tree has at least 1000 nodes",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The CPU optimization page says node cost shows up from thousands of nodes. OBJECT_NODE_COUNT includes the root. 1000 is the low end of that range.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gte": {
+        "name": "OBJECT_NODE_COUNT",
+        "value": 1000
+      }
+    },
+    "evidence": "Number of nodes currently instantiated in the scene tree",
+    "suggestion": "OBJECT_NODE_COUNT includes the root. The CPU optimization page says thousands of nodes start to matter and that fewer nodes with more in each is better.",
+    "tradeoff": "Depends on which objects or allocations you remove.",
+    "expected_effect": "The same Performance monitor should fall on the next collect_metrics.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "share_from": "",
+    "share_unit": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "memory.vram_largest_share",
+    "category": "memory",
+    "title": "One resource is most of the Video RAM list",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The debugger Video RAM tab lists bytes per resource. Half of that listed total and 64 MiB (a 4096x4096 RGBA8 texture with mipmaps is about 85 MiB) are review cuts, not GPU capacities; without the size floor a 6 MiB texture in a 12 MiB list was reported.",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "all": [
+        {
+          "metric_gt_metric": {
+            "left": "VRAM_LARGEST_BYTES",
+            "right": "VRAM_LISTED_HALF"
+          }
+        },
+        {
+          "metric_gte": {
+            "name": "VRAM_LARGEST_BYTES",
+            "value": 67108864
+          }
+        }
+      ]
+    },
+    "evidence": "The largest servers:memory_usage entry is more than half the listed total and at least 64 MiB.",
+    "suggestion": "vram_report names that resource by path, format, and byte size. Shrink or compress that texture or mesh. The debugger panel documents this list.",
+    "tradeoff": "A smaller or compressed resource loses detail.",
+    "expected_effect": "That resource's vram_bytes should fall on the next vram_report.",
+    "verify_step": "vram_report",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/scripting/debug/debugger_panel.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "memory.gdscript_track_call_stacks",
+    "category": "memory",
+    "title": "GDScript call stacks are tracked in release builds",
+    "severity": "low",
+    "kind": "performance",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "debug/settings/gdscript/always_track_call_stacks",
+        "value": true
+      }
+    },
+    "evidence": "debug/settings/gdscript/always_track_call_stacks is true. Godot docs: \"In projects exported in release mode, backtraces are disabled by default for performance reasons.\"",
+    "suggestion": "Turn debug/settings/gdscript/always_track_call_stacks off unless shipped builds report script backtraces (for example to a remote crash service).",
+    "setting": "debug/settings/gdscript/always_track_call_stacks",
+    "tradeoff": "Release builds can no longer capture script backtraces; the page recommends keeping it on when a custom logger reports exceptions remotely.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.5/tutorials/scripting/logging.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "memory.path_dense_cache",
+    "category": "memory",
+    "title": "A path requests a very fine baked-point cache",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_path_dense_cache",
+        "value": 1
+      }
+    },
+    "offender_key": "check_path_dense_cache",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A Path2D/3D has at least two control points and a positive bake_interval below 1 pixel in 2D or 0.05 metres in 3D. Defaults are 5 pixels and 0.2 metres. Smaller intervals increase cached samples and rebuild work when the cache is used. The scanner reads the interval and control-point count without baking or measuring path length.",
+    "suggestion": "Compare a coarser bake interval while moving followers along tight curves, then inspect cache memory and rebuild spikes after path edits.",
+    "tradeoff": "Followers can lose positional or orientation accuracy. Actual memory depends on curve length; an unchanged cache is not rebuilt each frame.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/resources/curve.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "memory.viewport_hdr2d",
+    "category": "memory",
+    "title": "A SubViewport uses a wide HDR canvas buffer",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_viewport_hdr2d",
+        "value": 1
+      }
+    },
+    "offender_key": "check_viewport_hdr2d",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An update-enabled SubViewport uses HDR 2D. The documented RGBA16 canvas target uses more bytes per pixel than an RGBA8 target. This applies to Forward+ in 4.4 and 4.5 and RD renderers from 4.6; Mobile's RGB10_A2 target in 4.4 and 4.5 is excluded from this wider-buffer claim.",
+    "suggestion": "Compare disabling HDR 2D if this viewport needs neither HDR effects nor linear-space canvas compositing.",
+    "tradeoff": "Glow, gradients, color blending and texture use in 3D can change; preserve HDR where the visual result requires it.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Viewport.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "renderers_by_version": {
+        "4.4": [
+          "forward_plus"
+        ],
+        "4.6": [
+          "forward_plus",
+          "mobile"
+        ]
+      }
+    }
+  }
+]

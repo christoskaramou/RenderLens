@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    defaults:
+      run:
+        working-directory: godot
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        godot-version: ['4.4', '4.7.2']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Xvfb and Mesa
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb mesa-vulkan-drivers libgl1-mesa-dri libvulkan1
+      - name: Download Godot
+        env:
+          VERSION: ${{ matrix.godot-version }}
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${VERSION}-stable/Godot_v${VERSION}-stable_linux.x86_64.zip" -O godot.zip
+          unzip -q godot.zip
+          mv "Godot_v${VERSION}-stable_linux.x86_64" godot
+          chmod +x godot
+      - name: Test the package, transport, rules and game bridge
+        run: xvfb-run -a python tests/run_regressions.py --godot "$PWD/godot" --packages --integration

@@ -1,0 +1,540 @@
+[
+  {
+    "id": "lights.many_realtime",
+    "category": "lights",
+    "title": "The scene has many real-time lights",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "Eight or more Light3D nodes is a review cut. The optimizing-3D page says real-time lights are costly and does not publish this count.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "light_count",
+        "value": 8
+      }
+    },
+    "evidence": "The scan counted at least eight DirectionalLight3D, OmniLight3D, or SpotLight3D nodes.",
+    "suggestion": "Bake static lights with LightmapGI, or disable light_bake_mode's dynamic contribution by leaving lights Static and using a lightmap. Narrow omni_range and spot_range so fewer lights overlap.",
+    "node_property": "Light3D.light_bake_mode",
+    "offender_key": "lights",
+    "tradeoff": "Baked lights do not move every frame. Dynamic lights (bake mode Dynamic) stay expensive.",
+    "expected_effect": "Fewer real-time light evaluations. The optimizing-3D page recommends baked lighting especially on mobile.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/optimizing_3d_performance.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "lights.omni_range",
+    "category": "lights",
+    "title": "Omni range is far above the node default",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "OmniLight3D.omni_range defaults to 5. A range of 20 or more is four times that default and increases overlap; it is not an engine error.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "omni_range_large_count",
+        "value": 1
+      }
+    },
+    "evidence": "At least one OmniLight3D has omni_range >= 20.",
+    "suggestion": "Shrink omni_range to the distance the light actually covers.",
+    "node_property": "OmniLight3D.omni_range",
+    "offender_key": "omni_range_large",
+    "tradeoff": "Objects outside the new range are no longer lit by that omni.",
+    "expected_effect": "Less light overlap. The lights page says overlapping lights cost more and can exceed the shadow atlas.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/lights_and_shadows.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "lights.wide_spot",
+    "category": "lights",
+    "title": "Spot angle is very wide",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "spot_angle of 120 degrees or more is far above the SpotLight3D default of 45. A wide cone behaves more like an omni for culling.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "spot_angle_wide_count",
+        "value": 1
+      }
+    },
+    "evidence": "A SpotLight3D has spot_angle >= 120. The property range is 0\u2013180 and the default is 45.",
+    "suggestion": "Narrow spot_angle, or replace the light with an OmniLight3D if the cone is intentional.",
+    "node_property": "SpotLight3D.spot_angle",
+    "offender_key": "spot_wide",
+    "tradeoff": "A narrower cone leaves more of the scene unlit by that spot.",
+    "expected_effect": "Tighter light culling.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_light3d.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "lights.physical_units",
+    "category": "lights",
+    "title": "Physical light units are enabled",
+    "severity": "info",
+    "kind": "info",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/lights_and_shadows/use_physical_light_units",
+        "value": true
+      }
+    },
+    "evidence": "use_physical_light_units is true. The default is false. Intensities are then lux or lumens on Light3D.",
+    "suggestion": "No change is required. Artists must set light_intensity_lux or light_intensity_lumens, or lights look black. This is a workflow note, not a cost estimate.",
+    "setting": "rendering/lights_and_shadows/use_physical_light_units",
+    "tradeoff": "Turning it off returns to the energy multiplier.",
+    "expected_effect": "None claimed.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/lights_and_shadows.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "lights.projector_filter_aniso",
+    "category": "lights",
+    "title": "Light projector filter uses anisotropic samples",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gte": {
+        "path": "rendering/textures/light_projectors/filter",
+        "value": 4
+      }
+    },
+    "evidence": "light projector filter index is 4 or higher. The hint starts Nearest, Linear, Nearest Mipmap, Linear Mipmap, then anisotropic modes marked Average. The default index is 3 (Linear Mipmap).",
+    "suggestion": "Set rendering/textures/light_projectors/filter to 3.",
+    "setting": "rendering/textures/light_projectors/filter",
+    "tradeoff": "Projected cookies shimmer more at grazing angles.",
+    "expected_effect": "Cheaper projector sampling.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "lights.negative",
+    "category": "lights",
+    "title": "Negative lights are in the scene",
+    "severity": "info",
+    "kind": "info",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "negative_light_count",
+        "value": 1
+      }
+    },
+    "evidence": "At least one Light3D has light_negative enabled.",
+    "suggestion": "Negative lights still run the real-time light path. Remove them if they were only for a prototype.",
+    "node_property": "Light3D.light_negative",
+    "offender_key": "negative_lights",
+    "tradeoff": "Those subtractive lights disappear.",
+    "expected_effect": "Fewer lights. No separate negative-light budget is documented.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_light3d.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "lights.no_lightmap_with_many_lights",
+    "category": "lights",
+    "title": "Many real-time lights and no LightmapGI",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "Fires when the light count is at least 8 and the scan finds no LightmapGI. The optimizing-3D page recommends baked lighting; it does not define this count.",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "light_count",
+            "value": 8
+          }
+        },
+        {
+          "scene_eq": {
+            "name": "lightmap_gi_count",
+            "value": 0
+          }
+        }
+      ]
+    },
+    "evidence": "At least eight Light3D nodes and no LightmapGI node.",
+    "suggestion": "Add a LightmapGI and set static lights' light_bake_mode to Static. The lightmap page covers bake quality versus bake time.",
+    "node_property": "LightmapGI",
+    "tradeoff": "Bake time, and indirect light will not follow moving geometry unless you also use SDFGI or VoxelGI.",
+    "expected_effect": "Static lights can stop being evaluated in real time after a bake.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/global_illumination/using_lightmap_gi.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "lights.editor_only_ignored",
+    "category": "lights",
+    "title": "Realtime lights are marked editor-only",
+    "severity": "info",
+    "kind": "info",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "editor_only_light_count",
+        "value": 1
+      }
+    },
+    "evidence": "Light3D.editor_only is true on at least one light, so the running game does not render it.",
+    "suggestion": "Turn editor_only off if the light was meant to ship.",
+    "node_property": "Light3D.editor_only",
+    "offender_key": "editor_only_lights",
+    "tradeoff": "The light starts costing real-time lighting in game.",
+    "expected_effect": "Corrects a hidden light. Not a performance cut.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_light3d.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "lights.positional_light_dynamic_bake",
+    "category": "lights",
+    "title": "Omni or spot lights stay Dynamic in a lightmapped scene",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "check_positional_light_dynamic_bake",
+            "value": 1
+          }
+        },
+        {
+          "scene_gte": {
+            "name": "lightmap_baked_count",
+            "value": 1
+          }
+        }
+      ]
+    },
+    "offender_key": "check_positional_light_dynamic_bake",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible OmniLight3D or SpotLight3D keeps light_bake_mode Dynamic while the scene has a baked LightmapGI. Godot docs: \"For best performance, you should set lights' bake mode to Static as opposed to the default Dynamic, as this will skip real-time lighting on meshes that have baked lighting.\"",
+    "suggestion": "Set light_bake_mode to Static on omni and spot lights the lightmap covers and rebake; the same page suggests keeping Dynamic on the DirectionalLight3D.",
+    "tradeoff": "Static lights can't cast shadows onto meshes with baked lighting, so moving objects lose those shadows.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/optimizing_3d_performance.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "lights.area_light_cost",
+    "category": "lights",
+    "title": "Area lights are in the scene",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_area_light_cost",
+        "value": 1
+      }
+    },
+    "offender_key": "check_area_light_cost",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible AreaLight3D with non-zero energy is in the scene. In Forward+, one visible area light adds cost to every rendered object; in Mobile and Compatibility only to the objects it reaches. Godot docs: \"This type of light is the most expensive to render in real-time. It should be used sparingly, especially when shadows are enabled.\"",
+    "suggestion": "Use area lights sparingly (the page suggests cinematics or high-end targets), turn off their shadows or set Size to 0.0 to drop the PCSS penumbra, and prefer omni or spot lights elsewhere.",
+    "tradeoff": "Omni and spot lights do not reproduce the soft, shaped highlights of an area light.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://docs.godotengine.org/en/4.7/tutorials/3d/lights_and_shadows.html",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "lights.light_volumetric_fog",
+    "category": "lights",
+    "title": "A light contributes to active volumetric fog",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_light_volumetric_fog",
+        "value": 1
+      }
+    },
+    "offender_key": "check_light_volumetric_fog",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "A visible non-editor-only Light3D has positive light and volumetric-fog energy and resolves to an Environment with volumetric fog enabled. Godot documents that zero fog energy skips fog computation for that light. Live current-camera environment overrides are honored; unresolved detached environments are excluded.",
+    "suggestion": "Compare zero volumetric-fog energy on lights whose contribution is unnecessary, especially many short-lived effect lights.",
+    "tradeoff": "Those lights no longer illuminate fog, which may remove important shafts or atmosphere.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Light3D.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [
+      "Render Fog",
+      "Integrate Fog",
+      "Filter Fog"
+    ],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  }
+]

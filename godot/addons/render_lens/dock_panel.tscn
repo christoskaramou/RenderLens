@@ -1,0 +1,97 @@
+[gd_scene load_steps=2 format=3 uid="uid://bx8q2y3n4h5p6"]
+
+[ext_resource type="Script" path="res://addons/render_lens/dock_panel.gd" id="1_dock_panel"]
+
+[node name="DockPanel" type="VBoxContainer"]
+offset_right = 300.0
+offset_bottom = 400.0
+script = ExtResource("1_dock_panel")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 2
+text = "Render Lens MCP"
+horizontal_alignment = 1
+
+[node name="SupportLink" type="LinkButton" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+tooltip_text = "Render Lens is free. Tip on Ko-fi (no account needed) and leave a message with what you would like improved."
+text = "♥ Support Render Lens"
+uri = "https://ko-fi.com/christoskaramoustos"
+
+[node name="SupportNote" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0.65)
+layout_mode = 2
+text = "Tip and suggest what to improve."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="HSeparator" type="HSeparator" parent="."]
+layout_mode = 2
+
+[node name="StatusContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="StatusContainer"]
+layout_mode = 2
+text = "Status:"
+
+[node name="StatusValue" type="Label" parent="StatusContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Stopped"
+
+[node name="PortLabel" type="Label" parent="StatusContainer"]
+layout_mode = 2
+text = "Port:"
+
+[node name="PortValue" type="Label" parent="StatusContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "N/A"
+
+[node name="ClientsLabel" type="Label" parent="StatusContainer"]
+layout_mode = 2
+text = "Connected Clients:"
+
+[node name="ClientsValue" type="Label" parent="StatusContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="HSeparator2" type="HSeparator" parent="."]
+layout_mode = 2
+
+[node name="ConfigLabel" type="Label" parent="."]
+layout_mode = 2
+text = "MCP Configuration:"
+
+[node name="ConfigText" type="TextEdit" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_vertical = 3
+text = "{
+  \"mcpServers\": {
+    \"render-lens\": {
+      \"url\": \"http://127.0.0.1:43788\"
+    }
+  }
+}"
+editable = false
+wrap_mode = 1
+
+[node name="HSeparator3" type="HSeparator" parent="."]
+layout_mode = 2
+
+[node name="LogLabel" type="Label" parent="."]
+layout_mode = 2
+text = "Tool Log:"
+
+[node name="LogText" type="TextEdit" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 3
+editable = false
+wrap_mode = 1

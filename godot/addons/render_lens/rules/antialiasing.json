@@ -1,0 +1,1066 @@
+[
+  {
+    "id": "antialiasing.msaa_4x",
+    "category": "antialiasing",
+    "title": "MSAA 3D is 4\u00d7",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/anti_aliasing/quality/msaa_3d",
+        "value": 2
+      }
+    },
+    "evidence": "msaa_3d is 2. The hint is Disabled, 2\u00d7, 4\u00d7, 8\u00d7, so 2 is 4\u00d7. The antialiasing page says higher levels are significantly more demanding.",
+    "suggestion": "Try 2\u00d7 (value 1) or TAA (Forward+ only) if 4\u00d7 shows up in the frame time.",
+    "setting": "rendering/anti_aliasing/quality/msaa_3d",
+    "tradeoff": "2\u00d7 leaves more edge aliasing than 4\u00d7. TAA adds blur and ghosting.",
+    "expected_effect": "Fewer coverage samples. Compare frame_timing.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/3d_antialiasing.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/anti_aliasing/quality/msaa_3d",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "id": "antialiasing.msaa_8x",
+    "category": "antialiasing",
+    "title": "MSAA 3D is 8\u00d7",
+    "severity": "high",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/anti_aliasing/quality/msaa_3d",
+        "value": 3
+      }
+    },
+    "evidence": "msaa_3d is 3 (8\u00d7). The antialiasing page says 8\u00d7 MSAA is usually too demanding and recommends staying at 2\u00d7 or 4\u00d7 for modern visuals.",
+    "suggestion": "Set rendering/anti_aliasing/quality/msaa_3d to 2 (4\u00d7) or 1 (2\u00d7).",
+    "setting": "rendering/anti_aliasing/quality/msaa_3d",
+    "tradeoff": "Edges alias more than at 8\u00d7.",
+    "expected_effect": "A large drop in MSAA sample cost, as characterized on the antialiasing page, still to be measured in this project.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/3d_antialiasing.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/anti_aliasing/quality/msaa_3d",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "antialiasing.msaa_on_mobile_renderer",
+    "category": "antialiasing",
+    "title": "MSAA 3D is on with the Mobile renderer",
+    "severity": "high",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/renderer/rendering_method",
+            "value": "mobile"
+          }
+        },
+        {
+          "setting_gt": {
+            "path": "rendering/anti_aliasing/quality/msaa_3d",
+            "value": 0
+          }
+        }
+      ]
+    },
+    "evidence": "Mobile renderer with msaa_3d above 0. The antialiasing page says that on mobile, FXAA is usually the viable option and higher MSAA levels are unlikely to run smoothly.",
+    "suggestion": "Set msaa_3d to 0 and set screen_space_aa to 1 (FXAA), which the page says is available on Mobile.",
+    "setting": "rendering/anti_aliasing/quality/msaa_3d",
+    "tradeoff": "FXAA is blurrier than MSAA and does little for specular aliasing.",
+    "expected_effect": "Replaces MSAA with the low-cost post pass the page recommends for low-end GPUs.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/3d_antialiasing.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "antialiasing.msaa_and_taa",
+    "category": "antialiasing",
+    "title": "MSAA and TAA are both enabled",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The antialiasing page says stacking techniques is usually unnecessary. It does not forbid the combination.",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_gt": {
+            "path": "rendering/anti_aliasing/quality/msaa_3d",
+            "value": 0
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/anti_aliasing/quality/use_taa",
+            "value": true
+          }
+        }
+      ]
+    },
+    "evidence": "msaa_3d is above 0 and use_taa is true. TAA is Forward+ only.",
+    "suggestion": "Keep one of them. The page says TAA is the usual choice against specular aliasing, and MSAA can be added only when there is spare GPU time.",
+    "setting": "rendering/anti_aliasing/quality/use_taa",
+    "tradeoff": "Dropping MSAA leaves more geometric aliasing. Dropping TAA leaves more specular shimmer and adds no blur.",
+    "expected_effect": "One less full antialiasing technique. Measure both ways.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/3d_antialiasing.html",
+    "when_pass": [
+      "TAA"
+    ],
+    "dedupe_key": "taa",
+    "kind": "performance",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "antialiasing.taa_enabled",
+    "category": "antialiasing",
+    "title": "TAA is enabled",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/anti_aliasing/quality/use_taa",
+            "value": true
+          }
+        },
+        {
+          "setting_neq": {
+            "path": "rendering/scaling_3d/mode",
+            "value": 2
+          }
+        }
+      ]
+    },
+    "evidence": "use_taa is true and FSR 2.2 is not the scaling mode. The page says TAA has a medium cost, blurs in motion, and ghosts.",
+    "suggestion": "Turn use_taa off and compare. If FSR 2.2 is enabled later, this setting is ignored because FSR 2.2 supplies temporal antialiasing.",
+    "setting": "rendering/anti_aliasing/quality/use_taa",
+    "tradeoff": "Specular and edge shimmer return.",
+    "expected_effect": "Removes the TAA pass. Read the TAA timestamp when it is present.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/3d_antialiasing.html",
+    "when_pass": [
+      "TAA"
+    ],
+    "dedupe_key": "taa",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/anti_aliasing/quality/use_taa",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "antialiasing.fxaa_enabled",
+    "category": "antialiasing",
+    "title": "FXAA is the screen-space antialiasing mode",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/anti_aliasing/quality/screen_space_aa",
+        "value": 1
+      }
+    },
+    "evidence": "screen_space_aa is 1. On 4.4 the hint is Disabled, FXAA. On 4.7 it is Disabled, FXAA, SMAA, so 1 is still FXAA. The page calls FXAA the fastest antialiasing method and a moderate blur.",
+    "suggestion": "Leave FXAA if the GPU is tight. On Forward+ with headroom, TAA covers specular aliasing better.",
+    "setting": "rendering/anti_aliasing/quality/screen_space_aa",
+    "tradeoff": "TAA costs more and ghosts. Disabling FXAA exposes edges.",
+    "expected_effect": "FXAA is a cheap fullscreen pass. Confirm with frame_timing rather than a fixed millisecond cost.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/3d_antialiasing.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "antialiasing.no_aa",
+    "category": "antialiasing",
+    "title": "No 3D antialiasing is enabled",
+    "severity": "low",
+    "kind": "quality_up",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "all": [
+        {
+          "scene_gte": {
+            "name": "geometry_3d_count",
+            "value": 1
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/anti_aliasing/quality/msaa_3d",
+            "value": 0
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/anti_aliasing/quality/use_taa",
+            "value": false
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "rendering/anti_aliasing/quality/screen_space_aa",
+            "value": 0
+          }
+        },
+        {
+          "setting_lte": {
+            "path": "rendering/scaling_3d/scale",
+            "value": 1.0
+          }
+        },
+        {
+          "setting_neq": {
+            "path": "rendering/scaling_3d/mode",
+            "value": 2
+          }
+        }
+      ]
+    },
+    "evidence": "msaa_3d, use_taa, and screen_space_aa are off, scale is not above 1, and mode is not FSR 2.2. The antialiasing page treats that combination as no edge antialiasing.",
+    "suggestion": "With GPU headroom: Forward+ can enable use_taa. Mobile can set screen_space_aa to 1 (FXAA). Compatibility can use msaa_3d 1 (2\u00d7). This is optional.",
+    "setting": "rendering/anti_aliasing/quality/use_taa",
+    "tradeoff": "Every method on the page costs GPU time or adds blur.",
+    "expected_effect": "Smoother edges. Measure before shipping it.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/3d_antialiasing.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "antialiasing.roughness_limiter_off",
+    "category": "antialiasing",
+    "title": "Screen-space roughness limiter is off",
+    "severity": "low",
+    "kind": "quality_up",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/anti_aliasing/screen_space_roughness_limiter/enabled",
+        "value": false
+      }
+    },
+    "evidence": "The limiter is disabled. The antialiasing page says it is on by default, has a small performance impact, and reduces specular aliasing.",
+    "suggestion": "Set rendering/anti_aliasing/screen_space_roughness_limiter/enabled to true. Defaults are amount 0.25 and limit 0.18.",
+    "setting": "rendering/anti_aliasing/screen_space_roughness_limiter/enabled",
+    "tradeoff": "A small extra cost, which the page says to skip only when specular aliasing is not a problem.",
+    "expected_effect": "Less specular shimmer on detailed geometry. Not an edge antialiasing method.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/3d_antialiasing.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "antialiasing.debanding_on",
+    "category": "antialiasing",
+    "title": "Debanding is enabled",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/anti_aliasing/quality/use_debanding",
+        "value": true
+      }
+    },
+    "evidence": "rendering/anti_aliasing/quality/use_debanding is true. The default is false.",
+    "suggestion": "Turn use_debanding off and check gradients. It is an extra fullscreen operation on top of the default off state.",
+    "setting": "rendering/anti_aliasing/quality/use_debanding",
+    "tradeoff": "Color banding can show in gradients and fog.",
+    "expected_effect": "One less fullscreen step. Measure; the class reference does not publish a millisecond cost.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "antialiasing.msaa_2d_high",
+    "category": "antialiasing",
+    "title": "2D MSAA is 4\u00d7 or 8\u00d7",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gte": {
+        "path": "rendering/anti_aliasing/quality/msaa_2d",
+        "value": 2
+      }
+    },
+    "evidence": "msaa_2d is 2 or 3 (4\u00d7 or 8\u00d7). The hint matches 3D: Disabled, 2\u00d7, 4\u00d7, 8\u00d7. The default is 0.",
+    "suggestion": "Set rendering/anti_aliasing/quality/msaa_2d to 0 or 1 unless 2D edges need the higher sample count.",
+    "setting": "rendering/anti_aliasing/quality/msaa_2d",
+    "tradeoff": "2D edges alias more.",
+    "expected_effect": "Fewer 2D coverage samples. This setting is independent of msaa_3d.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/3d_antialiasing.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pass.taa",
+    "category": "antialiasing",
+    "title": "TAA is in the capture",
+    "severity": "medium",
+    "heuristic": true,
+    "heuristic_rationale": "The trigger is a RenderingDevice timestamp label substring from Godot's clustered renderer. Labels are not a stable public API. The rule fires only when that pass has exclusive time above 0.",
+    "requires": [
+      "passes"
+    ],
+    "condition": {
+      "pass_present": {
+        "names": [
+          "TAA"
+        ]
+      }
+    },
+    "evidence": "The TAA timestamp is present. TAA is Forward+ only and has a medium cost on the antialiasing page.",
+    "suggestion": "Turn use_taa off if another antialiasing method is enough.",
+    "tradeoff": "Turning the feature off changes the look described on the cited page.",
+    "expected_effect": "That pass should shrink or disappear on the next gpu_passes capture. No percentage is predicted.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/3d_antialiasing.html",
+    "when_pass": [
+      "TAA"
+    ],
+    "dedupe_key": "taa",
+    "pass_only": true,
+    "kind": "performance",
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "experiment": [
+      {
+        "setting": "rendering/anti_aliasing/quality/use_taa",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "antialiasing.smaa_enabled",
+    "category": "antialiasing",
+    "title": "SMAA is the screen-space antialiasing mode",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/anti_aliasing/quality/screen_space_aa",
+        "value": 2
+      }
+    },
+    "evidence": "Sets the screen-space antialiasing mode",
+    "suggestion": "Viewport.SCREEN_SPACE_AA_SMAA is 2 in Godot 4.7. Set rendering/anti_aliasing/quality/screen_space_aa to 0 or to FXAA if you need the post pass gone or cheaper.",
+    "setting": "rendering/anti_aliasing/quality/screen_space_aa",
+    "tradeoff": "Edges are aliased if you also leave MSAA off.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.7/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "min_version": "4.5"
+    },
+    "experiment": [
+      {
+        "setting": "rendering/anti_aliasing/quality/screen_space_aa",
+        "value": 0
+      }
+    ]
+  },
+  {
+    "id": "antialiasing.smaa_threshold_low",
+    "category": "antialiasing",
+    "title": "SMAA edge detection is more sensitive than the default",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_lt": {
+        "path": "rendering/anti_aliasing/quality/smaa_edge_detection_threshold",
+        "value": 0.05
+      }
+    },
+    "evidence": "Lower values will catch more edges, at a potentially higher performance cost",
+    "suggestion": "Raise rendering/anti_aliasing/quality/smaa_edge_detection_threshold toward 0.05. The description says lower values cost more.",
+    "setting": "rendering/anti_aliasing/quality/smaa_edge_detection_threshold",
+    "tradeoff": "Faint edges are no longer smoothed.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.7/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.5",
+        "4.6",
+        "4.7"
+      ],
+      "min_version": "4.5"
+    }
+  },
+  {
+    "id": "antialiasing.viewport_msaa_fxaa",
+    "category": "antialiasing",
+    "title": "A SubViewport combines MSAA with FXAA",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_viewport_msaa_fxaa",
+        "value": 1
+      }
+    },
+    "offender_key": "check_viewport_msaa_fxaa",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An update-enabled 3D SubViewport enables both MSAA and FXAA. The native RD post-process selects FXAA independently of the MSAA setting; their costs can combine. The methods target different aliasing, so combining them is not automatically wrong.",
+    "suggestion": "Compare each method on its own in this viewport, measuring GPU time and inspecting both geometry edges and specular shimmer.",
+    "tradeoff": "Removing MSAA can worsen geometric edges; removing FXAA can expose shader aliasing. FXAA can also soften fine detail.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/servers/rendering/renderer_rd/renderer_scene_render_rd.cpp",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "antialiasing.viewport_msaa_2d",
+    "category": "antialiasing",
+    "title": "A SubViewport uses 4x or 8x 2D MSAA",
+    "severity": "low",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_viewport_msaa_2d",
+        "value": 1
+      }
+    },
+    "offender_key": "check_viewport_msaa_2d",
+    "heuristic": true,
+    "heuristic_rationale": "A configured feature is a measurement candidate, not proof that it is currently visible, costly or unnecessary. Numeric review thresholds are Render Lens heuristics, not Godot limits.",
+    "evidence": "An update-enabled SubViewport has msaa_2d set to 4x or 8x. Its canvas sample count is independent of the root viewport's project setting. Disabled viewport updates are excluded.",
+    "suggestion": "Compare 2x MSAA or disabled MSAA for this viewport's 2D content.",
+    "tradeoff": "Canvas geometry edges may alias more; MSAA does not fix texture or shader aliasing.",
+    "expected_effect": "Potentially reduce work for this feature; no frame-time saving is predicted from configuration alone.",
+    "verify_step": "Capture a visual reference; change one feature and repeat frame timing plus relevant CPU or GPU profiling in the same scene on target hardware.",
+    "source": "https://github.com/godotengine/godot/blob/4.4-stable/doc/classes/Viewport.xml",
+    "evidence_kind": "godot_feature",
+    "dedupe_key": "",
+    "kind": "performance",
+    "when_pass": [],
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "antialiasing.taa_with_temporal_upscaler",
+    "category": "antialiasing",
+    "title": "TAA is enabled together with a temporal upscaler",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/anti_aliasing/quality/use_taa",
+            "value": true
+          }
+        },
+        {
+          "any": [
+            {
+              "setting_eq": {
+                "path": "rendering/scaling_3d/mode",
+                "value": 2
+              }
+            },
+            {
+              "setting_eq": {
+                "path": "rendering/scaling_3d/mode",
+                "value": 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "setting": "rendering/anti_aliasing/quality/use_taa",
+    "offender_key": "",
+    "evidence": "Godot prints \"FSR 2 or MetalFX Temporal is not compatible with TAA. Disabling TAA internally.\" when use_taa is on and the scaling mode is FSR 2.2 (2) or MetalFX Temporal (4). The upscaler provides its own temporal antialiasing and Godot turns TAA off.",
+    "suggestion": "Turn rendering/anti_aliasing/quality/use_taa off; the temporal upscaler already antialiases.",
+    "tradeoff": "None; TAA is already disabled while the temporal upscaler runs.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/renderer_viewport.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "antialiasing.taa_renderer",
+    "category": "antialiasing",
+    "title": "TAA is enabled outside Forward+",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/anti_aliasing/quality/use_taa",
+        "value": true
+      }
+    },
+    "setting": "rendering/anti_aliasing/quality/use_taa",
+    "offender_key": "",
+    "evidence": "Godot prints \"TAA is only available when using the Forward+ renderer.\" when use_taa is on under the Mobile or Compatibility renderer, which have no TAA pass.",
+    "suggestion": "Turn use_taa off for this renderer and choose another antialiasing method (MSAA or FXAA where available).",
+    "tradeoff": "Without TAA, specular and geometric aliasing remain unless another method is enabled.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/renderer_viewport.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "antialiasing.screen_space_aa_renderer",
+    "category": "antialiasing",
+    "title": "Screen-space antialiasing is set under Compatibility",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_neq": {
+        "path": "rendering/anti_aliasing/quality/screen_space_aa",
+        "value": 0
+      }
+    },
+    "setting": "rendering/anti_aliasing/quality/screen_space_aa",
+    "offender_key": "",
+    "evidence": "Godot prints \"Screen-space AA is only available when using the Forward+ or Mobile renderer.\" when screen_space_aa is FXAA or SMAA under the Compatibility renderer, which does not run it.",
+    "suggestion": "Set screen_space_aa to Disabled and use MSAA under Compatibility.",
+    "tradeoff": "MSAA does not smooth shader or transparency aliasing.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/renderer_viewport.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "antialiasing.msaa_2d_renderer",
+    "category": "antialiasing",
+    "title": "2D MSAA is set under Compatibility",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/anti_aliasing/quality/msaa_2d",
+        "value": 0
+      }
+    },
+    "setting": "rendering/anti_aliasing/quality/msaa_2d",
+    "offender_key": "",
+    "evidence": "Godot prints \"2D MSAA is not yet supported for GLES3.\" when msaa_2d is above Disabled under the Compatibility renderer, so 2D content is not multisampled.",
+    "suggestion": "Set msaa_2d to Disabled, or antialias 2D lines and polygons with their antialiased properties.",
+    "tradeoff": "Polygon and line edges stay aliased unless drawn antialiased.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/gles3/storage/texture_storage.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  },
+  {
+    "id": "antialiasing.metalfx_temporal_msaa",
+    "category": "antialiasing",
+    "title": "MetalFX Temporal upscaling is combined with 3D MSAA",
+    "kind": "correctness",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/scaling_3d/mode",
+            "value": 4
+          }
+        },
+        {
+          "setting_gt": {
+            "path": "rendering/anti_aliasing/quality/msaa_3d",
+            "value": 0
+          }
+        }
+      ]
+    },
+    "setting": "rendering/scaling_3d/mode",
+    "offender_key": "",
+    "evidence": "Godot prints \"MetalFX temporal upscaling does not support 3D MSAA. Disabling 3D MSAA internally.\" on Apple devices that run MetalFX Temporal (scaling mode 4) when msaa_3d is enabled; MSAA is turned off while the upscaler runs.",
+    "suggestion": "Set msaa_3d to Disabled when using MetalFX Temporal, or choose another scaling mode.",
+    "tradeoff": "None on devices that run MetalFX Temporal; other devices fall back to another upscaler and keep MSAA.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/renderer_viewport.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

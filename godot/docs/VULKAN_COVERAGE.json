@@ -1,0 +1,1825 @@
+{
+  "upstream_commit": "99fd2cb5761410c0e8cd82395861abd75c9d1f06",
+  "verified": "2026-10-11",
+  "scope": "All 148 literal BestPractices message IDs in 19 handwritten implementation files and four headers have a Godot applicability disposition. Generated best_practices.cpp adds native return-code hooks using the common header messages. This completes the pinned best-practices message inventory, not all core, synchronization, GPU-assisted, shader or vendor validation research.",
+  "checks": [
+    {
+      "check": "BestPractices-AMD-ClearAttachment-ClearImage-color",
+      "source": {
+        "path": "layers/best_practices/bp_copy_blit_resolve.cpp",
+        "line": 298
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual standalone clear/resolve/copy command selection and, for copies, differing source/destination tilings. MSAA, texture updates and viewport settings do not determine the native command path."
+    },
+    {
+      "check": "BestPractices-AMD-ClearAttachment-ClearImage-depth-stencil",
+      "source": {
+        "path": "layers/best_practices/bp_copy_blit_resolve.cpp",
+        "line": 318
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual standalone clear/resolve/copy command selection and, for copies, differing source/destination tilings. MSAA, texture updates and viewport settings do not determine the native command path."
+    },
+    {
+      "check": "BestPractices-AMD-ClearAttachment-FastClearValues-color",
+      "source": {
+        "path": "layers/best_practices/bp_copy_blit_resolve.cpp",
+        "line": 216
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual vkCmdClearAttachments clear values and attachment aspects. The depth/stencil predicate combines non-endpoint depth with nonzero stencil. Godot background colors are not evidence that this command or attachment path was used."
+    },
+    {
+      "check": "BestPractices-AMD-ClearAttachment-FastClearValues-depth-stencil",
+      "source": {
+        "path": "layers/best_practices/bp_copy_blit_resolve.cpp",
+        "line": 231
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual vkCmdClearAttachments clear values and attachment aspects. The depth/stencil predicate combines non-endpoint depth with nonzero stencil. Godot background colors are not evidence that this command or attachment path was used."
+    },
+    {
+      "check": "BestPractices-AMD-CmdBuffer-highBarrierCount",
+      "source": {
+        "path": "layers/best_practices/bp_synchronization.cpp",
+        "line": 345
+      },
+      "status": "engine state unavailable",
+      "reason": "Counts image/buffer barriers submitted during the frame. Godot draw-call and GPU-pass counts do not determine that native command count."
+    },
+    {
+      "check": "BestPractices-AMD-CreatePipelines-AvoidPrimitiveRestart",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 203
+      },
+      "status": "not observable from ordinary scene meshes",
+      "reason": "Both checked Vulkan drivers enable restart only for RenderingDevice triangle strips WITH_RESTART_INDEX. Mesh triangle-strip topology alone cannot identify that mode."
+    },
+    {
+      "check": "BestPractices-AMD-CreatePipelines-MinimizeNumDynamicStates",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 210
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native dynamic-state list length or live pipeline-object count. Material/node counts and Godot compilation counters do not equal those quantities."
+    },
+    {
+      "check": "BestPractices-AMD-CreatePipelines-TooManyPipelines",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 264
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native dynamic-state list length or live pipeline-object count. Material/node counts and Godot compilation counters do not equal those quantities."
+    },
+    {
+      "check": "BestPractices-AMD-CreatePipelinesLayout-KeepLayoutSmall",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 432
+      },
+      "status": "implemented",
+      "reason": "Fixed push-constant member offsets/payloads plus the highest known descriptor-set index + 1 form a lower bound exceeding 13 DWORDs. Dynamic-buffer costs are omitted; Vulkan/AMD scope and heuristic labeling retained. Since 1.16, applicable resource/operand checks inspect each public imported shader stage independently, including Godot 4.7 ray stages; workgroup checks remain compute-only. Stage quantities are not summed across unverified pipelines.",
+      "rules": [
+        "gpu_best_practices.compute_amd_layout"
+      ]
+    },
+    {
+      "check": "BestPractices-AMD-LocalWorkgroup-Multiple64",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 392
+      },
+      "status": "implemented",
+      "rules": [
+        "gpu_best_practices.compute_amd_alignment"
+      ]
+    },
+    {
+      "check": "BestPractices-AMD-UpdateDescriptors-AvoidCopyingDescriptors",
+      "source": {
+        "path": "layers/best_practices/bp_descriptor.cpp",
+        "line": 142
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native descriptor copy/update-template calls. Godot resource/scene data does not reveal which update API path was submitted."
+    },
+    {
+      "check": "BestPractices-AMD-UpdateDescriptors-PreferNonTemplate",
+      "source": {
+        "path": "layers/best_practices/bp_descriptor.cpp",
+        "line": 157
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native descriptor copy/update-template calls. Godot resource/scene data does not reveal which update API path was submitted."
+    },
+    {
+      "check": "BestPractices-AMD-VkCommandBuffer-AvoidSecondaryCmdBuffers",
+      "source": {
+        "path": "layers/best_practices/bp_cmd_buffer.cpp",
+        "line": 193
+      },
+      "status": "disabled in checked stock Godot builds",
+      "reason": "Godot 4.4 and 4.7.2 rendering_device.cpp both define SECONDARY_COMMAND_BUFFERS_PER_FRAME as zero. Custom engine command-buffer use is not observable through ordinary scene data."
+    },
+    {
+      "check": "BestPractices-AMD-vkImage-AvoidConcurrentRenderTargets",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 95
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the actual VkImage creation flags, usage, queue-family sharing or tiling combination. Generic texture/material/viewport properties do not establish these engine-selected native fields."
+    },
+    {
+      "check": "BestPractices-AMD-vkImage-AvoidGeneral",
+      "source": {
+        "path": "layers/best_practices/bp_synchronization.cpp",
+        "line": 380
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the submitted old/new image layouts, access masks and/or native image usage. Stored shader/material properties cannot establish those runtime synchronization transitions."
+    },
+    {
+      "check": "BestPractices-AMD-vkImage-AvoidImageToImageCopy",
+      "source": {
+        "path": "layers/best_practices/bp_copy_blit_resolve.cpp",
+        "line": 348
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual standalone clear/resolve/copy command selection and, for copies, differing source/destination tilings. MSAA, texture updates and viewport settings do not determine the native command path."
+    },
+    {
+      "check": "BestPractices-AMD-vkImage-DontUseMutableRenderTargets",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 106
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the actual VkImage creation flags, usage, queue-family sharing or tiling combination. Generic texture/material/viewport properties do not establish these engine-selected native fields."
+    },
+    {
+      "check": "BestPractices-AMD-vkImage-DontUseStorageRenderTargets",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 114
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the actual VkImage creation flags, usage, queue-family sharing or tiling combination. Generic texture/material/viewport properties do not establish these engine-selected native fields."
+    },
+    {
+      "check": "BestPractices-Arm-vkAllocateDescriptorSets-suboptimal-reuse",
+      "source": {
+        "path": "layers/best_practices/bp_descriptor.cpp",
+        "line": 33
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires live native descriptor-pool free/available counts and allocation history. Imported shader declarations do not expose pool ownership or capacity."
+    },
+    {
+      "check": "BestPractices-Arm-vkBeginCommandBuffer-one-time-submit",
+      "source": {
+        "path": "layers/best_practices/bp_cmd_buffer.cpp",
+        "line": 58
+      },
+      "status": "already followed by checked stock Godot",
+      "reason": "Both checked Godot Vulkan drivers set VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT in primary and secondary command-buffer begin info (4.4 lines 2825/2844; 4.7.2 lines 3466/3487). No project setting is needed."
+    },
+    {
+      "check": "BestPractices-Arm-vkCmdDrawIndexed-post-transform-cache-thrashing",
+      "source": {
+        "path": "layers/best_practices/bp_drawdispatch.cpp",
+        "line": 313
+      },
+      "status": "engine state unavailable",
+      "reason": "Simulates a cache using actual mapped indices for the submitted indexed draw range. Scene mesh totals cannot determine the access order or cache hit rate; audit readbacks are not justified."
+    },
+    {
+      "check": "BestPractices-Arm-vkCmdDrawIndexed-sparse-index-buffer",
+      "source": {
+        "path": "layers/best_practices/bp_drawdispatch.cpp",
+        "line": 254
+      },
+      "status": "engine state unavailable",
+      "other_occurrences": [
+        {
+          "path": "layers/best_practices/bp_drawdispatch.cpp",
+          "line": 305
+        }
+      ],
+      "reason": "Needs submitted index range, mapped index contents and primitive-restart handling; guidance specifically targets pre-G71 Mali without IDVS. Ordinary mesh counts do not supply these inputs, and reading GPU buffers would add audit cost."
+    },
+    {
+      "check": "BestPractices-Arm-vkCmdResolveImage-resolving-image",
+      "source": {
+        "path": "layers/best_practices/bp_copy_blit_resolve.cpp",
+        "line": 258
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual standalone clear/resolve/copy command selection and, for copies, differing source/destination tilings. MSAA, texture updates and viewport settings do not determine the native command path."
+    },
+    {
+      "check": "BestPractices-Arm-vkCreateComputePipelines-compute-spatial-locality",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 367
+      },
+      "status": "implemented",
+      "reason": "Exactly one fixed local-size axis exceeds one and a directly inspected entry-point image operation uses a multidimensional image. Declarations alone, helper-only accesses and unknown values do not qualify. Vulkan/Arm scope and addressing uncertainty retained.",
+      "rules": [
+        "gpu_best_practices.compute_arm_spatial"
+      ]
+    },
+    {
+      "check": "BestPractices-Arm-vkCreateComputePipelines-compute-thread-group-alignment",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 348
+      },
+      "status": "implemented",
+      "rules": [
+        "gpu_best_practices.compute_arm_alignment"
+      ]
+    },
+    {
+      "check": "BestPractices-Arm-vkCreateComputePipelines-compute-work-group-size",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 338
+      },
+      "status": "implemented",
+      "rules": [
+        "gpu_best_practices.compute_arm_large"
+      ]
+    },
+    {
+      "check": "BestPractices-Arm-vkCreateImage-too-large-sample-count",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 60
+      },
+      "status": "implemented",
+      "rules": [
+        "gpu_best_practices.arm_msaa8"
+      ]
+    },
+    {
+      "check": "BestPractices-Arm-vkCreatePipelines-depthbias-zero",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 165
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires pipeline depthBiasEnable plus both native constant/slope factors. Zero light shadow bias alone does not identify that rasterization state or its dynamic overrides."
+    },
+    {
+      "check": "BestPractices-Arm-vkCreatePipelines-multisampled-blending",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 71
+      },
+      "status": "implemented",
+      "rules": [
+        "gpu_best_practices.arm_msaa_blending"
+      ]
+    },
+    {
+      "check": "BestPractices-Arm-vkCreateSampler-anisotropy",
+      "source": {
+        "path": "layers/best_practices/bp_descriptor.cpp",
+        "line": 125
+      },
+      "status": "implemented",
+      "rules": [
+        "gpu_best_practices.arm_anisotropic_materials"
+      ]
+    },
+    {
+      "check": "BestPractices-Arm-vkCreateSampler-border-clamp-color",
+      "source": {
+        "path": "layers/best_practices/bp_descriptor.cpp",
+        "line": 108
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual sampler creation state (per-axis addressing, LOD bounds, border color or unnormalized coordinates). RDSamplerState is a transient RefCounted creation object; checked RenderingDevice APIs expose no sampler-state getter or sampler enumeration. Built-in material filters do not establish these fields."
+    },
+    {
+      "check": "BestPractices-Arm-vkCreateSampler-different-wrapping-modes",
+      "source": {
+        "path": "layers/best_practices/bp_descriptor.cpp",
+        "line": 78
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual sampler creation state (per-axis addressing, LOD bounds, border color or unnormalized coordinates). RDSamplerState is a transient RefCounted creation object; checked RenderingDevice APIs expose no sampler-state getter or sampler enumeration. Built-in material filters do not establish these fields."
+    },
+    {
+      "check": "BestPractices-Arm-vkCreateSampler-lod-bias",
+      "source": {
+        "path": "layers/best_practices/bp_descriptor.cpp",
+        "line": 97
+      },
+      "status": "implemented",
+      "rules": [
+        "gpu_best_practices.arm_mip_bias"
+      ]
+    },
+    {
+      "check": "BestPractices-Arm-vkCreateSampler-lod-clamping",
+      "source": {
+        "path": "layers/best_practices/bp_descriptor.cpp",
+        "line": 88
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual sampler creation state (per-axis addressing, LOD bounds, border color or unnormalized coordinates). RDSamplerState is a transient RefCounted creation object; checked RenderingDevice APIs expose no sampler-state getter or sampler enumeration. Built-in material filters do not establish these fields."
+    },
+    {
+      "check": "BestPractices-Arm-vkCreateSampler-unnormalized-coordinates",
+      "source": {
+        "path": "layers/best_practices/bp_descriptor.cpp",
+        "line": 117
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual sampler creation state (per-axis addressing, LOD bounds, border color or unnormalized coordinates). RDSamplerState is a transient RefCounted creation object; checked RenderingDevice APIs expose no sampler-state getter or sampler enumeration. Built-in material filters do not establish these fields."
+    },
+    {
+      "check": "BestPractices-Arm-vkCreateSwapchainKHR-swapchain-presentmode-not-fifo",
+      "source": {
+        "path": "layers/best_practices/bp_wsi.cpp",
+        "line": 132
+      },
+      "status": "related Godot guidance already exists",
+      "reason": "The exact native present mode can differ from the requested Godot VSync setting. Existing pacing checks already offer caps/VSync and explain mailbox tradeoffs; duplicating them as a proven Arm FIFO violation would overstate the evidence.",
+      "rules": [
+        "pacing.vsync_off_uncapped",
+        "pacing.mailbox_vsync"
+      ]
+    },
+    {
+      "check": "BestPractices-ClearValueCountHigherThanAttachmentCount",
+      "source": {
+        "path": "layers/best_practices/bp_render_pass.cpp",
+        "line": 199
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native attachment formats/layouts, load/store/resolve operations, supplied clear arrays or attachment touches by submitted pipelines. These render-pass details are not exposed by the scene audit."
+    },
+    {
+      "check": "BestPractices-ClearValueWithoutLoadOpClear",
+      "source": {
+        "path": "layers/best_practices/bp_render_pass.cpp",
+        "line": 188
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native attachment formats/layouts, load/store/resolve operations, supplied clear arrays or attachment touches by submitted pipelines. These render-pass details are not exposed by the scene audit."
+    },
+    {
+      "check": "BestPractices-ConcurrentUsageOfExclusiveImage",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 295
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires per-image-subresource native usage history, load/store operations or queue ownership across submissions. Viewport clear/update settings cannot reconstruct those sequences."
+    },
+    {
+      "check": "BestPractices-DrawState-ClearCmdBeforeDraw",
+      "source": {
+        "path": "layers/best_practices/bp_copy_blit_resolve.cpp",
+        "line": 69
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual clear rectangles/aspects, prior attachment touches, draws and load operations within the current native render pass. A configured clear mode does not supply that sequence."
+    },
+    {
+      "check": "BestPractices-Error-Result",
+      "source": {
+        "path": "layers/best_practices/best_practices_validation.h",
+        "line": 63
+      },
+      "status": "engine call results unavailable",
+      "reason": "Generated hooks pass native VkResult values to LogResult. Imported shader errors are already reported separately; they do not expose arbitrary Vulkan call results."
+    },
+    {
+      "check": "BestPractices-Event-SignalSignaledEvent",
+      "source": {
+        "path": "layers/best_practices/bp_cmd_buffer.cpp",
+        "line": 141
+      },
+      "status": "engine state unavailable",
+      "other_occurrences": [
+        {
+          "path": "layers/best_practices/bp_instance_device.cpp",
+          "line": 247
+        },
+        {
+          "path": "layers/best_practices/bp_synchronization.cpp",
+          "line": 58
+        }
+      ],
+      "reason": "Requires native event signal state and command ordering, including primary/secondary replay and host signaling. No public Godot event-history observation establishes it."
+    },
+    {
+      "check": "BestPractices-Failure-Result",
+      "source": {
+        "path": "layers/best_practices/best_practices_validation.h",
+        "line": 61
+      },
+      "status": "engine call results unavailable",
+      "reason": "Generated hooks pass native VkResult values to LogResult. Imported shader errors are already reported separately; they do not expose arbitrary Vulkan call results."
+    },
+    {
+      "check": "BestPractices-GetPhysicalDeviceQueueFamilyProperties-CountMismatch",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 161
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native instance/device extension lists, feature enablement, API-version relationship or query call history. These are engine initialization policy/state, not ordinary scene configuration; supported hardware features do not prove enabled features."
+    },
+    {
+      "check": "BestPractices-GetPhysicalDeviceSurfaceFormatsKHR-CountMismatch",
+      "source": {
+        "path": "layers/best_practices/bp_wsi.cpp",
+        "line": 195
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native display/surface/swapchain query call history, returned counts or retrieved image handles. Window and VSync properties do not expose that history."
+    },
+    {
+      "check": "BestPractices-IMG-Texture-Format-PVRTC-Outdated",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 86
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires an actual VkImage format (PVRTC or D32 variants). Ordinary audited resource settings do not expose the selected native format. Existing texture-import and shadow-precision advice is not evidence of this Vulkan condition."
+    },
+    {
+      "check": "BestPractices-IMG-vkCreateImage-too-large-sample-count",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 69
+      },
+      "status": "implemented",
+      "rules": [
+        "gpu_best_practices.imagination_msaa8"
+      ]
+    },
+    {
+      "check": "BestPractices-ImageBarrierAccessLayout",
+      "source": {
+        "path": "layers/best_practices/bp_synchronization.cpp",
+        "line": 231
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the submitted old/new image layouts, access masks and/or native image usage. Stored shader/material properties cannot establish those runtime synchronization transitions."
+    },
+    {
+      "check": "BestPractices-ImageMemoryBarrier-TransitionUndefinedToReadOnly",
+      "source": {
+        "path": "layers/best_practices/bp_synchronization.cpp",
+        "line": 252
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the submitted old/new image layouts, access masks and/or native image usage. Stored shader/material properties cannot establish those runtime synchronization transitions."
+    },
+    {
+      "check": "BestPractices-Mesh-MaxPreferredWorkGroupInvocations",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 598
+      },
+      "status": "not exposed by checked Godot API",
+      "reason": "Checks task/mesh entry points against device preferred task/mesh invocation properties. Neither shader stage nor those preferred limits is exposed by the checked Godot RenderingDevice APIs."
+    },
+    {
+      "check": "BestPractices-MutableDescriptor-TypeListCount",
+      "source": {
+        "path": "layers/best_practices/bp_descriptor.cpp",
+        "line": 181
+      },
+      "status": "engine state unavailable",
+      "reason": "Compares native mutable descriptor type-list count with VkDescriptorPoolCreateInfo poolSizeCount. Neither pool creation array is exposed by project resources."
+    },
+    {
+      "check": "BestPractices-NVIDIA-AccelerationStructure-NotAsync",
+      "source": {
+        "path": "layers/best_practices/bp_ray_tracing.cpp",
+        "line": 42
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the queue flags of the command buffer building acceleration structures. Godot scene nodes and imported ray-query shader capabilities do not identify that submission queue."
+    },
+    {
+      "check": "BestPractices-NVIDIA-AllocateMemory-ReuseAllocations",
+      "source": {
+        "path": "layers/best_practices/bp_device_memory.cpp",
+        "line": 76
+      },
+      "status": "engine state unavailable",
+      "reason": "Compares native allocation/free events by size and elapsed time. Public memory totals cannot distinguish VMA suballocation reuse from native memory release/reallocation.",
+      "other_occurrences": [
+        {
+          "path": "layers/best_practices/bp_device_memory.cpp",
+          "line": 85
+        }
+      ]
+    },
+    {
+      "check": "BestPractices-NVIDIA-AllocateMemory-SetPriority",
+      "source": {
+        "path": "layers/best_practices/bp_device_memory.cpp",
+        "line": 48
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires enabled pageable/memory-priority extensions and static or dynamic priority on each native allocation. Scene resource priority is not Vulkan memory priority; these allocation attributes are not exposed."
+    },
+    {
+      "check": "BestPractices-NVIDIA-BindMemory-NoPriority",
+      "source": {
+        "path": "layers/best_practices/bp_device_memory.cpp",
+        "line": 255
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires enabled pageable/memory-priority extensions and static or dynamic priority on each native allocation. Scene resource priority is not Vulkan memory priority; these allocation attributes are not exposed."
+    },
+    {
+      "check": "BestPractices-NVIDIA-BindPipeline-SwitchTessGeometryMesh",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 537
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires command-buffer pipeline bind order, repeated handle identity and actual tessellation/geometry/task/mesh stage transitions. Static material presence or ordering does not reveal submitted binds."
+    },
+    {
+      "check": "BestPractices-NVIDIA-ClearColor-NotCompressed",
+      "source": {
+        "path": "layers/best_practices/bp_cmd_buffer_nv.cpp",
+        "line": 181
+      },
+      "status": "engine state unavailable",
+      "other_occurrences": [
+        {
+          "path": "layers/best_practices/bp_cmd_buffer_nv.cpp",
+          "line": 214
+        }
+      ],
+      "reason": "Requires actual image format, format-normalized clear bytes and the device-wide registered-color history. A project background color alone cannot establish either native warning branch."
+    },
+    {
+      "check": "BestPractices-NVIDIA-CreateDevice-PageableDeviceLocalMemory",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 146
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native instance/device extension lists, feature enablement, API-version relationship or query call history. These are engine initialization policy/state, not ordinary scene configuration; supported hardware features do not prove enabled features."
+    },
+    {
+      "check": "BestPractices-NVIDIA-CreateImage-Depth32Format",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 131
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires an actual VkImage format (PVRTC or D32 variants). Ordinary audited resource settings do not expose the selected native format. Existing texture-import and shadow-precision advice is not evidence of this Vulkan condition."
+    },
+    {
+      "check": "BestPractices-NVIDIA-CreateImage-TilingLinear",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 123
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the actual VkImage creation flags, usage, queue-family sharing or tiling combination. Generic texture/material/viewport properties do not establish these engine-selected native fields."
+    },
+    {
+      "check": "BestPractices-NVIDIA-CreatePipelineLayout-LargePipelineLayout",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 503
+      },
+      "status": "implemented",
+      "rules": [
+        "gpu_best_practices.compute_nvidia_descriptor_space"
+      ],
+      "reason": "Known image/sampler arrays cost four bytes per descriptor; plain uniform/storage buffers cost eight/sixteen. Unique bindings are counted once. Buffer arrays and unknown declarations are omitted; Vulkan/NVIDIA scope retained. Since 1.16, applicable resource/operand checks inspect each public imported shader stage independently, including Godot 4.7 ray stages; workgroup checks remain compute-only. Stage quantities are not summed across unverified pipelines."
+    },
+    {
+      "check": "BestPractices-NVIDIA-CreatePipelineLayout-SeparateSampler",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 496
+      },
+      "status": "implemented",
+      "rules": [
+        "gpu_best_practices.compute_nvidia_separate_sampler"
+      ],
+      "reason": "Separate sampler declarations retain the NVIDIA/Vulkan gate and heuristic labeling. Since 1.16, applicable resource/operand checks inspect each public imported shader stage independently, including Godot 4.7 ray stages; workgroup checks remain compute-only. Stage quantities are not summed across unverified pipelines."
+    },
+    {
+      "check": "BestPractices-NVIDIA-QueueBindSparse-NotAsync",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 392
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires sparse-memory requirement queries, binding metadata/aspects and the actual bind queue flags. Audited Godot resources expose none of this sparse residency command history."
+    },
+    {
+      "check": "BestPractices-NVIDIA-Zcull-LessGreaterRatio",
+      "source": {
+        "path": "layers/best_practices/bp_cmd_buffer_nv.cpp",
+        "line": 114
+      },
+      "status": "engine state unavailable",
+      "reason": "Counts LESS/GREATER depth comparisons and clear/reset history per native depth attachment. Material depth draw modes are not those comparison operations or submitted draw counts."
+    },
+    {
+      "check": "BestPractices-NVIDIA-vkBeginCommandBuffer-one-time-submit",
+      "source": {
+        "path": "layers/best_practices/bp_cmd_buffer.cpp",
+        "line": 69
+      },
+      "status": "already followed by checked stock Godot",
+      "reason": "Both checked Godot Vulkan drivers set VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT in primary and secondary command-buffer begin info (4.4 lines 2825/2844; 4.7.2 lines 3466/3487). No project setting is needed."
+    },
+    {
+      "check": "BestPractices-Partial-Bound-Buffer",
+      "source": {
+        "path": "layers/best_practices/bp_device_memory.cpp",
+        "line": 285
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires failed vkBindBufferMemory2/vkBindImageMemory2 results and optional per-binding VkBindMemoryStatus history. Godot resource existence and memory totals cannot establish partial binding state."
+    },
+    {
+      "check": "BestPractices-Partial-Bound-Buffer-Status",
+      "source": {
+        "path": "layers/best_practices/bp_device_memory.cpp",
+        "line": 276
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires failed vkBindBufferMemory2/vkBindImageMemory2 results and optional per-binding VkBindMemoryStatus history. Godot resource existence and memory totals cannot establish partial binding state."
+    },
+    {
+      "check": "BestPractices-Partial-Bound-Image",
+      "source": {
+        "path": "layers/best_practices/bp_device_memory.cpp",
+        "line": 310
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires failed vkBindBufferMemory2/vkBindImageMemory2 results and optional per-binding VkBindMemoryStatus history. Godot resource existence and memory totals cannot establish partial binding state."
+    },
+    {
+      "check": "BestPractices-Partial-Bound-Image-Status",
+      "source": {
+        "path": "layers/best_practices/bp_device_memory.cpp",
+        "line": 301
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires failed vkBindBufferMemory2/vkBindImageMemory2 results and optional per-binding VkBindMemoryStatus history. Godot resource existence and memory totals cannot establish partial binding state."
+    },
+    {
+      "check": "BestPractices-Pipeline-NoRendering",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 191
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the graphics pipeline renderPass handle and VkPipelineRenderingCreateInfo pNext chain, including library-stage exceptions. Ordinary project resources do not expose them."
+    },
+    {
+      "check": "BestPractices-Pipeline-SortAndBind",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 528
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires command-buffer pipeline bind order, repeated handle identity and actual tessellation/geometry/task/mesh stage transitions. Static material presence or ordering does not reveal submitted binds."
+    },
+    {
+      "check": "BestPractices-PipelineBarrier-readToReadBarrier",
+      "source": {
+        "path": "layers/best_practices/bp_synchronization.cpp",
+        "line": 369
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the submitted old/new image layouts, access masks and/or native image usage. Stored shader/material properties cannot establish those runtime synchronization transitions."
+    },
+    {
+      "check": "BestPractices-PipelineBarrier-unneeded-QFOT",
+      "source": {
+        "path": "layers/best_practices/bp_synchronization.cpp",
+        "line": 266
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires queue-family ownership transfers, image usage/tiling and maintenance9 feature state. Public scene resources do not expose this command history.",
+      "other_occurrences": [
+        {
+          "path": "layers/best_practices/bp_synchronization.cpp",
+          "line": 284
+        },
+        {
+          "path": "layers/best_practices/bp_synchronization.cpp",
+          "line": 313
+        }
+      ]
+    },
+    {
+      "check": "BestPractices-PushConstants",
+      "source": {
+        "path": "layers/best_practices/bp_drawdispatch.cpp",
+        "line": 61
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires tracking bytes actually written by vkCmdPushConstants before a draw/dispatch against the bound layout. Declared push-constant size does not establish initialized runtime bytes."
+    },
+    {
+      "check": "BestPractices-QueryPool-Unavailable",
+      "source": {
+        "path": "layers/best_practices/bp_cmd_buffer.cpp",
+        "line": 106
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires a begin-capable native query that remains reset because no vkCmdBeginQuery was recorded. The predicate excludes timestamp and acceleration-structure-size queries, so GPU timing capture availability is not an equivalent observation."
+    },
+    {
+      "check": "BestPractices-RenderPass-blitimage-loadopload",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 216
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires per-image-subresource native usage history, load/store operations or queue ownership across submissions. Viewport clear/update settings cannot reconstruct those sequences."
+    },
+    {
+      "check": "BestPractices-RenderPass-copyimage-loadopload",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 232
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires per-image-subresource native usage history, load/store operations or queue ownership across submissions. Viewport clear/update settings cannot reconstruct those sequences."
+    },
+    {
+      "check": "BestPractices-RenderPass-inefficient-clear",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 224
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires per-image-subresource native usage history, load/store operations or queue ownership across submissions. Viewport clear/update settings cannot reconstruct those sequences."
+    },
+    {
+      "check": "BestPractices-RenderPass-redundant-clear",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 200
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires per-image-subresource native usage history, load/store operations or queue ownership across submissions. Viewport clear/update settings cannot reconstruct those sequences."
+    },
+    {
+      "check": "BestPractices-RenderPass-redundant-store",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 191
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires per-image-subresource native usage history, load/store operations or queue ownership across submissions. Viewport clear/update settings cannot reconstruct those sequences."
+    },
+    {
+      "check": "BestPractices-RenderPass-resolveimage-loadopload",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 240
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires per-image-subresource native usage history, load/store operations or queue ownership across submissions. Viewport clear/update settings cannot reconstruct those sequences."
+    },
+    {
+      "check": "BestPractices-SpirvDeprecated_WorkgroupSize",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 575
+      },
+      "status": "engine compiler/version policy",
+      "reason": "The deprecated BuiltIn requires enabled maintenance4/Vulkan 1.3 conditions and is generated by the engine-selected shader compiler target. It is not a measured performance defect; imported bytecode alone does not justify changing engine compilation."
+    },
+    {
+      "check": "BestPractices-StoreOpDontCareThenLoadOpLoad",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 308
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires per-image-subresource native usage history, load/store operations or queue ownership across submissions. Viewport clear/update settings cannot reconstruct those sequences."
+    },
+    {
+      "check": "BestPractices-Submission-ReduceNumberOfSubmissions",
+      "source": {
+        "path": "layers/best_practices/bp_wsi.cpp",
+        "line": 210
+      },
+      "status": "engine state unavailable",
+      "reason": "Counts native queue submissions per frame. Godot GPU pass timestamps and draw-call monitors are not queue submission counts."
+    },
+    {
+      "check": "BestPractices-SyncObjects-HighNumberOfFences",
+      "source": {
+        "path": "layers/best_practices/bp_synchronization.cpp",
+        "line": 472
+      },
+      "status": "engine state unavailable",
+      "reason": "Counts live native VkSemaphore/VkFence objects. Godot monitors do not enumerate these synchronization objects; node/resource counts are not equivalents."
+    },
+    {
+      "check": "BestPractices-SyncObjects-HighNumberOfSemaphores",
+      "source": {
+        "path": "layers/best_practices/bp_synchronization.cpp",
+        "line": 451
+      },
+      "status": "engine state unavailable",
+      "reason": "Counts live native VkSemaphore/VkFence objects. Godot monitors do not enumerate these synchronization objects; node/resource counts are not equivalents."
+    },
+    {
+      "check": "BestPractices-Verbose-Success-Logging",
+      "source": {
+        "path": "layers/best_practices/best_practices_validation.h",
+        "line": 59
+      },
+      "status": "engine call results unavailable",
+      "reason": "Generated hooks pass native VkResult values to LogResult. Imported shader errors are already reported separately; they do not expose arbitrary Vulkan call results."
+    },
+    {
+      "check": "BestPractices-VkRenderingInfo-ResolveModeNone",
+      "source": {
+        "path": "layers/best_practices/bp_render_pass.cpp",
+        "line": 245
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native attachment formats/layouts, load/store/resolve operations, supplied clear arrays or attachment touches by submitted pipelines. These render-pass details are not exposed by the scene audit."
+    },
+    {
+      "check": "BestPractices-specialuse-extension",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 35
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native instance/device extension lists, feature enablement, API-version relationship or query call history. These are engine initialization policy/state, not ordinary scene configuration; supported hardware features do not prove enabled features."
+    },
+    {
+      "check": "BestPractices-vkAcquireNextImageKHR-SwapchainImagesNotFound",
+      "source": {
+        "path": "layers/best_practices/bp_wsi.cpp",
+        "line": 227
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native display/surface/swapchain query call history, returned counts or retrieved image handles. Window and VSync properties do not expose that history."
+    },
+    {
+      "check": "BestPractices-vkAllocateCommandBuffers-unusable-secondary",
+      "source": {
+        "path": "layers/best_practices/bp_cmd_buffer.cpp",
+        "line": 38
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires secondary-command-buffer levels, pool queue flags and primary/secondary usage flags. Stock checked Godot disables secondary buffers; ordinary nodes cannot establish these native creation/execution predicates."
+    },
+    {
+      "check": "BestPractices-vkAllocateDescriptorSets-EmptyDescriptorPool",
+      "source": {
+        "path": "layers/best_practices/bp_descriptor.cpp",
+        "line": 43
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires live native descriptor-pool free/available counts and allocation history. Imported shader declarations do not expose pool ownership or capacity."
+    },
+    {
+      "check": "BestPractices-vkAllocateDescriptorSets-EmptyDescriptorPoolType",
+      "source": {
+        "path": "layers/best_practices/bp_descriptor.cpp",
+        "line": 56
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires live native descriptor-pool free/available counts and allocation history. Imported shader declarations do not expose pool ownership or capacity."
+    },
+    {
+      "check": "BestPractices-vkBindBufferMemory-small-dedicated-allocation",
+      "source": {
+        "path": "layers/best_practices/bp_device_memory.cpp",
+        "line": 124
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires exact native allocation size and whether one buffer/image consumes it completely. Texture estimates and total buffer memory cannot establish dedicated versus suballocated memory."
+    },
+    {
+      "check": "BestPractices-vkBindImageMemory-non-lazy-transient-image",
+      "source": {
+        "path": "layers/best_practices/bp_device_memory.cpp",
+        "line": 202
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires transient image usage, memory-type flags, and supported lazy allocation. Scene texture/viewport properties do not expose the actual selected native allocation type."
+    },
+    {
+      "check": "BestPractices-vkBindImageMemory-small-dedicated-allocation",
+      "source": {
+        "path": "layers/best_practices/bp_device_memory.cpp",
+        "line": 172
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires exact native allocation size and whether one buffer/image consumes it completely. Texture estimates and total buffer memory cannot establish dedicated versus suballocated memory."
+    },
+    {
+      "check": "BestPractices-vkBindVideoSessionMemoryKHR-requirements-count-not-retrieved",
+      "source": {
+        "path": "layers/best_practices/bp_video.cpp",
+        "line": 49
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native Vulkan video-session memory-query/binding history, which Godot project resources and monitors do not expose."
+    },
+    {
+      "check": "BestPractices-vkBindVideoSessionMemoryKHR-requirements-not-all-retrieved",
+      "source": {
+        "path": "layers/best_practices/bp_video.cpp",
+        "line": 56
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native Vulkan video-session memory-query/binding history, which Godot project resources and monitors do not expose."
+    },
+    {
+      "check": "BestPractices-vkCmdBeginRenderPass-attachment-needs-readback",
+      "source": {
+        "path": "layers/best_practices/bp_render_pass.cpp",
+        "line": 157
+      },
+      "status": "implemented",
+      "rules": [
+        "gpu_best_practices.tile_keep_viewport"
+      ]
+    },
+    {
+      "check": "BestPractices-vkCmdClearAttachments-clear-after-load-color",
+      "source": {
+        "path": "layers/best_practices/bp_copy_blit_resolve.cpp",
+        "line": 79
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual clear rectangles/aspects, prior attachment touches, draws and load operations within the current native render pass. A configured clear mode does not supply that sequence."
+    },
+    {
+      "check": "BestPractices-vkCmdClearAttachments-clear-after-load-depth",
+      "source": {
+        "path": "layers/best_practices/bp_copy_blit_resolve.cpp",
+        "line": 91
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual clear rectangles/aspects, prior attachment touches, draws and load operations within the current native render pass. A configured clear mode does not supply that sequence."
+    },
+    {
+      "check": "BestPractices-vkCmdClearAttachments-clear-after-load-stencil",
+      "source": {
+        "path": "layers/best_practices/bp_copy_blit_resolve.cpp",
+        "line": 106
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires actual clear rectangles/aspects, prior attachment touches, draws and load operations within the current native render pass. A configured clear mode does not supply that sequence."
+    },
+    {
+      "check": "BestPractices-vkCmdDispatch-group-count-zero",
+      "source": {
+        "path": "layers/best_practices/bp_drawdispatch.cpp",
+        "line": 647
+      },
+      "status": "engine state unavailable",
+      "reason": "Checks counts passed to actual native draw/dispatch calls. Empty MultiMesh or particle configurations do not prove a zero-count Vulkan call; Godot can skip submission entirely."
+    },
+    {
+      "check": "BestPractices-vkCmdDispatchBase-group-count-zero",
+      "source": {
+        "path": "layers/best_practices/bp_drawdispatch.cpp",
+        "line": 674
+      },
+      "status": "engine state unavailable",
+      "reason": "Checks counts passed to actual native draw/dispatch calls. Empty MultiMesh or particle configurations do not prove a zero-count Vulkan call; Godot can skip submission entirely."
+    },
+    {
+      "check": "BestPractices-vkCmdDraw-instance-count-zero",
+      "source": {
+        "path": "layers/best_practices/bp_drawdispatch.cpp",
+        "line": 102
+      },
+      "status": "engine state unavailable",
+      "reason": "Checks counts passed to actual native draw/dispatch calls. Empty MultiMesh or particle configurations do not prove a zero-count Vulkan call; Godot can skip submission entirely."
+    },
+    {
+      "check": "BestPractices-vkCmdDrawIndexed-instance-count-zero",
+      "source": {
+        "path": "layers/best_practices/bp_drawdispatch.cpp",
+        "line": 118
+      },
+      "status": "engine state unavailable",
+      "reason": "Checks counts passed to actual native draw/dispatch calls. Empty MultiMesh or particle configurations do not prove a zero-count Vulkan call; Godot can skip submission entirely."
+    },
+    {
+      "check": "BestPractices-vkCmdDrawIndexed-many-small-indexed-drawcalls",
+      "source": {
+        "path": "layers/best_practices/bp_drawdispatch.cpp",
+        "line": 127
+      },
+      "status": "implemented",
+      "rules": [
+        "gpu_best_practices.tile_small_meshes"
+      ]
+    },
+    {
+      "check": "BestPractices-vkCmdDrawIndexedIndirect-draw-count-zero",
+      "source": {
+        "path": "layers/best_practices/bp_drawdispatch.cpp",
+        "line": 360
+      },
+      "status": "engine state unavailable",
+      "reason": "Checks counts passed to actual native draw/dispatch calls. Empty MultiMesh or particle configurations do not prove a zero-count Vulkan call; Godot can skip submission entirely."
+    },
+    {
+      "check": "BestPractices-vkCmdDrawIndirect-draw-count-zero",
+      "source": {
+        "path": "layers/best_practices/bp_drawdispatch.cpp",
+        "line": 345
+      },
+      "status": "engine state unavailable",
+      "reason": "Checks counts passed to actual native draw/dispatch calls. Empty MultiMesh or particle configurations do not prove a zero-count Vulkan call; Godot can skip submission entirely."
+    },
+    {
+      "check": "BestPractices-vkCmdEndRenderPass-depth-pre-pass-usage",
+      "source": {
+        "path": "layers/best_practices/bp_render_pass.cpp",
+        "line": 346
+      },
+      "status": "related Godot guidance already exists",
+      "reason": "Requires observed depth-only/equal-depth draw patterns and attachment usage within a native render pass. Existing Godot prepass/vendor-exception guidance covers the project setting without claiming the layer predicate fired.",
+      "rules": [
+        "renderer.depth_prepass_disabled",
+        "renderer.depth_prepass_vendor_list"
+      ]
+    },
+    {
+      "check": "BestPractices-vkCmdEndRenderPass-redundant-attachment-on-tile",
+      "source": {
+        "path": "layers/best_practices/bp_render_pass.cpp",
+        "line": 405
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native attachment formats/layouts, load/store/resolve operations, supplied clear arrays or attachment touches by submitted pipelines. These render-pass details are not exposed by the scene audit."
+    },
+    {
+      "check": "BestPractices-vkCmdExecuteCommands-CommandBufferSimultaneousUse",
+      "source": {
+        "path": "layers/best_practices/bp_cmd_buffer.cpp",
+        "line": 180
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires secondary-command-buffer levels, pool queue flags and primary/secondary usage flags. Stock checked Godot disables secondary buffers; ordinary nodes cannot establish these native creation/execution predicates."
+    },
+    {
+      "check": "BestPractices-vkCreateBuffer-sharing-mode-exclusive",
+      "source": {
+        "path": "layers/best_practices/bp_buffer.cpp",
+        "line": 28
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires VkBufferCreateInfo queueFamilyIndexCount and sharingMode. Godot scene/resource properties do not expose this native queue-sharing declaration."
+    },
+    {
+      "check": "BestPractices-vkCreateComputePipelines-multiple-cache",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 304
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires pipeline creation call batches and cache handle identity/history. The existing stutter.pipeline_cache_off setting check is related guidance, but does not prove these native predicates."
+    },
+    {
+      "check": "BestPractices-vkCreateComputePipelines-multiple-pipelines-no-cache",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 295
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires pipeline creation call batches and cache handle identity/history. The existing stutter.pipeline_cache_off setting check is related guidance, but does not prove these native predicates."
+    },
+    {
+      "check": "BestPractices-vkCreateDevice-API-version-mismatch",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 86
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native instance/device extension lists, feature enablement, API-version relationship or query call history. These are engine initialization policy/state, not ordinary scene configuration; supported hardware features do not prove enabled features."
+    },
+    {
+      "check": "BestPractices-vkCreateDevice-RobustBufferAccess",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 132
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native instance/device extension lists, feature enablement, API-version relationship or query call history. These are engine initialization policy/state, not ordinary scene configuration; supported hardware features do not prove enabled features."
+    },
+    {
+      "check": "BestPractices-vkCreateDevice-extension-mismatch",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 110
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native instance/device extension lists, feature enablement, API-version relationship or query call history. These are engine initialization policy/state, not ordinary scene configuration; supported hardware features do not prove enabled features."
+    },
+    {
+      "check": "BestPractices-vkCreateDevice-physical-device-features-not-retrieved",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 123
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native instance/device extension lists, feature enablement, API-version relationship or query call history. These are engine initialization policy/state, not ordinary scene configuration; supported hardware features do not prove enabled features."
+    },
+    {
+      "check": "BestPractices-vkCreateFramebuffer-attachment-should-be-transient",
+      "source": {
+        "path": "layers/best_practices/bp_framebuffer.cpp",
+        "line": 66
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the actual framebuffer attachment load/store operations, VkImage transient usage and supported lazy-allocation memory types. A scene texture or viewport clear setting cannot establish all three."
+    },
+    {
+      "check": "BestPractices-vkCreateFramebuffer-attachment-should-not-be-transient",
+      "source": {
+        "path": "layers/best_practices/bp_framebuffer.cpp",
+        "line": 47
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the actual framebuffer attachment load/store operations, VkImage transient usage and supported lazy-allocation memory types. A scene texture or viewport clear setting cannot establish all three."
+    },
+    {
+      "check": "BestPractices-vkCreateGraphicsPipelines-SampleShadingFragmentShadingRate",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 127
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires static fragment-rate size/combiner operations plus sampleShadingEnable or a fragment entry-point SampleId/SamplePosition use. A VRS texture or MSAA project setting alone does not establish this pipeline predicate."
+    },
+    {
+      "check": "BestPractices-vkCreateGraphicsPipelines-multiple-pipelines-no-cache",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 239
+      },
+      "status": "implemented",
+      "rules": [
+        "stutter.pipeline_cache_off"
+      ]
+    },
+    {
+      "check": "BestPractices-vkCreateGraphicsPipelines-too-many-instanced-vertex-buffers",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 151
+      },
+      "status": "engine state unavailable",
+      "reason": "Counts native vertex bindings with inputRate INSTANCE. MultiMesh instance count is not the number of instanced vertex buffers."
+    },
+    {
+      "check": "BestPractices-vkCreateImage-CreateFlags",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 39
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the actual VkImage creation flags, usage, queue-family sharing or tiling combination. Generic texture/material/viewport properties do not establish these engine-selected native fields."
+    },
+    {
+      "check": "BestPractices-vkCreateImage-non-transient-ms-image",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 49
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the actual VkImage creation flags, usage, queue-family sharing or tiling combination. Generic texture/material/viewport properties do not establish these engine-selected native fields."
+    },
+    {
+      "check": "BestPractices-vkCreateImage-sharing-mode-exclusive",
+      "source": {
+        "path": "layers/best_practices/bp_image.cpp",
+        "line": 31
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires the actual VkImage creation flags, usage, queue-family sharing or tiling combination. Generic texture/material/viewport properties do not establish these engine-selected native fields."
+    },
+    {
+      "check": "BestPractices-vkCreateInstance-extension-mismatch",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 62
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native instance/device extension lists, feature enablement, API-version relationship or query call history. These are engine initialization policy/state, not ordinary scene configuration; supported hardware features do not prove enabled features."
+    },
+    {
+      "check": "BestPractices-vkCreatePipelines-multiple-pipelines-caches",
+      "source": {
+        "path": "layers/best_practices/bp_pipeline.cpp",
+        "line": 255
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires pipeline creation call batches and cache handle identity/history. The existing stutter.pipeline_cache_off setting check is related guidance, but does not prove these native predicates."
+    },
+    {
+      "check": "BestPractices-vkCreateRenderPass-SubpassResolve-NonOptimalFormat",
+      "source": {
+        "path": "layers/best_practices/bp_render_pass.cpp",
+        "line": 103
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires VkSubpassResolvePerformanceQueryEXT::optimal for the actual resolve attachment format. The checked Godot API exposes neither that property query nor the native attachment choice."
+    },
+    {
+      "check": "BestPractices-vkCreateRenderPass-attachment-color-depth",
+      "source": {
+        "path": "layers/best_practices/bp_render_pass.cpp",
+        "line": 52
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native attachment formats/layouts, load/store/resolve operations, supplied clear arrays or attachment touches by submitted pipelines. These render-pass details are not exposed by the scene audit."
+    },
+    {
+      "check": "BestPractices-vkCreateRenderPass-attachment-stencil",
+      "source": {
+        "path": "layers/best_practices/bp_render_pass.cpp",
+        "line": 60
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native attachment formats/layouts, load/store/resolve operations, supplied clear arrays or attachment touches by submitted pipelines. These render-pass details are not exposed by the scene audit."
+    },
+    {
+      "check": "BestPractices-vkCreateRenderPass-image-requires-memory",
+      "source": {
+        "path": "layers/best_practices/bp_render_pass.cpp",
+        "line": 81
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native attachment formats/layouts, load/store/resolve operations, supplied clear arrays or attachment touches by submitted pipelines. These render-pass details are not exposed by the scene audit."
+    },
+    {
+      "check": "BestPractices-vkCreateSharedSwapchainsKHR-SuboptimalSwapchain",
+      "source": {
+        "path": "layers/best_practices/bp_wsi.cpp",
+        "line": 169
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires VK_SUBOPTIMAL_KHR returned by the actual presentation call for each swapchain. A window resize alone is not evidence of that return value."
+    },
+    {
+      "check": "BestPractices-vkCreateSharedSwapchainsKHR-sharing-mode-exclusive",
+      "source": {
+        "path": "layers/best_practices/bp_wsi.cpp",
+        "line": 151
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native swapchain queue-family arrays, sharing mode, enabled maintenance extension and creation pNext chain. These are owned by the engine/platform driver."
+    },
+    {
+      "check": "BestPractices-vkCreateSwapchainKHR-capabilities-no-surface",
+      "source": {
+        "path": "layers/best_practices/bp_wsi.cpp",
+        "line": 78
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native display/surface/swapchain query call history, returned counts or retrieved image handles. Window and VSync properties do not expose that history."
+    },
+    {
+      "check": "BestPractices-vkCreateSwapchainKHR-formats-no-surface",
+      "source": {
+        "path": "layers/best_practices/bp_wsi.cpp",
+        "line": 95
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native display/surface/swapchain query call history, returned counts or retrieved image handles. Window and VSync properties do not expose that history."
+    },
+    {
+      "check": "BestPractices-vkCreateSwapchainKHR-no-VkSwapchainPresentModesCreateInfoKHR-provided",
+      "source": {
+        "path": "layers/best_practices/bp_wsi.cpp",
+        "line": 123
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native swapchain queue-family arrays, sharing mode, enabled maintenance extension and creation pNext chain. These are owned by the engine/platform driver."
+    },
+    {
+      "check": "BestPractices-vkCreateSwapchainKHR-present-mode-no-surface",
+      "source": {
+        "path": "layers/best_practices/bp_wsi.cpp",
+        "line": 88
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native display/surface/swapchain query call history, returned counts or retrieved image handles. Window and VSync properties do not expose that history."
+    },
+    {
+      "check": "BestPractices-vkCreateSwapchainKHR-sharing-mode-exclusive",
+      "source": {
+        "path": "layers/best_practices/bp_wsi.cpp",
+        "line": 101
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native swapchain queue-family arrays, sharing mode, enabled maintenance extension and creation pNext chain. These are owned by the engine/platform driver."
+    },
+    {
+      "check": "BestPractices-vkCreateSwapchainKHR-suboptimal-swapchain-image-count",
+      "source": {
+        "path": "layers/best_practices/bp_wsi.cpp",
+        "line": 112
+      },
+      "status": "implemented",
+      "rules": [
+        "gpu_best_practices.double_buffer_vsync"
+      ]
+    },
+    {
+      "check": "BestPractices-vkGetDisplayPlaneSupportedDisplaysKHR-properties-not-retrieved",
+      "source": {
+        "path": "layers/best_practices/bp_wsi.cpp",
+        "line": 29
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native display/surface/swapchain query call history, returned counts or retrieved image handles. Window and VSync properties do not expose that history."
+    },
+    {
+      "check": "BestPractices-vkGetVideoSessionMemoryRequirementsKHR-count-not-retrieved",
+      "source": {
+        "path": "layers/best_practices/bp_video.cpp",
+        "line": 29
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires native Vulkan video-session memory-query/binding history, which Godot project resources and monitors do not expose."
+    },
+    {
+      "check": "BestPractices-vkQueueBindSparse-image-metadata-requirements",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 380
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires sparse-memory requirement queries, binding metadata/aspects and the actual bind queue flags. Audited Godot resources expose none of this sparse residency command history."
+    },
+    {
+      "check": "BestPractices-vkQueueBindSparse-image-opaque-requirements",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 364
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires sparse-memory requirement queries, binding metadata/aspects and the actual bind queue flags. Audited Godot resources expose none of this sparse residency command history."
+    },
+    {
+      "check": "BestPractices-vkQueueBindSparse-image-opaque-requirements2",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 355
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires sparse-memory requirement queries, binding metadata/aspects and the actual bind queue flags. Audited Godot resources expose none of this sparse residency command history."
+    },
+    {
+      "check": "BestPractices-vkQueueBindSparse-image-requirements",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 337
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires sparse-memory requirement queries, binding metadata/aspects and the actual bind queue flags. Audited Godot resources expose none of this sparse residency command history."
+    },
+    {
+      "check": "BestPractices-vkQueueBindSparse-image-requirements2",
+      "source": {
+        "path": "layers/best_practices/bp_instance_device.cpp",
+        "line": 328
+      },
+      "status": "engine state unavailable",
+      "reason": "Requires sparse-memory requirement queries, binding metadata/aspects and the actual bind queue flags. Audited Godot resources expose none of this sparse residency command history."
+    }
+  ],
+  "additional_review": [
+    {
+      "source": "layers/core_checks/cc_descriptor.cpp",
+      "scope": "GetDescriptorCountMaxPerStage; PreCallValidateCreatePipelineLayout descriptor counts; uniform-buffer range checks",
+      "status": "partially adapted",
+      "rules": [
+        "scene_validation.compute_samplers_limit",
+        "scene_validation.compute_sampled_images_limit",
+        "scene_validation.compute_storage_images_limit",
+        "scene_validation.compute_uniform_buffers_limit",
+        "scene_validation.compute_storage_buffers_limit",
+        "scene_validation.compute_uniform_buffer_size_limit"
+      ],
+      "reason": "Known fixed compute declarations and public Vulkan limits establish lower bounds. Runtime descriptor writes, dynamic offset use and the rest of this file remain outside this observation model. Since 1.16, applicable resource/operand checks inspect each public imported shader stage independently, including Godot 4.7 ray stages; workgroup checks remain compute-only. Stage quantities are not summed across unverified pipelines."
+    },
+    {
+      "source": "layers/stateless/sl_pipeline.cpp",
+      "scope": "Pipeline-layout set count and push-constant ranges",
+      "status": "partially adapted",
+      "rules": [
+        "scene_validation.compute_bound_sets_limit",
+        "scene_validation.compute_push_constant_limit"
+      ],
+      "reason": "Godot reflects sets through highest index + 1 and push constants into a zero-offset range. Other pipeline creation parameters require separate review. Since 1.16, applicable resource/operand checks inspect each public imported shader stage independently, including Godot 4.7 ray stages; workgroup checks remain compute-only. Stage quantities are not summed across unverified pipelines."
+    },
+    {
+      "source": "layers/gpuav/validation_cmd/gpuav_dispatch.cpp",
+      "scope": "Indirect dispatch count validation",
+      "status": "runtime state unavailable",
+      "reason": "Actual indirect buffer counts are unavailable; workgroup local size is not dispatch group count."
+    },
+    {
+      "source": "layers/gpuav/validation_cmd/gpuav_draw.cpp",
+      "scope": "FirstInstance, CountBuffer, DrawMeshIndirect, DrawIndexedIndirectIndexBuffer",
+      "status": "runtime state unavailable",
+      "reason": "Actual command-buffer bindings, indirect records/counts and submitted index ranges are unavailable from ordinary scene totals."
+    },
+    {
+      "source": "layers/gpuav/validation_cmd/gpuav_copy_buffer_to_image.cpp",
+      "scope": "Float depth source-texel range validation",
+      "status": "runtime state unavailable",
+      "reason": "Requires copied source bytes/regions, actual D32 format and disabled unrestricted-depth extension. HDR color values outside 0-1 are not equivalent."
+    },
+    {
+      "source": "layers/gpuav/validation_cmd/gpuav_copy_memory_indirect.cpp",
+      "scope": "Indirect copy address, size and row/image extent validation",
+      "status": "runtime state unavailable",
+      "reason": "Requires runtime indirect command records and actual live buffer device-address ranges."
+    },
+    {
+      "source": "layers/gpuav/validation_cmd/gpuav_ray_tracing.cpp",
+      "scope": "TraceRaysIndirect, TLAS and BLAS input observation",
+      "status": "runtime state unavailable",
+      "reason": "Requires device-addressed runtime command/build records and native acceleration structures; ray-query capability alone is insufficient."
+    },
+    {
+      "source": "layers/gpuav/validation_cmd/gpuav_validation_cmd_common.cpp",
+      "scope": "Validation resource and pipeline binding helpers",
+      "status": "validation infrastructure",
+      "reason": "GPU validation infrastructure, not a separate project configuration predicate."
+    },
+    {
+      "source": "layers/gpuav/descriptor_validation/gpuav_descriptor_set.cpp",
+      "scope": "Descriptor binding layout and resource-encoding snapshots, including push updates",
+      "status": "validation infrastructure",
+      "reason": "Encodes actual native descriptor classes, resource IDs and byte/texel ranges; imported declarations cannot supply these runtime bindings or resource lifetimes."
+    },
+    {
+      "source": "layers/gpuav/descriptor_validation/gpuav_descriptor_validation.cpp",
+      "scope": "UpdateBoundDescriptors and UpdateBoundDescriptorHeap",
+      "status": "validation infrastructure",
+      "reason": "Routes current command-buffer descriptor sets and heap snapshots to registered validators; no independent project performance predicate."
+    },
+    {
+      "source": "layers/gpuav/instrumentation/buffer_device_address.cpp",
+      "scope": "Unallocated-reference and Aligned-operand error handlers",
+      "status": "runtime state unavailable",
+      "reason": "Requires executed load/store addresses, byte widths and live committed address ranges. Existing capability checks do not prove bounds or alignment."
+    },
+    {
+      "source": "layers/gpuav/instrumentation/descriptor_checks_classic.cpp",
+      "scope": "Array bounds, uninitialized/destroyed descriptors, buffer/cooperative-matrix/texel bounds",
+      "status": "runtime state unavailable",
+      "reason": "Requires actual accessed indices and descriptor allocation/update/lifetime records, bound ranges and resource robustness state; scene material counts and declared array lengths alone are insufficient."
+    },
+    {
+      "source": "layers/gpuav/instrumentation/descriptor_checks_buffer.cpp",
+      "scope": "Missing and wrong-type descriptor hash handlers",
+      "status": "runtime state unavailable",
+      "reason": "Requires executed descriptor-buffer locations and hashes of actual encoded native descriptors, not resource declarations."
+    },
+    {
+      "source": "layers/gpuav/instrumentation/descriptor_checks_heap.cpp",
+      "scope": "Heap bounds/reserved ranges, descriptor/push/address alignment, null addresses and descriptor hashes",
+      "status": "runtime state unavailable",
+      "reason": "Requires native heap mappings, push-data snapshots, addresses, alignments and encoded descriptor contents. Static set numbers are not heap offsets."
+    },
+    {
+      "source": "layers/gpuav/instrumentation/shared_memory_data_race.cpp",
+      "scope": "Store/load/atomic race error handlers",
+      "status": "runtime state unavailable",
+      "reason": "Requires overlapping accesses from executed invocations, shadow-memory state and instruction locations. Shared-memory declarations or absence of a barrier do not establish a race."
+    },
+    {
+      "source": "layers/gpuav/instrumentation/mesh_shading.cpp",
+      "scope": "SetMeshOutputs and task-payload error handlers",
+      "status": "unsupported public shader stage",
+      "reason": "Checked Godot public RDShader stages expose no mesh/task stage. GPUAV compares executed output counts and actual pipeline task-stage presence."
+    },
+    {
+      "source": "layers/gpuav/instrumentation/vertex_attribute_fetch_oob.cpp",
+      "scope": "GetVertexAttributeFetchLimits and indexed vertex/instance access handlers",
+      "status": "runtime state unavailable",
+      "reason": "Requires active pipeline input locations, bound vertex buffer sizes/strides/offsets, instance divisors and executed indices. Generic mesh vertex totals do not establish the submitted access."
+    },
+    {
+      "source": "layers/gpuav/instrumentation/trace_ray.cpp",
+      "scope": "Ray/hit-object/query values, flags, TLAS state and hit-kind handlers",
+      "status": "partial static adaptation",
+      "reason": "Direct literal uint32 ray-query flag conflicts and float32 distance constraints in the first compute entry block are adapted. Executed origins/directions, dynamic operands, hit-object/pipeline rays, SBT and TLAS state remain unavailable. No capability-only operand warning is added. Since 1.16, applicable resource/operand checks inspect each public imported shader stage independently, including Godot 4.7 ray stages; workgroup checks remain compute-only. Stage quantities are not summed across unverified pipelines.",
+      "rules": [
+        "scene_validation.compute_ray_query_flags",
+        "scene_validation.compute_ray_query_distance"
+      ]
+    },
+    {
+      "source": "layers/gpuav/instrumentation/sanitizer.cpp",
+      "scope": "Divide/modulo zero, ImageGather component, Pow, Atan2, FMin/FMax and cooperative-matrix alignment handlers",
+      "status": "partial static adaptation",
+      "reason": "Division/remainder/modulo zero and GLSL Pow/Atan2/FMin/FMax now have scalar32 and direct 2-4 component vector adaptations in the first compute entry block. Literal uint32-to-float32 bitcasts are supported. FMin/FMax NaN is portability advice under current Khronos wording, not an invalid-instruction claim. Both Godot compilers reject out-of-range ImageGather components through the existing shader-compile-error rule. General dynamic operands, other widths, later blocks and cooperative-matrix runtime address/alignment checks remain outside observation. Since 1.16, applicable resource/operand checks inspect each public imported shader stage independently, including Godot 4.7 ray stages; workgroup checks remain compute-only. Stage quantities are not summed across unverified pipelines.",
+      "rules": [
+        "scene_validation.compute_zero_divisor",
+        "scene_validation.compute_pow_domain",
+        "scene_validation.compute_atan2_zero",
+        "scene_validation.compute_minmax_nan"
+      ]
+    },
+    {
+      "source": "layers/gpuav/instrumentation/post_process_descriptor_indexing.cpp",
+      "scope": "Submission completion routing into DescriptorValidator::ValidateBindingDynamic",
+      "status": "runtime state unavailable",
+      "reason": "Uses GPU-recorded descriptor accesses plus current native descriptor bindings, shader identities and command locations. The downstream descriptor validator needs separate source review."
+    },
+    {
+      "source": "layers/gpuav/instrumentation/gpuav_instrumentation.cpp",
+      "scope": "Error-record dispatch to registered instrumentation handlers",
+      "status": "partial infrastructure review",
+      "reason": "Read error-record dispatch and shader lookup; it forwards instrumented GPU records. Remaining orchestration bodies are not claimed reviewed."
+    },
+    {
+      "source": "layers/gpuav/instrumentation/gpuav_shader_instrumentor.cpp",
+      "scope": "FinishDeviceSetup instrumentation prerequisites and reserved descriptor slot",
+      "status": "partial infrastructure review",
+      "reason": "These features and the reserved slot support the validation instrumentation itself, not ordinary project requirements. Remaining pipeline/shader rewriting bodies are not claimed reviewed."
+    },
+    {
+      "source": "layers/drawdispatch/descriptor_validator.cpp",
+      "scope": "ValidateDescriptorsStatic/ValidateBindingStatic and buffer-descriptor validity dispatch",
+      "status": "partial core descriptor review",
+      "reason": "Even the static draw-time path requires actual descriptor updates, adjusted allocation counts, native buffer lifetime and memory bindings. Imported shader declarations alone cannot reproduce it. Image/sampler/attachment/tensor branches remain unreviewed."
+    },
+    {
+      "source": "layers/sync/sync_hazard_detection.cpp",
+      "scope": "AccessContext buffer/image DetectHazard entry points",
+      "status": "partial synchronization review",
+      "reason": "Hazards operate on native buffer address ranges or image subresources with current usage and prior access contexts. Scene order or resource sharing does not reveal these ranges or command history; attachment and submit paths need further review."
+    },
+    {
+      "source": "layers/sync/sync_access_state.cpp",
+      "scope": "DetectHazard and DetectAsyncHazard",
+      "status": "partial synchronization review",
+      "reason": "Read-after-write, write-after-read/write and racing accesses compare recorded reads/writes, stage/access scopes, queue IDs and usage tags. Presence of a shared resource or missing script barrier is insufficient. Other state-update/attachment/present paths are not claimed reviewed."
+    },
+    {
+      "source": "layers/sync/sync_barrier.cpp",
+      "scope": "BarrierSet buffer/image memory-barrier normalization",
+      "status": "partial synchronization review",
+      "reason": "Uses actual VkBuffer/VkImage handles, offsets/sizes/subresource ranges, stage/access masks and old/new layouts, including depth-slice normalization. These native barriers cannot be reconstructed from project settings. Remaining barrier application paths need review."
+    },
+    {
+      "source": "layers/gpuav/shaders/instrumentation/trace_ray.comp",
+      "scope": "inst_ray_query_comp literal flags and Tmin/Tmax comparisons",
+      "status": "partial static adaptation",
+      "reason": "Three flag masks and nonnegative/non-NaN/ordered scalar distances are implemented; positive infinity is retained when ordering permits. Origin/direction vectors and dynamic values remain outside this pass."
+    },
+    {
+      "source": "layers/gpuav/spirv/trace_ray_pass.cpp",
+      "scope": "GetRayQueryInitializeValidationFunctionCallInstructions operand wiring",
+      "status": "partial instrumentation review",
+      "reason": "Verified flag/origin/Tmin/direction/Tmax operand positions against OpRayQueryInitializeKHR and Godot-bundled SPIR-V enums. Other ray/hit-object pass transformations need further review."
+    },
+    {
+      "source": "layers/gpuav/spirv/sanitizer_pass.cpp",
+      "scope": "Division/modulo dispatch, ImageGather compiler rejection, constant-zero recognition and extended-math component predicates",
+      "status": "partial static adaptation",
+      "reason": "Reviewed RequiresInstrumentation, IsConstantZero and PowCheck/Atan2Check/FminmaxCheck. Seven divide/remainder/modulo opcodes exclude OpFDiv. Direct scalar32/vector components and literal bitcasts are adapted; unknown components are not guessed. Only the exact GLSL.std.450 import is accepted. Compiler-folded operations can leave no instruction to inspect. ImageGather component errors are already rejected by both Godot compilers. Runtime and cooperative-matrix instrumentation remains unadapted. Since 1.16, applicable resource/operand checks inspect each public imported shader stage independently, including Godot 4.7 ray stages; workgroup checks remain compute-only. Stage quantities are not summed across unverified pipelines.",
+      "rules": [
+        "scene_validation.compute_zero_divisor",
+        "scene_validation.compute_pow_domain",
+        "scene_validation.compute_atan2_zero",
+        "scene_validation.compute_minmax_nan"
+      ]
+    },
+    {
+      "source": "layers/gpuav/shaders/instrumentation/sanitizer.comp",
+      "scope": "Divide-zero, gather, Pow, Atan2 and FMin/FMax payload helpers",
+      "status": "partial static adaptation",
+      "reason": "Payload helpers consume invalidity booleans from the SPIR-V pass. Four bounded static adaptations cover known scalar32/direct vector operands. FMin/FMax deliberately follows current normative NaN portability wording instead of the pinned diagnostic. No GPU execution, instrumentation, pointer/stride checks or general expression evaluation is performed. Since 1.16, applicable resource/operand checks inspect each public imported shader stage independently, including Godot 4.7 ray stages; workgroup checks remain compute-only. Stage quantities are not summed across unverified pipelines.",
+      "rules": [
+        "scene_validation.compute_zero_divisor",
+        "scene_validation.compute_pow_domain",
+        "scene_validation.compute_atan2_zero",
+        "scene_validation.compute_minmax_nan"
+      ]
+    },
+    {
+      "source": "layers/gpuav/spirv/buffer_device_address_pass.cpp",
+      "scope": "RequiresInstrumentation and CreateFunctionCall: physical-pointer access size, live address conversion, range and alignment checks",
+      "status": "partial instrumentation review",
+      "reason": "The pass converts the executed pointer to uint64 and checks that address against live allocation ranges and required alignment. A declared buffer-reference capability or struct size does not establish an invalid address. Existing device-capability guidance is retained; no static bounds/alignment warning is invented. Access-path construction and the remaining control-flow optimizations are separate review scopes."
+    },
+    {
+      "source": "layers/gpuav/spirv/descriptor_indexing_oob_pass.cpp",
+      "scope": "RequiresInstrumentation and image/sampler call arguments: descriptor indices, binding-layout counts and per-block deduplication",
+      "status": "partial instrumentation review",
+      "reason": "Checks need the pipeline binding-layout lookup table, executed image/sampler descriptor indices and bindless state. Shader declaration lengths alone do not establish the bound allocation count or an executed invalid access. Ordinary non-array descriptors without bindless state are explicitly skipped upstream. No generic material-count adaptation is appropriate."
+    },
+    {
+      "source": "layers/gpuav/spirv/descriptor_class_general_buffer_pass.cpp",
+      "scope": "RequiresInstrumentation, robustness gates, access-path offsets and instrumentation setup",
+      "status": "partial instrumentation review",
+      "reason": "General uniform/storage-buffer loads, stores, atomics and cooperative-matrix accesses are filtered by enabled robustness and then checked against actual descriptor binding ranges. Render Lens sees imported declarations but not their live buffer ranges or dispatch. Existing lower-bound declaration/device-limit rules remain distinct from runtime out-of-bounds validation."
+    },
+    {
+      "source": "layers/gpuav/spirv/descriptor_class_texel_buffer_pass.cpp",
+      "scope": "CreateFunctionCall and RequiresInstrumentation: buffer images, fetch/read/write coordinate and binding lookup",
+      "status": "partial instrumentation review",
+      "reason": "Texel-buffer coordinates and live descriptor ranges are needed. Upstream explicitly limits this path to non-depth, non-arrayed, non-multisampled DimBuffer images and leaves image-offset support incomplete. These checks cannot be generalized into texture-resolution or ordinary storage-image warnings."
+    },
+    {
+      "source": "layers/gpuav/spirv/shared_memory_data_race_pass.cpp",
+      "scope": "RequiresInstrumentation dispatch, Workgroup barrier filtering, access-chain offsets and GetWorkgroupSize",
+      "status": "partial instrumentation review",
+      "reason": "Race checks need inter-invocation shadow state and actual memory accesses; a shared declaration, atomic instruction or barrier alone does not prove a race. The reviewed path resets shadow state for Workgroup AcquireRelease control barriers. Its instrumentation assumptions are not a blanket requirement that every compute shader contain such a barrier. Existing fixed workgroup/shared-memory limit checks are separate."
+    },
+    {
+      "source": "layers/core_checks/cc_tensor.cpp",
+      "scope": "Tensor format-feature queries, create/view validation and queue/format/memory requirements",
+      "status": "partial core tensor review",
+      "reason": "The reviewed checks consume VkTensorARM/VkTensorViewARM handles, ARM tensor tiling/usage, allocation bindings, queue-family indices and capture-replay features. Neither checked Godot RenderingDevice public API exposes tensor resources. Do not map tensor flags onto ordinary ImageTexture or RDTexture settings. Copy/protection/rolling-backing details remain separate scopes."
+    },
+    {
+      "source": "layers/gpuav/spirv/descriptor_buffer_pass.cpp",
+      "scope": "CreateFunctionCall, RequiresInstrumentation and descriptor-hashing dispatch",
+      "status": "partial instrumentation review",
+      "reason": "The pass needs native cached descriptor sizes, actual descriptor index/type and descriptor-buffer hashing state. Acceleration structures, sampler/combined-sampler and mutable descriptors are explicitly unsupported by this pass. These are instrumentation coverage limits, not evidence those legal descriptor types are slow or invalid. Godot imported declarations do not expose encoded live descriptor buffers."
+    },
+    {
+      "source": "layers/gpuav/spirv/descriptor_heap_pass.cpp",
+      "scope": "ResourceTypeMatchesBinding, GetMapping, GetMinBufferAlignment and RequiresInstrumentation",
+      "status": "partial instrumentation review",
+      "reason": "Checks consume VkShaderDescriptorSetAndBindingMappingInfoEXT mappings, live heap selection, embedded-sampler state, physical-device alignment limits and untyped layouts. Shader declarations alone do not supply those values. Native mapping masks and instrumentation exclusions must not become generic Godot resource warnings. Remaining offset/sampler call-generation logic is a separate review scope."
+    },
+    {
+      "source": "layers/gpuav/spirv/post_process_descriptor_indexing_pass.cpp",
+      "scope": "CreateFunctionCall, RequiresInstrumentation and Instrument",
+      "status": "validation infrastructure",
+      "reason": "This pass records actually used descriptor set/binding/index/variable combinations for later validation against live native binding state. It does not make unused shader declarations invalid. Its block-level deduplication and instrumentation limits are validator implementation details, not Godot game performance rules."
+    },
+    {
+      "source": "layers/gpuav/spirv/mesh_shading_pass.cpp",
+      "scope": "Mesh-stage gate, execution-mode output limits, SetMeshOutputs and task-payload checks",
+      "status": "unsupported public shader stage",
+      "reason": "The path requires a mesh-stage shader and task/mesh pipeline state. Neither checked Godot RenderingDevice public ShaderStage enum exposes mesh/task stages. Do not equate Vulkan mesh-shader output counts with MeshInstance3D/MultiMesh node counts. The upstream safe-mode clamp is an instrumentation safeguard, not a project edit recommendation."
+    },
+    {
+      "source": "layers/gpuav/spirv/vertex_attribute_fetch_oob_pass.cpp",
+      "scope": "Instrument: vertex-stage/input gate, entry-point insertion and stage-information payload",
+      "status": "runtime state unavailable",
+      "reason": "The pass injects a call using executed vertex/instance stage information and the live draw/binding data traced in the existing vertex-attribute handler review. Imported shader inputs alone do not establish submitted vertex-buffer ranges. A mesh resource count or array size cannot safely stand in for the actual draw range."
+    },
+    {
+      "source": "layers/gpuav/spirv/spec_constant.cpp",
+      "scope": "SetSpecConstantValue and component handling in ConstantFold",
+      "status": "partial specialization review",
+      "reason": "Upstream freezes defaults only after consulting the actual VkSpecializationInfo and matching map entries, then folds expressions using those resolved values. Render Lens does not observe pipeline-creation specialization data. Treating imported defaults as effective values would create false workgroup/resource/operand findings, so unresolved specialization remains excluded. General arithmetic/vector folding is not replicated."
+    },
+    {
+      "source": "layers/core_checks/cc_pipeline_compute.cpp",
+      "scope": "Complete compute-pipeline entry dispatch and ValidateComputePipelineDerivatives; delegated shader/layout validators are separate scopes",
+      "status": "native pipeline state unavailable",
+      "reason": "Direct checks require native derivative/base pipeline handles and creation flags, creation-array ordering, independent-set layout flags and embedded sampler counts. These are not observable from a Godot scene or imported shader declaration. The file also delegates shader, robustness and SPIR-V checks elsewhere; reading this dispatcher does not claim those validators are exhausted. No generic compute-shader performance warning is warranted."
+    },
+    {
+      "source": "layers/core_checks/cc_shader_interface.cpp",
+      "scope": "ValidateBuiltInLimits, ValidatePrimitiveTopology, ValidatePipelineTessellationStages and ValidateInterfaceBetweenStages, ValidateInterfaceVertexInput, ValidateInterfaceFragmentOutput, ValidateShaderInputAttachmentDynamicRendering, ValidateShaderInputAttachmentRenderPass and ValidateFsOutputsAgainstRenderPass, ValidateDrawDynamicRenderingFsOutputs, ValidateDrawRenderingTileMemoryOutputs and ValidateGraphicsPipelineShaderState (all function bodies in this file; delegated validators retain their own scopes)",
+      "status": "partial static adaptation",
+      "reason": "Vertex/fragment pairs with no extra stages now check incompatible numeric kinds/widths and proven missing producer slots. Missing-output findings require complete supported vertex reflection; bounded/unknown declarations suppress them. Signedness is ignored. Unused outputs and larger producer vectors depend on maintenance4 and are not inferred. Built-in and tessellation interface matching remain outside this adaptation. Primitive-topology checks require an unexposed geometry stage. Previously reviewed clip/cull/sample-mask limits remain unavailable, and four invalid/missing tessellation layout modes already produce compiler errors on both Godot versions. Additional 1.18 review: vertex-input type/width/missing/unused checks require actual vertex attribute formats and enabled vertexAttributeRobustness/maintenance9. Fragment alpha-to-coverage requires its pipeline state. Input attachment checks require the associated subpass or dynamic-rendering count/remapping. Fragment output warnings require bound attachment formats, color-write masks and alpha-to-coverage state. Public RenderingDevice creation APIs accept these values but do not enumerate live shader/pipeline associations or recover all required creation state. An imported RDShaderFile alone is insufficient; no rule added from these five functions. The dynamic-rendering draw checks also require bound image views, location remapping and effective color-write/alpha-to-coverage/rasterization state. Tile-memory output delegates ValidateBoundTileMemory using command-buffer active attachments; the delegated predicate is recorded separately under cc_drawdispatch.cpp. The graphics-pipeline dispatcher orders real linked stages and delegates per-stage validation, interface validation and tessellation checks. This completes the function-body review of this file, not every delegated validator or all VVL research.",
+      "rules": [
+        "scene_validation.shader_interface"
+      ]
+    },
+    {
+      "source": "layers/core_checks/cc_image_layout.cpp",
+      "scope": "ValidateDescriptorImageLayout, ValidateSubresourceImageLayout and ValidateClearImageLayout only",
+      "status": "partial core image-layout review",
+      "reason": "These checks compare an explicit descriptor/copy/clear layout with per-command-buffer layout tracking for the exact image aspect, layer and mip range. Standalone clear operations also constrain their VkImageLayout argument. Godot owns these layouts internally; neither checked public RenderingDevice API exposes the executed command-buffer layout map. A texture format, material or viewport clear mode cannot establish a layout mismatch. Other render-pass, barrier, submission and host-copy validators in this file remain separate review scopes."
+    },
+    {
+      "source": "layers/core_checks/cc_image.cpp",
+      "scope": "Complete bodies of ValidateClearDepthStencilValue and ValidateImageViewFormatFeatures only; other image validators remain pending",
+      "status": "partially adapted; unavailable clear/view state documented",
+      "reason": "Clear depth must lie in [0,1] unless the native depth-range-unrestricted extension is enabled, also rejecting NaN. Historical clear arguments and enabled extension state are not observable from scene camera/viewport settings. The reviewed image-view storage-format feature requirement is adapted to explicit imported image formats and the current public Vulkan device query: both optimal and linear tiling must lack storage support. Actual view usage, DRM modifier/external image features, other extension-dependent branches and command execution are not inferred. Image creation, view/copy/clear ranges and validators outside the two named bodies remain pending.",
+      "rules": [
+        "scene_validation.shader_storage_format"
+      ]
+    },
+    {
+      "source": "layers/state_tracker/shader_module.cpp",
+      "scope": "GetLocationsConsumedByType, GetComponentsConsumedByType, StageInterfaceVariable::GetInterfaceSlots and entry-point slot-map population; IsArrayInterface and FindBaseType; focused invocation-repack switch fragment at lines 1093-1103 only",
+      "status": "partial interface metadata review",
+      "rules": [
+        "scene_validation.shader_interface",
+        "scene_validation.shader_subgroup_repack"
+      ],
+      "reason": "Read numeric type/width matching, component spans, matrix-column gaps, array location strides and explicit member/variable decorations. The plugin implements bounded reflection and skips unknown/grouped layouts; it is not a complete SPIR-V validator. Other module parsing, reachability, built-in use and feature analysis remain separate scopes. Fragment PerVertexKHR arrays discard exactly their outer wrapper for matching; tested on both Godot compilers. Nested structure layout follows the normative location-assignment rules and is compiler-tested rather than inheriting the upstream nested-structure workaround. The focused switch sets the repack flag for TraceRayKHR, TraceRayMotionNV, ReportIntersectionKHR and ExecuteCallableKHR; this does not complete unrelated module instruction cases or adaptation of the stateless control-flow conflict. The focused invocation-repack switch now supports a tested intrinsic subgroup-mode conflict rule. Unrelated instruction tracking remains outside the recorded scope."
+    },
+    {
+      "source": "layers/state_tracker/shader_module.h",
+      "scope": "InterfaceSlot definition only",
+      "status": "partial interface metadata review",
+      "rules": [
+        "scene_validation.shader_interface"
+      ],
+      "reason": "Location/component mapping and numeric-kind/bit-width fields support the new interface finding. This header read does not claim full shader state analysis or native Vulkan feature coverage."
+    },
+    {
+      "source": "layers/core_checks/cc_drawdispatch.cpp",
+      "scope": "ValidateBoundTileMemory only",
+      "status": "engine state unavailable",
+      "rules": [],
+      "reason": "Compares each bound resource memory allocation from a tile-memory heap against the command buffer active tile-memory handle (action VUID 10746). Requires native VkDeviceMemory binding identities, memory heap flags and command-buffer state. Godot scene nodes, imported shader declarations and public device limits do not provide those associations. No warning can be inferred from ordinary Godot tile maps, texture memory totals or renderer selection. Other draw/dispatch validators in this file remain unreviewed."
+    },
+    {
+      "source": "layers/core_checks/cc_device_memory.cpp",
+      "scope": "HasTileMemoryType and ValidateTileMemoryBindInfo only",
+      "status": "engine state unavailable",
+      "rules": [],
+      "reason": "HasTileMemoryType resolves allocation memoryTypeIndex to heapIndex and tests VK_MEMORY_HEAP_TILE_MEMORY_BIT_QCOM. ValidateTileMemoryBindInfo requires the supplied native allocation to come from such a heap (VUID-VkTileMemoryBindInfoQCOM-memory-10726). The audit cannot recover the native allocation/heap/command binding association. Other allocation, map, bind, device-group and memory-budget validators in this file remain unreviewed."
+    },
+    {
+      "source": "layers/core_checks/cc_spirv.cpp",
+      "scope": "Complete function-body review, including shader-stage specialization/dispatch, module creation, compute/task/mesh limits, ARM data graphs and EXT descriptor-heap mapping/direct-access/struct checks; delegated validators remain separate scopes",
+      "status": "partly implemented; compiler-covered cases and unavailable state documented",
+      "rules": [
+        "scene_validation.shader_invalid_spirv",
+        "scene_validation.shader_compile_error",
+        "scene_validation.compute_dimension_limit",
+        "scene_validation.compute_invocation_limit",
+        "scene_validation.compute_shared_memory_limit"
+      ],
+      "reason": "New read-only imported shader-header finding adapts byte alignment and magic checks plus the SPIR-V five-word header. It excludes budgets, byte-swapped data, absent stages, unsupported reflection and versions with compilation errors. Actual Godot compilers reject undersized rgba32f imageStore operands and subpass arrays lacking input_attachment_index in both tested versions; existing compile-error reporting covers those. Workgroup/device limits already have rules; subgroup and cooperative-matrix reserve checks need unavailable state. Push ranges, descriptors, YCbCr bindings, native render-pass/depth/stencil/viewport state, transform feedback, enabled long-vector/indexing features, specialization mappings and module-identifier calls cannot be inferred from imported declarations. The SPIRV-Tools validation call is an external delegated scope, not an implemented runtime dependency or a completed review. Follow-up: task/mesh workgroup counts, emitted groups, shared memory and payload limits require stages absent from both public Godot ShaderStage enums. ARM data-graph tensor shapes/formats/bindings/constants and TOSA queue-operation checks need graph pipelines, tensor descriptions and queue-family properties not exposed by RenderingDevice. EXT descriptor-heap mapping offsets/strides, sampler separation, push-data/address alignment, missing mappings and mapped resource restrictions need native mapping/heap state and extension properties. Untyped direct-heap reads also carry extension-specific provisional restrictions, explicitly expected to change for future KHR heaps; no blanket shader rule is inferred. Descriptor-struct member alignment requires unexposed descriptor/tensor heap properties. All bodies in this pinned file have now been read; delegated helpers and SPIRV-Tools validation are not claimed complete."
+    },
+    {
+      "source": "layers/vulkan/generated/spirv_validation_helper.cpp",
+      "scope": "Complete CompatibleSpirvImageFormat and ValidateShaderCapabilitiesAndExtensions bodies; all 41 image mappings; seven forbidden SPIR-V 1.0 capability exclusions and PhysicalStorageBufferAddresses/RayQueryKHR/RayTracingKHR feature-table entries only; remaining generated tables/helpers pending",
+      "status": "mapping and selected declaration/feature predicates adapted; other tables/helpers pending",
+      "rules": [
+        "scene_validation.shader_storage_format",
+        "scene_validation.compute_buffer_device_address",
+        "scene_validation.compute_ray_query",
+        "scene_validation.compute_raytracing_pipeline",
+        "scene_validation.shader_vulkan_capability",
+        "scene_validation.shader_extension_namespace"
+      ],
+      "reason": "The complete validator uses alternative version/feature/extension/property requirements and a separate portability interpolation feature gate. Stable seven-capability exclusions and the mandatory SPV_ extension namespace are observable in compiled imports and pass native compiler/import tests on both versions; unrelated unknown/future capabilities or SPV_ extensions are not rejected. Declaration findings require a version without stored base or stage errors and the actual Vulkan driver. Only public Godot support getters are used for physical buffer addresses, ray queries and ray-tracing pipelines; missing queries are unknown. Ray-tracing support is the engine compound acceleration-structure/pipeline contract, not a raw Vulkan feature query. Full enabled-feature/property/extension tables and other generated helpers are not counted reviewed. Prior 41-format mappings retain their current native support tests and tiling exclusions."
+    },
+    {
+      "source": "layers/stateless/sl_spirv.cpp",
+      "scope": "Complete handwritten bodies and local helpers, lines 18-1781, including all 27 dispatch targets/helpers; delegated SPIRV-Tools and generated capability tables are separate scopes",
+      "status": "handwritten logic review complete; four intrinsic predicates adapted; unexposed features/properties excluded",
+      "rules": [
+        "scene_validation.shader_interface_8bit",
+        "scene_validation.shader_graph_capability",
+        "scene_validation.shader_tensor_declaration",
+        "scene_validation.shader_subgroup_repack"
+      ],
+      "reason": "Existing eight-bit shader IO plus GraphARM in shader modules, tensor rank/shape declaration forms and subgroup-uniform-control-flow with invocation repacking are adapted. Both compilers accept GraphARM and the mode/intrinsic ReportIntersection combination; Godot 4.7 compiles a valid ranked tensor module and both versions test declaration mutations in saved bytecode. All checks require Vulkan and error-free imported versions; no invalid shader/pipeline is created. Remaining subgroup/tessellation/mesh/geometry/transform-feedback/tile/tensor/float-control/texel-offset/conservative-rasterization/wait-queue checks require unexposed enabled features, exact physical-device properties or unsupported Godot stage/pipeline state; no native limits or unsupported-feature conclusions are guessed. This completes only this handwritten source file, not delegated or other Vulkan validation."
+    },
+    {
+      "source": "layers/core_checks/cc_spirv_cooperative.cpp",
+      "scope": "Complete handwritten GetComponentType, string_CooperativeMatrixUse, IsSignedIntEnum, ValidateCooperativeMatrix and ValidateCooperativeVector logic, including local helpers, lines 41-1137; delegated SPIRV-Tools constraints are separate",
+      "status": "six intrinsic predicates adapted; native feature/property and memory conclusions unavailable",
+      "reason": "Complete handwritten cooperative matrix/vector logic read. Six vector predicates now adapt outer-product input type/layout/accumulation interpretation, reduction component types, both training pointer storage classes and FP8 multiplication layouts. Actual Godot 4.7.2 compiler output accepts the invalid cases; 4.4 rejects ordinary cooperative GLSL. Both versions parse saved original bytecode and test imports/error gates without submitting invalid modules. First-entry-block operations, recognized value types/pointer flows/core storage and 32-bit literal layouts/interpretations only; unknown/specialized/helper/later-block cases are omitted independently. Physical-device properties, supported combinations/dimensions, native feature enablement, alignment, memory validity and complete pipeline compatibility remain unknown. Delegated SPIRV-Tools constraints remain separate.",
+      "rules": [
+        "scene_validation.shader_cooperative_outer_type",
+        "scene_validation.shader_cooperative_outer_layout",
+        "scene_validation.shader_cooperative_outer_interpretation",
+        "scene_validation.shader_cooperative_reduce_type",
+        "scene_validation.shader_cooperative_training_storage",
+        "scene_validation.shader_cooperative_fp8_layout"
+      ]
+    }
+  ]
+}

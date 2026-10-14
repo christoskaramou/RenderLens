@@ -1,0 +1,366 @@
+{
+ "_note": "Fixed inputs for the golden advice tests. tests/golden/make_golden.gd turns a case into <case>.ctx inside a project that has its scene; expected.json holds the reviewed result. demo_run: a demo scene, passes from a 2026-10-13 capture (RTX 4080 SUPER, Godot 4.7.2). heavy_*: sample_project/heavy_test.tscn with costs from docs/MEASURED_EFFECTS.md. lights2d_static: godot-demo-projects 2d/lights_and_shadows (Compatibility renderer), a static audit.",
+ "demo_run": {
+  "scene": "res://demo.tscn",
+  "mode": "measured",
+  "renderer": "forward_plus",
+  "target_fps": 60,
+  "median_ms": 12.701,
+  "cpu_ms": 12.6,
+  "gpu_ms": 9.994,
+  "bound": "unknown",
+  "settings": {
+   "display/window/vsync/vsync_mode": 0
+  },
+  "metrics": {
+   "PROCESS_MEDIAN_SEC": 0.0126,
+   "TIME_PROCESS": 0.0337,
+   "TIME_FPS": 78.0,
+   "RENDER_VIDEO_MEM_USED": 984397072.0,
+   "RENDER_TEXTURE_MEM_USED": 878426112.0,
+   "VRAM_LARGEST_BYTES": 6291480,
+   "VRAM_LISTED_HALF": 6012810.0,
+   "VIEWPORT_SHADOW_DRAW_CALLS": 601,
+   "VIEWPORT_VISIBLE_DRAW_CALLS": 11,
+   "PIPELINE_COMPILATIONS_SURFACE": 15.0,
+   "PIPELINE_COMPILATIONS_SPECIALIZATION": 27.0,
+   "RENDER_TOTAL_DRAW_CALLS_IN_FRAME": 612.0
+  },
+  "passes": [
+   {
+    "name": "Render GI + Render Directional/SpotLight Shadows (Parallel)",
+    "exclusive_median_ms": 5.7748,
+    "share": 48.712
+   },
+   {
+    "name": "Render OmniLight Shadows",
+    "exclusive_median_ms": 3.0838,
+    "share": 26.013
+   },
+   {
+    "name": "Render Opaque Pass",
+    "exclusive_median_ms": 1.0271,
+    "share": 8.664
+   },
+   {
+    "name": "Render 3D Transparent Pass",
+    "exclusive_median_ms": 0.4209,
+    "share": 3.55
+   },
+   {
+    "name": "Render Depth Pre-Pass",
+    "exclusive_median_ms": 0.3891,
+    "share": 3.282
+   },
+   {
+    "name": "GI + Render Depth Pre-Pass (Parallel)",
+    "exclusive_median_ms": 0.3046,
+    "share": 2.57
+   },
+   {
+    "name": "Pre Opaque Render",
+    "exclusive_median_ms": 0.187,
+    "share": 1.577
+   },
+   {
+    "name": "Pack 3D Cluster Elements",
+    "exclusive_median_ms": 0.1413,
+    "share": 1.192
+   },
+   {
+    "name": "Render SDFGI",
+    "exclusive_median_ms": 0.0717,
+    "share": 0.605
+   },
+   {
+    "name": "Depth of Field",
+    "exclusive_median_ms": 0.0614,
+    "share": 0.518
+   },
+   {
+    "name": "Process SSIL",
+    "exclusive_median_ms": 0.0594,
+    "share": 0.501
+   },
+   {
+    "name": "Process SSR",
+    "exclusive_median_ms": 0.0512,
+    "share": 0.432
+   },
+   {
+    "name": "Render Fog",
+    "exclusive_median_ms": 0.0471,
+    "share": 0.397
+   },
+   {
+    "name": "Bake 3D Cluster",
+    "exclusive_median_ms": 0.0404,
+    "share": 0.341
+   },
+   {
+    "name": "Average SDFGI Probes",
+    "exclusive_median_ms": 0.0369,
+    "share": 0.311
+   },
+   {
+    "name": "Render 3D Cluster Elements",
+    "exclusive_median_ms": 0.0357,
+    "share": 0.301
+   },
+   {
+    "name": "Glow",
+    "exclusive_median_ms": 0.0317,
+    "share": 0.268
+   },
+   {
+    "name": "Process SSAO",
+    "exclusive_median_ms": 0.0307,
+    "share": 0.259
+   },
+   {
+    "name": "Copy Final Framebuffer (SSIL/SSR)",
+    "exclusive_median_ms": 0.0246,
+    "share": 0.207
+   },
+   {
+    "name": "Setup 3D Scene",
+    "exclusive_median_ms": 0.0216,
+    "share": 0.182
+   },
+   {
+    "name": "Tonemap",
+    "exclusive_median_ms": 0.0215,
+    "share": 0.181
+   },
+   {
+    "name": "Post-Process ReflectionProbe, Step 1",
+    "exclusive_median_ms": 0.0174,
+    "share": 0.147
+   },
+   {
+    "name": "Integrate Fog",
+    "exclusive_median_ms": 0.0143,
+    "share": 0.121
+   },
+   {
+    "name": "Filter Fog",
+    "exclusive_median_ms": 0.0133,
+    "share": 0.112
+   },
+   {
+    "name": "Process Post Transparent Compositor Effects",
+    "exclusive_median_ms": 0.0061,
+    "share": 0.052
+   },
+   {
+    "name": "Render Sky",
+    "exclusive_median_ms": 0.0056,
+    "share": 0.048
+   },
+   {
+    "name": "Update GPUParticles",
+    "exclusive_median_ms": 0.0051,
+    "share": 0.043
+   },
+   {
+    "name": "Render CanvasItems",
+    "exclusive_median_ms": 0.0051,
+    "share": 0.043
+   },
+   {
+    "name": "Render 3D Scene",
+    "exclusive_median_ms": 0.0031,
+    "share": 0.026
+   },
+   {
+    "name": "Prepare Depth for SSAO/SSIL",
+    "exclusive_median_ms": 0.002,
+    "share": 0.017
+   },
+   {
+    "name": "Cull OmniLight3D Shadow Cube, Side 5",
+    "exclusive_median_ms": 0.002,
+    "share": 0.017
+   },
+   {
+    "name": "Prepare Render Frame",
+    "exclusive_median_ms": 0.0015,
+    "share": 0.013
+   },
+   {
+    "name": "Setup Sky",
+    "exclusive_median_ms": 0.0013,
+    "share": 0.011
+   },
+   {
+    "name": "Cull OmniLight3D Shadow Cube, Side 4",
+    "exclusive_median_ms": 0.001,
+    "share": 0.009
+   },
+   {
+    "name": "Cull OmniLight3D Shadow Cube, Side 3",
+    "exclusive_median_ms": 0.001,
+    "share": 0.009
+   },
+   {
+    "name": "Cull OmniLight3D Shadow Cube, Side 2",
+    "exclusive_median_ms": 0.001,
+    "share": 0.009
+   },
+   {
+    "name": "Cull OmniLight3D Shadow Cube, Side 1",
+    "exclusive_median_ms": 0.001,
+    "share": 0.009
+   },
+   {
+    "name": "Cull OmniLight3D Shadow Cube, Side 0",
+    "exclusive_median_ms": 0.001,
+    "share": 0.009
+   },
+   {
+    "name": "Cull SpotLight3D Shadow",
+    "exclusive_median_ms": 0.001,
+    "share": 0.009
+   }
+  ]
+ },
+ "heavy_over_budget": {
+  "scene": "res://heavy_test.tscn",
+  "mode": "measured",
+  "renderer": "forward_plus",
+  "target_fps": 240,
+  "median_ms": 7.854,
+  "cpu_ms": 7.5,
+  "gpu_ms": 6.049,
+  "bound": "unknown",
+  "settings": {},
+  "metrics": {
+   "PROCESS_MEDIAN_SEC": 0.0075,
+   "TIME_PROCESS": 0.009,
+   "TIME_FPS": 127.0
+  },
+  "passes": [
+   {
+    "name": "Render OmniLight Shadows",
+    "exclusive_median_ms": 2.751,
+    "share": 45.479
+   },
+   {
+    "name": "Render GI + Render Directional/SpotLight Shadows (Parallel)",
+    "exclusive_median_ms": 1.4,
+    "share": 23.144
+   },
+   {
+    "name": "Render Opaque Pass",
+    "exclusive_median_ms": 0.6,
+    "share": 9.919
+   },
+   {
+    "name": "Render 3D Transparent Pass",
+    "exclusive_median_ms": 0.2,
+    "share": 3.306
+   },
+   {
+    "name": "Render SDFGI",
+    "exclusive_median_ms": 0.2,
+    "share": 3.306
+   },
+   {
+    "name": "Depth of Field",
+    "exclusive_median_ms": 0.125,
+    "share": 2.066
+   },
+   {
+    "name": "Process SSIL",
+    "exclusive_median_ms": 0.114,
+    "share": 1.885
+   },
+   {
+    "name": "Tonemap",
+    "exclusive_median_ms": 0.1,
+    "share": 1.653
+   },
+   {
+    "name": "Process SSR",
+    "exclusive_median_ms": 0.078,
+    "share": 1.289
+   },
+   {
+    "name": "Glow",
+    "exclusive_median_ms": 0.062,
+    "share": 1.025
+   },
+   {
+    "name": "Process SSAO",
+    "exclusive_median_ms": 0.05,
+    "share": 0.827
+   },
+   {
+    "name": "Render Fog",
+    "exclusive_median_ms": 0.048,
+    "share": 0.794
+   }
+  ]
+ },
+ "heavy_mobile": {
+  "scene": "res://heavy_test.tscn",
+  "mode": "measured",
+  "renderer": "mobile",
+  "target_fps": 240,
+  "median_ms": 7.854,
+  "cpu_ms": 7.5,
+  "gpu_ms": 6.049,
+  "bound": "unknown",
+  "settings": {
+   "rendering/renderer/rendering_method": "mobile"
+  },
+  "metrics": {
+   "PROCESS_MEDIAN_SEC": 0.0075,
+   "TIME_PROCESS": 0.009,
+   "TIME_FPS": 127.0
+  },
+  "passes": [
+   {
+    "name": "Render Shadows",
+    "exclusive_median_ms": 4.2,
+    "share": 69.433
+   },
+   {
+    "name": "Render Opaque",
+    "exclusive_median_ms": 0.9,
+    "share": 14.878
+   },
+   {
+    "name": "Render Transparent",
+    "exclusive_median_ms": 0.3,
+    "share": 4.959
+   },
+   {
+    "name": "Glow",
+    "exclusive_median_ms": 0.06,
+    "share": 0.992
+   },
+   {
+    "name": "Tonemap",
+    "exclusive_median_ms": 0.1,
+    "share": 1.653
+   }
+  ]
+ },
+ "heavy_ui_static": {
+  "scene": "res://heavy_ui.tscn",
+  "mode": "static",
+  "renderer": "forward_plus",
+  "settings": {},
+  "metrics": {},
+  "passes": []
+ },
+ "lights2d_static": {
+  "scene": "res://light_shadows.tscn",
+  "mode": "static",
+  "renderer": "gl_compatibility",
+  "settings": {},
+  "metrics": {},
+  "passes": []
+ }
+}

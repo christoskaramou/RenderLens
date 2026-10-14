@@ -1,0 +1,64 @@
+[gd_scene load_steps=4 format=3]
+
+[sub_resource type="AudioStreamWAV" id="Silent_voice"]
+data = PackedByteArray(128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128)
+loop_mode = 1
+loop_end = 16
+
+[sub_resource type="ConcavePolygonShape3D" id="Concave_1"]
+data = PackedVector3Array(0, 0, 0, 1, 0, 0, 0, 1, 0)
+
+[sub_resource type="HeightMapShape3D" id="Height_1"]
+map_width = 2
+map_depth = 2
+map_data = PackedFloat32Array(0, 0, 0, 0)
+
+[node name="HeavyPhysics" type="Node3D"]
+
+[node name="CcdBody" type="RigidBody3D" parent="."]
+continuous_cd = true
+
+[node name="Concave" type="CollisionShape3D" parent="CcdBody"]
+shape = SubResource("Concave_1")
+
+[node name="Height" type="CollisionShape3D" parent="."]
+shape = SubResource("Height_1")
+
+[node name="CcdBody2D" type="RigidBody2D" parent="."]
+continuous_cd = true
+
+[node name="Soft" type="SoftBody3D" parent="."]
+
+[node name="Characters" type="Node3D" parent="."]
+
+[node name="C1" type="CharacterBody3D" parent="Characters"]
+
+[node name="C2" type="CharacterBody3D" parent="Characters"]
+
+[node name="C3" type="CharacterBody3D" parent="Characters"]
+
+[node name="C4" type="CharacterBody3D" parent="Characters"]
+
+[node name="C5" type="CharacterBody3D" parent="Characters"]
+
+[node name="C6" type="CharacterBody3D" parent="Characters"]
+
+[node name="C7" type="CharacterBody3D" parent="Characters"]
+
+[node name="C8" type="CharacterBody3D" parent="Characters"]
+
+[node name="Agent" type="NavigationAgent3D" parent="."]
+avoidance_enabled = true
+
+[node name="Anim" type="AnimationPlayer" parent="."]
+callback_mode_process = 0
+
+[node name="Voice" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("Silent_voice")
+autoplay = true
+max_polyphony = 4
+max_distance = 0.0
+
+[node name="BakedLight" type="LightmapGI" parent="."]
+
+[node name="BakedVoxel" type="VoxelGI" parent="."]

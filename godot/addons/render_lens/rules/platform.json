@@ -1,0 +1,280 @@
+[
+  {
+    "id": "platform.windows_driver_vulkan",
+    "category": "platform",
+    "title": "Windows rendering driver is still Vulkan",
+    "severity": "low",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/rendering_device/driver.windows",
+        "value": "vulkan"
+      }
+    },
+    "evidence": "it is recommended to switch them manually to",
+    "suggestion": "On Godot 4.7, rendering/rendering_device/driver.windows still says vulkan. The 4.7 description says projects created before 4.6 keep Vulkan and recommends switching them to d3d12 on Windows. This does not change the Linux driver.",
+    "setting": "rendering/rendering_device/driver.windows",
+    "tradeoff": "Direct3D 12 has its own validation and fallback path.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.7/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.6",
+        "4.7"
+      ],
+      "min_version": "4.6"
+    }
+  },
+  {
+    "id": "platform.per_pixel_transparency",
+    "category": "platform",
+    "title": "Per-pixel window transparency is allowed",
+    "severity": "medium",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "display/window/per_pixel_transparency/allowed",
+        "value": true
+      }
+    },
+    "evidence": "This affects performance, so leave it on false unless you need it",
+    "suggestion": "Set display/window/per_pixel_transparency/allowed to false unless the window really needs a transparent background.",
+    "setting": "display/window/per_pixel_transparency/allowed",
+    "tradeoff": "The window background can no longer be transparent.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "platform.subwindows_not_embedded",
+    "category": "platform",
+    "title": "Subwindows are not embedded in the main window",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "display/window/subwindows/embed_subwindows",
+        "value": false
+      }
+    },
+    "evidence": "Single-window mode can be faster",
+    "suggestion": "Set display/window/subwindows/embed_subwindows to true. The description says creating a separate window per popup can be slow.",
+    "setting": "display/window/subwindows/embed_subwindows",
+    "tradeoff": "Popups are no longer separate OS windows.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "platform.etc2_astc_off_mobile",
+    "category": "platform",
+    "title": "ETC2 and ASTC import is off while the mobile renderer is selected",
+    "severity": "low",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/textures/vram_compression/import_etc2_astc",
+        "value": false
+      }
+    },
+    "evidence": "Ericsson Texture Compression 2 algorithm",
+    "suggestion": "Turn rendering/textures/vram_compression/import_etc2_astc on before exporting to Android or iOS. The description says this override selects ETC2 for lower quality textures and ASTC for high quality, and that the importer always imports the format the host platform needs, so desktop runs are unaffected.",
+    "setting": "rendering/textures/vram_compression/import_etc2_astc",
+    "tradeoff": "Desktop S3TC imports are a separate override.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "platform.s3tc_off_forward",
+    "category": "platform",
+    "title": "S3TC and BPTC import is off on Forward+",
+    "severity": "low",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/textures/vram_compression/import_s3tc_bptc",
+        "value": false
+      }
+    },
+    "evidence": "This algorithm is only supported on PC desktop platforms and consoles",
+    "suggestion": "Turn rendering/textures/vram_compression/import_s3tc_bptc on for desktop Forward+ if you want VRAM-compressed textures. The description limits that algorithm to PC and consoles.",
+    "setting": "rendering/textures/vram_compression/import_s3tc_bptc",
+    "tradeoff": "Mobile GPUs do not sample S3TC.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "platform.path_case_mismatch",
+    "category": "platform",
+    "title": "A res:// path differs in case from the file on disk",
+    "kind": "correctness",
+    "severity": "medium",
+    "requires": [
+      "scene"
+    ],
+    "condition": {
+      "scene_gte": {
+        "name": "check_path_case_mismatch",
+        "value": 1
+      }
+    },
+    "setting": "",
+    "offender_key": "check_path_case_mismatch",
+    "evidence": "Godot prints \"Case mismatch opening requested file 'res://Art/hero.png', stored as 'res://art/hero.png' in the filesystem. This file will not open when exported to other case-sensitive platforms.\" in editor builds on Windows (and macOS) when a script, scene, resource or a path-bearing project setting (main scene, icon, boot splash, theme, autoloads, translations and their remaps) refers to a res:// path whose letter case differs from the file or folder on disk. The case-insensitive file system opens it during development; exported packs are case-sensitive. Text-resource references that also carry a uid:// are skipped, since Godot loads those by UID.",
+    "suggestion": "Change the reference to the on-disk spelling, or rename the file to match.",
+    "tradeoff": "Renaming files needs the editor so imports and UIDs follow.",
+    "expected_effect": "Godot uses the configuration as written instead of overriding or ignoring it; no performance saving is asserted.",
+    "verify_step": "audit_project_rendering or scan_scene, then run the game and confirm the warning is gone from the output",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/windows/file_access_windows.cpp",
+    "evidence_kind": "godot_runtime_warning",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    },
+    "godot_warns": "runtime"
+  }
+]

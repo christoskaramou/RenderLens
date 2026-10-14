@@ -1,0 +1,487 @@
+[
+  {
+    "id": "pacing.vsync_off_uncapped",
+    "category": "pacing",
+    "title": "VSync is off and the frame rate is uncapped",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "display/window/vsync/vsync_mode",
+            "value": 0
+          }
+        },
+        {
+          "setting_eq": {
+            "path": "application/run/max_fps",
+            "value": 0
+          }
+        }
+      ]
+    },
+    "evidence": "vsync_mode is 0 (Disabled) and max_fps is 0 (uncapped). The vsync hint is Disabled, Enabled, Adaptive, Mailbox. The default vsync mode is 1 (Enabled) and the default max_fps is 0.",
+    "suggestion": "Enable vsync (1) or set application/run/max_fps to the target rate so the frame does not run ahead of the display.",
+    "setting": "display/window/vsync/vsync_mode",
+    "tradeoff": "VSync adds latency. A cap without vsync can still tear.",
+    "expected_effect": "Frame pacing follows the display or the cap. TIME_FPS should sit near that rate.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pacing.vsync_off_with_cap",
+    "category": "pacing",
+    "title": "VSync is off with a max_fps cap",
+    "severity": "low",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "display/window/vsync/vsync_mode",
+            "value": 0
+          }
+        },
+        {
+          "setting_gt": {
+            "path": "application/run/max_fps",
+            "value": 0
+          }
+        }
+      ]
+    },
+    "evidence": "vsync_mode is Disabled and max_fps is above 0.",
+    "suggestion": "Expect tearing. Turn vsync on if the cap was only meant to limit CPU use.",
+    "setting": "display/window/vsync/vsync_mode",
+    "tradeoff": "VSync latency versus tearing.",
+    "expected_effect": "The image stops tearing if the display supports the selected mode. Adaptive is 2 and Mailbox is 3.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pacing.max_fps_below_target",
+    "category": "pacing",
+    "title": "max_fps is below the advise target",
+    "severity": "medium",
+    "requires": [
+      "settings",
+      "frame"
+    ],
+    "condition": {
+      "max_fps_below_target": true
+    },
+    "evidence": "application/run/max_fps is greater than 0 and lower than the target_fps passed to advise or frame_timing.",
+    "suggestion": "Raise max_fps to the target, or to 0 if vsync should govern the rate.",
+    "setting": "application/run/max_fps",
+    "tradeoff": "A higher cap lets the frame run hotter if vsync is off.",
+    "expected_effect": "The cap stops being the reason TIME_FPS cannot reach the target.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pacing.low_processor",
+    "category": "pacing",
+    "title": "Low-processor mode is on",
+    "severity": "info",
+    "kind": "info",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "application/run/low_processor_mode",
+        "value": true
+      }
+    },
+    "evidence": "application/run/low_processor_mode is true. The default is false. low_processor_mode_sleep_usec defaults to 6900.",
+    "suggestion": "Turn low_processor_mode off while measuring a game. It sleeps the main loop and will not represent gameplay frame time. frame_timing already disables it for the sample window.",
+    "setting": "application/run/low_processor_mode",
+    "tradeoff": "The editor or tool uses more CPU when this is off.",
+    "expected_effect": "The measured frame is no longer sleeping on purpose.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pacing.frame_queue",
+    "category": "pacing",
+    "title": "Rendering-device frame queue size is 3",
+    "severity": "info",
+    "kind": "info",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gte": {
+        "path": "rendering/rendering_device/vsync/frame_queue_size",
+        "value": 3
+      }
+    },
+    "evidence": "frame_queue_size is 3. The range is 2\u20133 and the default is 2. swapchain_image_count defaults to 3 (range 2\u20134).",
+    "suggestion": "Leave the queue at 2 if you are chasing latency. A deeper queue can smooth pacing and adds frames of latency.",
+    "setting": "rendering/rendering_device/vsync/frame_queue_size",
+    "tradeoff": "A shorter queue can stutter if the GPU falls a frame behind.",
+    "expected_effect": "Lower presentation latency. Confirm with frame_timing rather than a formula.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pacing.mailbox_vsync",
+    "category": "pacing",
+    "title": "VSync mode is Mailbox",
+    "severity": "info",
+    "kind": "info",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "display/window/vsync/vsync_mode",
+        "value": 3
+      }
+    },
+    "evidence": "vsync_mode is 3 (Mailbox).",
+    "suggestion": "Mailbox is a valid low-latency present mode when the driver supports it. If the display stutters, compare with Enabled (1).",
+    "setting": "display/window/vsync/vsync_mode",
+    "tradeoff": "Enabled can add latency. Mailbox can still tear on drivers that do not support it cleanly.",
+    "expected_effect": "No change is required. Re-measure if you switch modes.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pacing.fps_below_target",
+    "category": "pacing",
+    "title": "Measured FPS is below the target",
+    "severity": "high",
+    "requires": [
+      "metrics",
+      "frame"
+    ],
+    "condition": {
+      "fps_below_target": true
+    },
+    "evidence": "TIME_FPS is above 1 and below the target rate from the frame budget. TIME_FPS is frames per second, per the Performance class.",
+    "suggestion": "Use the bound from frame_timing. GPU-bound frames should follow the measured pass list. Use script_profile to investigate CPU work; periodic Performance peaks do not identify a bottleneck.",
+    "tradeoff": "Depends on which later suggestion you apply.",
+    "expected_effect": "TIME_FPS should move toward the target after a real cut. This rule only reports the gap.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_performance.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pacing.shadow_draws_dominate",
+    "category": "pacing",
+    "title": "Shadow draw calls exceed visible draw calls",
+    "severity": "high",
+    "requires": [
+      "metrics"
+    ],
+    "condition": {
+      "metric_gt_metric": {
+        "left": "VIEWPORT_SHADOW_DRAW_CALLS",
+        "right": "VIEWPORT_VISIBLE_DRAW_CALLS"
+      }
+    },
+    "evidence": "VIEWPORT_SHADOW_DRAW_CALLS is greater than VIEWPORT_VISIBLE_DRAW_CALLS. Both come from viewport_get_render_info for the shadow and visible viewports.",
+    "suggestion": "Disable shadows on lights that do not need them, switch omni shadows to dual paraboloid, and shorten directional shadow distance. The visible scene is no longer the larger draw submission.",
+    "tradeoff": "Fewer real-time shadows.",
+    "expected_effect": "The shadow counter should fall below the visible counter after the cut. No percentage is assumed.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_renderingserver.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "setting": "",
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pacing.delta_smoothing_off",
+    "category": "pacing",
+    "title": "Frame delta smoothing is off",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "application/run/delta_smoothing",
+        "value": false
+      }
+    },
+    "evidence": "Delta smoothing can often give a better result",
+    "suggestion": "Turn application/run/delta_smoothing back on unless you have a reason to take the raw platform deltas. The setting description says smoothing filters minor fluctuations from the refresh rate.",
+    "setting": "application/run/delta_smoothing",
+    "tradeoff": "Smoothing can hide a real hitch from gameplay code that reads delta.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "pacing.swapchain_images",
+    "category": "pacing",
+    "title": "The swapchain has more than 3 images",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/rendering_device/vsync/swapchain_image_count",
+        "value": 3
+      }
+    },
+    "evidence": "2 corresponds to double-buffering and 3 to triple-buffering",
+    "suggestion": "Set rendering/rendering_device/vsync/swapchain_image_count to 2 or 3. The description says 2 is the lowest latency and 3 is triple-buffering.",
+    "setting": "rendering/rendering_device/vsync/swapchain_image_count",
+    "tradeoff": "With vsync, a missed frame can drop to a divisor of the refresh rate.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  }
+]

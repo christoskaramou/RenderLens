@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+
+# Godot
+.godot/
+*.translation
+.render_lens/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads (user files)
+uploads/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary test files
+.tmp/
+*.log
+/dist/

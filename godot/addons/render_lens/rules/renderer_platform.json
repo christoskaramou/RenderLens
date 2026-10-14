@@ -1,0 +1,573 @@
+[
+  {
+    "id": "renderer.compatibility_method",
+    "category": "renderer_platform",
+    "title": "Compatibility renderer is selected",
+    "severity": "info",
+    "kind": "info",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/renderer/rendering_method",
+        "value": "gl_compatibility"
+      }
+    },
+    "evidence": "rendering/renderer/rendering_method is gl_compatibility.",
+    "suggestion": "Forward+ is required for SDFGI, SSAO, SSIL, SSR, volumetric fog, TAA, and FSR. Mobile keeps VoxelGI, decals, and FXAA but not those Forward+-only effects. Stay on Compatibility only when the target GPU has no RenderingDevice.",
+    "setting": "rendering/renderer/rendering_method",
+    "tradeoff": "Forward+ and Mobile drop older OpenGL-only devices.",
+    "expected_effect": "The feature set changes. Re-measure after switching; this rule does not assign a frame-time delta.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/optimizing_3d_performance.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "renderer.mobile_method",
+    "category": "renderer_platform",
+    "title": "Mobile renderer is selected",
+    "severity": "info",
+    "kind": "info",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/renderer/rendering_method",
+        "value": "mobile"
+      }
+    },
+    "evidence": "rendering/renderer/rendering_method is mobile.",
+    "suggestion": "Mobile is the lower-overhead clustered renderer. SDFGI, SSAO, SSIL, SSR, volumetric fog, TAA, and FSR are Forward+-only in the 4.4 docs. The .mobile shadow-size overrides default to 2048 rather than 4096.",
+    "setting": "rendering/renderer/rendering_method",
+    "tradeoff": "Moving to Forward+ enables those effects and raises the GPU cost.",
+    "expected_effect": "Documents the renderer ceiling. It does not by itself change frame time.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/environment_and_post_processing.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "renderer.thread_model_unsafe",
+    "category": "renderer_platform",
+    "title": "Rendering thread model is Unsafe (deprecated)",
+    "severity": "high",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/driver/threads/thread_model",
+        "value": 0
+      }
+    },
+    "evidence": "rendering/driver/threads/thread_model is 0. The ProjectSettings hint is Unsafe (deprecated), Safe, Separate. The default is 1 (Safe).",
+    "suggestion": "Set rendering/driver/threads/thread_model to 1 (Safe). The thread-safety page shows direct scene-tree calls from a worker as unsafe.",
+    "setting": "rendering/driver/threads/thread_model",
+    "tradeoff": "Safe serializes those calls. Separate is a different mode and is not required to leave Unsafe.",
+    "expected_effect": "Removes the deprecated unsafe threading mode.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/thread_safe_apis.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "renderer.depth_prepass_disabled",
+    "category": "renderer_platform",
+    "title": "Depth prepass is disabled",
+    "severity": "medium",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/driver/depth_prepass/enable",
+        "value": false
+      }
+    },
+    "evidence": "rendering/driver/depth_prepass/enable is false. The default is true.",
+    "suggestion": "Set rendering/driver/depth_prepass/enable back to true unless a specific GPU is on rendering/driver/depth_prepass/disable_for_vendors (default PowerVR,Mali,Adreno,Apple).",
+    "setting": "rendering/driver/depth_prepass/enable",
+    "tradeoff": "The prepass is an extra geometry pass. The GPU optimization page describes early depth rejection as how opaque pixels avoid shading hidden surfaces.",
+    "expected_effect": "Restores the default depth prepass. Compare the Render Depth Pre-Pass timestamp if the game is running.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/gpu_optimization.html",
+    "when_pass": [
+      "Render Depth Pre-Pass"
+    ],
+    "dedupe_key": "depth_prepass",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "kind": "performance",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "renderer.depth_prepass_vendor_list",
+    "category": "renderer_platform",
+    "title": "Adapter vendor is on the depth-prepass disable list",
+    "severity": "info",
+    "kind": "info",
+    "requires": [
+      "settings",
+      "metrics"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/driver/depth_prepass/enable",
+            "value": true
+          }
+        },
+        {
+          "adapter_listed_in_setting": {
+            "path": "rendering/driver/depth_prepass/disable_for_vendors"
+          }
+        }
+      ]
+    },
+    "evidence": "The video adapter vendor string is listed in rendering/driver/depth_prepass/disable_for_vendors while the prepass project setting is still true.",
+    "suggestion": "Godot keeps a vendor exception list for the depth prepass. Confirm on device whether the prepass is actually running before tuning it.",
+    "setting": "rendering/driver/depth_prepass/disable_for_vendors",
+    "tradeoff": "Forcing the prepass on a listed vendor can be the case the default list is avoiding.",
+    "expected_effect": "Explains a missing depth prepass on that GPU. No frame-time number is assumed.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "renderer.force_vertex_shading",
+    "category": "renderer_platform",
+    "title": "Vertex shading is forced project-wide",
+    "severity": "low",
+    "kind": "quality_up",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/shading/overrides/force_vertex_shading",
+        "value": true
+      }
+    },
+    "evidence": "rendering/shading/overrides/force_vertex_shading is true. The default is false.",
+    "suggestion": "Turn force_vertex_shading off to shade per pixel again. The GPU optimization page points at vertex shading as a way to cut shading cost on particles.",
+    "setting": "rendering/shading/overrides/force_vertex_shading",
+    "tradeoff": "Per-pixel shading costs more GPU time and restores specular and normal-map detail.",
+    "expected_effect": "Higher shading quality. Re-measure the opaque pass before keeping it.",
+    "verify_step": "gpu_passes frames=60",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/performance/gpu_optimization.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "renderer.force_lambert",
+    "category": "renderer_platform",
+    "title": "Lambert is forced over Burley",
+    "severity": "low",
+    "kind": "quality_up",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_eq": {
+        "path": "rendering/shading/overrides/force_lambert_over_burley",
+        "value": true
+      }
+    },
+    "evidence": "rendering/shading/overrides/force_lambert_over_burley is true. The desktop default is false. The .mobile override defaults to true.",
+    "suggestion": "On desktop Forward+, turn this off to use Burley diffuse. Leave it on for a Mobile-renderer target if you chose that default on purpose.",
+    "setting": "rendering/shading/overrides/force_lambert_over_burley",
+    "tradeoff": "Burley is the higher-quality diffuse model.",
+    "expected_effect": "Changes the diffuse BRDF. Frame-time impact has to be measured.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile",
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "renderer.cluster_elements_scene",
+    "category": "renderer_platform",
+    "title": "Lights, decals, or probes exceed the clustered-element budget",
+    "severity": "high",
+    "heuristic": true,
+    "heuristic_rationale": "The largest of the scene's omni, spot and area light (hidden lights excluded), decal and reflection-probe counts is compared with rendering/limits/cluster_builder/max_clustered_elements: ClusterBuilderRD caps each type on its own (cluster_builder_rd.h add_light/add_box), although the class reference describes a sum. Scene counts include elements outside the view, so this is not the engine's per-view count. Mobile does not use the cluster builder (RenderForwardMobile::get_max_elements is a fixed 256).",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "cluster_budget_exceeded": true
+    },
+    "evidence": "The scene's omni, spot, area, decal or reflection-probe count exceeds rendering/limits/cluster_builder/max_clustered_elements (default 512), which Forward+ applies to each type on its own.",
+    "suggestion": "Raise the limit only if elements are being dropped, or reduce how many lights, decals, and probes overlap the camera. The decal page says extra elements past the limit are not rendered.",
+    "setting": "rendering/limits/cluster_builder/max_clustered_elements",
+    "tradeoff": "A higher limit uses more cluster memory.",
+    "expected_effect": "Stops clustered elements from being dropped. It does not claim a frame-time change.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/using_decals.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "renderer.gl_light_limit",
+    "category": "renderer_platform",
+    "title": "Compatibility light count is above max_renderable_lights",
+    "severity": "high",
+    "heuristic": true,
+    "heuristic_rationale": "The cap applies to the lights visible in a frame; the scan counts the scene's visible omni, spot and area lights, including any outside the camera view.",
+    "requires": [
+      "settings",
+      "scene"
+    ],
+    "condition": {
+      "opengl_light_limit_exceeded": true
+    },
+    "evidence": "The scanned omni, spot or area light count is above rendering/limits/opengl/max_renderable_lights (default 32), which the Compatibility renderer applies to each light type on its own.",
+    "suggestion": "Reduce lights or raise rendering/limits/opengl/max_renderable_lights. That setting is the Compatibility renderer cap, separate from max_lights_per_object (default 8).",
+    "setting": "rendering/limits/opengl/max_renderable_lights",
+    "tradeoff": "A higher cap costs more on the OpenGL path.",
+    "expected_effect": "Lights above the cap become renderable. Measure draw calls afterward.",
+    "verify_step": "scan_scene",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "renderer.vrs_off_while_gpu_bound",
+    "category": "renderer_platform",
+    "title": "Variable rate shading is off while the frame is over a GPU budget",
+    "severity": "low",
+    "heuristic": true,
+    "heuristic_rationale": "The rule only suggests VRS when frame_timing says the frame is over budget and GPU-bound. It does not estimate the shading-rate saving.",
+    "requires": [
+      "settings",
+      "frame"
+    ],
+    "condition": {
+      "all": [
+        {
+          "setting_eq": {
+            "path": "rendering/vrs/mode",
+            "value": 0
+          }
+        },
+        {
+          "frame_over_budget": true
+        },
+        {
+          "frame_bound": "gpu"
+        }
+      ]
+    },
+    "evidence": "rendering/vrs/mode is 0 (Disabled) and frame_timing reports a GPU-bound frame over the target budget.",
+    "suggestion": "Try rendering/vrs/mode Texture or XR on hardware that supports variable rate shading. The VRS page describes it as shading some pixels at a lower rate.",
+    "setting": "rendering/vrs/mode",
+    "tradeoff": "Lower shading rates soften shading, not geometric edges. A density texture has to be authored for Texture mode.",
+    "expected_effect": "Can cut shading work on supported GPUs. Re-measure; do not assume a percentage.",
+    "verify_step": "frame_timing",
+    "source": "https://docs.godotengine.org/en/4.4/tutorials/3d/variable_rate_shading.html",
+    "kind": "performance",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "forward_plus",
+        "mobile"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "renderer.gl_lights_per_object",
+    "category": "renderer_platform",
+    "title": "Compatibility allows more than 8 omni or spot lights per object",
+    "severity": "low",
+    "kind": "performance",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/limits/opengl/max_lights_per_object",
+        "value": 8
+      }
+    },
+    "evidence": "Setting this low will slightly reduce memory usage",
+    "suggestion": "Lower rendering/limits/opengl/max_lights_per_object toward 8. The description says the low value saves a bit of memory and is still capped by max_renderable_lights.",
+    "setting": "rendering/limits/opengl/max_lights_per_object",
+    "tradeoff": "Surfaces keep fewer lights.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  },
+  {
+    "id": "renderer.gl_element_cap",
+    "category": "renderer_platform",
+    "title": "The Compatibility element cap is above 65536",
+    "severity": "low",
+    "kind": "info",
+    "heuristic": false,
+    "heuristic_rationale": "",
+    "requires": [
+      "settings"
+    ],
+    "condition": {
+      "setting_gt": {
+        "path": "rendering/limits/opengl/max_renderable_elements",
+        "value": 65536
+      }
+    },
+    "evidence": "Setting this low will slightly reduce memory usage and may decrease shader compile times",
+    "suggestion": "Lower rendering/limits/opengl/max_renderable_elements toward 65536 unless a frame is actually dropping surfaces. The description says elements are mesh surfaces.",
+    "setting": "rendering/limits/opengl/max_renderable_elements",
+    "tradeoff": "Extra surfaces in a frame are not drawn.",
+    "expected_effect": "Re-measure with collect_metrics after changing this setting. No frame-time percentage is predicted.",
+    "verify_step": "collect_metrics",
+    "source": "https://docs.godotengine.org/en/4.4/classes/class_projectsettings.html",
+    "when_pass": [],
+    "dedupe_key": "",
+    "pass_only": false,
+    "node_property": "",
+    "offender_key": "",
+    "share_from": "",
+    "share_unit": "",
+    "engine_internal": false,
+    "validation_id": "",
+    "applies_to": {
+      "renderers": [
+        "gl_compatibility"
+      ],
+      "versions": [
+        "4.4",
+        "4.5",
+        "4.6",
+        "4.7"
+      ]
+    }
+  }
+]
