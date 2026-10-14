@@ -46,6 +46,16 @@ def main():
         with zipfile.ZipFile(archive) as zipped:
             assert zipped.testzip() is None
         print(archive)
+    # The Godot Asset Library ZIP: only the addon, under one wrapper folder. Godot's installer skips a single top-level
+    # folder (4.4 always; 4.7.2 unless it is addons/), so the files land in res://addons/render_lens on every version.
+    assetlib = output / f"render-lens-{version}-assetlib.zip"
+    with zipfile.ZipFile(assetlib, "w", zipfile.ZIP_DEFLATED) as zipped:
+        for path in sorted((ROOT / "addons" / "render_lens").rglob("*")):
+            if path.is_file() and "__pycache__" not in path.parts:
+                zipped.write(path, "render-lens/" + path.relative_to(ROOT).as_posix())
+    with zipfile.ZipFile(assetlib) as zipped:
+        assert zipped.testzip() is None
+    print(assetlib)
     return archive
 
 
